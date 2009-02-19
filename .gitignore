@@ -1,0 +1,7 @@
+client/.classpath
+client/.project
+client/.settings/
+integration-tests/.classpath
+integration-tests/.project
+integration-tests/.settings/
+target/
