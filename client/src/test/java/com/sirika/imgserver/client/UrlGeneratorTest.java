@@ -2,6 +2,7 @@ package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsOriginal;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsResizedTo300x200InPng;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.hamcrest.CoreMatchers;
@@ -19,13 +20,11 @@ public class UrlGeneratorTest {
     
     @Test
     public void shouldGeneratUrlForOriginalImage() {
-	ImageReference britney = britneySpearsOriginal();
-	assertThat(urlGenerator.urlFor(britney), CoreMatchers.is("http://localhost:8000/original/britney"));
+	assertThat(urlGenerator.urlFor(britneySpearsOriginal()), is("http://localhost:8000/original/britney"));
     }
     
     @Test
     public void shouldGeneratUrlForDerivedImage() {
-	ImageReference britney = britneySpearsResizedTo300x200InPng();
-	assertThat(urlGenerator.urlFor(britney), CoreMatchers.is("http://localhost:8000/derived/britney-300x200.png"));
+	assertThat(urlGenerator.urlFor(britneySpearsResizedTo300x200InPng()), is("http://localhost:8000/derived/britney-300x200.png"));
     }
 }
