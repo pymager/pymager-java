@@ -1,3 +1,4 @@
+package com.sirika.imgserver.client;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
