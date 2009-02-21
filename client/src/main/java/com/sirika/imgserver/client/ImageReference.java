@@ -1,5 +1,7 @@
 package com.sirika.imgserver.client;
 
+import static com.sirika.imgserver.client.ImageId.imageId;
+
 import org.apache.commons.lang.Validate;
 /**
  * Identifies the image that we want to retrieve.
@@ -13,11 +15,11 @@ import org.apache.commons.lang.Validate;
  */
 public class ImageReference {
 
-    private String id;
+    private ImageId id;
     private ImageScale rescaling;
     private ImageFormat imageFormat;
     
-    private ImageReference(String id, ImageScale rescaling, ImageFormat imageFormat) {
+    private ImageReference(ImageId id, ImageScale rescaling, ImageFormat imageFormat) {
 	Validate.notNull(id);
 	this.id = id;
 	this.rescaling = rescaling;
@@ -25,7 +27,7 @@ public class ImageReference {
     }
     
     public static ImageReference originalImage(String id) {
-	return new ImageReference(id, null, null);
+	return new ImageReference(imageId(id), null, null);
     }
     
     public ImageReference rescaledTo(ImageScale imageScale) {
@@ -45,7 +47,7 @@ public class ImageReference {
     }
 
     public String getId() {
-        return id;
+        return id.toString();
     }
 
     public ImageScale getRescaling() {
