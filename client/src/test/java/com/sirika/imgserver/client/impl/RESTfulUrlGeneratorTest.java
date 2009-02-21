@@ -8,7 +8,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sirika.imgserver.client.UrlGenerator;
 
 public class RESTfulUrlGeneratorTest {
 

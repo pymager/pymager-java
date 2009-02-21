@@ -1,7 +1,6 @@
 package com.sirika.imgserver.client.impl;
 
 import com.sirika.imgserver.client.ImageReference;
-import com.sirika.imgserver.client.UrlGenerator;
 
 /**
  * Generates URLs such as :

@@ -1,4 +1,6 @@
-package com.sirika.imgserver.client;
+package com.sirika.imgserver.client.impl;
+
+import com.sirika.imgserver.client.ImageReference;
 
 /**
  * Generates URLs to access the resources references by {@link ImageReference}

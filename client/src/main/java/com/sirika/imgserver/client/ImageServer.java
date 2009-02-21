@@ -9,6 +9,8 @@ import org.springframework.core.io.InputStreamSource;
  *
  */
 public interface ImageServer {
+    String downloadUrl(ImageReference imageReference);
     InputStreamSource downloadImage(ImageReference imageReference);
-    void uploadImage(ImageId id, InputStreamSource imageSource);
+    ImageReference uploadImage(ImageId id, InputStreamSource imageSource);
+    void deleteImage(ImageId imageId);
 }
