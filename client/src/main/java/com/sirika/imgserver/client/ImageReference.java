@@ -1,7 +1,16 @@
 package com.sirika.imgserver.client;
 
 import org.apache.commons.lang.Validate;
-
+/**
+ * Identifies the image that we want to retrieve.
+ * <ul>
+ *  <li>The Image ID</li>
+ *  <li>The optional {@link ImageScale}</li>
+ *  <li>The optional {@link ImageFormat} (defaults to {@link ImageFormat#JPEG}</li>
+ * </ul>
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
 public class ImageReference {
 
     private String id;
@@ -28,6 +37,9 @@ public class ImageReference {
     }
     
     public ImageReference convertedTo(ImageFormat imageFormat) {
+	if(this.rescaling == null) {
+	    throw new IllegalArgumentException("Because of a limitation of the image service, converting to another format also requires rescaling the image");
+	}
 	Validate.notNull(imageFormat);
 	return new ImageReference(this.id, this.rescaling, imageFormat);
     }

@@ -1,21 +1,22 @@
-package com.sirika.imgserver.client;
+package com.sirika.imgserver.client.impl;
 
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsOriginal;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsResizedTo300x200InPng;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UrlGeneratorTest {
+import com.sirika.imgserver.client.UrlGenerator;
+
+public class RESTfulUrlGeneratorTest {
 
     private UrlGenerator urlGenerator;
     
     @Before
     public void onSetUp() {
-	this.urlGenerator = new UrlGenerator("http://localhost:8000");
+	this.urlGenerator = new RESTfulUrlGenerator("http://localhost:8000");
     }
     
     @Test

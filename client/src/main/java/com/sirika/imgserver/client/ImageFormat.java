@@ -1,5 +1,14 @@
 package com.sirika.imgserver.client;
 
+/**
+ * Lists all formats supported by Image Server. 
+ * This should match the list of formats that 
+ * <a href="http://www.pythonware.com/products/pil/">PIL</a> 
+ * supports writing to.
+ * 
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
 public enum ImageFormat {
     BMP {
 	public String extension() {

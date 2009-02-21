@@ -22,6 +22,16 @@ public class ImageReferenceTest {
     }
     
     @Test(expected=IllegalArgumentException.class)
+    public void rescalingIsMandatoryBeforeConversion() {
+	originalImage("id").convertedTo(JPEG);
+    }
+    
+    /**
+     * this is typically a limitation of the image service, but in the meanwhile, 
+     * we need to make sure we alert the user that he won't get whatever format
+     * he asked for
+     */
+    @Test(expected=IllegalArgumentException.class)
     public void formatShouldBeMandatoryWhenRescaling() {
 	originalImage("id").rescaledTo(width(800).by(600)).convertedTo(null);
     }
