@@ -19,6 +19,10 @@ public class ImageReference {
     private ImageScale rescaling;
     private ImageFormat imageFormat;
     
+    private ImageReference(ImageId id) {
+	this(id, null, null);
+    }
+    
     private ImageReference(ImageId id, ImageScale rescaling, ImageFormat imageFormat) {
 	Validate.notNull(id);
 	this.id = id;
@@ -26,8 +30,14 @@ public class ImageReference {
 	this.imageFormat = imageFormat;
     }
     
+    public ImageReference getOriginalParentReference() {
+	if(!isDerived()) {
+	    return this;
+	}
+	return new ImageReference(this.id);
+    }
     public static ImageReference originalImage(String id) {
-	return new ImageReference(imageId(id), null, null);
+	return new ImageReference(imageId(id));
     }
     
     public ImageReference rescaledTo(ImageScale imageScale) {

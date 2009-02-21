@@ -10,8 +10,10 @@ import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMoth
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 public class ImageReferenceTest {
@@ -52,6 +54,17 @@ public class ImageReferenceTest {
 	assertThat(imageReference.isConverted(), is(true));
 	assertThat(imageReference.getImageFormat(), is(PNG));
 	assertThat(imageReference.getRescaling(), is(width(300).by(200)));
+    }
+    
+    @Test
+    public void originalParentReferenceOfOriginalImageReferenceShouldBeItself() {
+	ImageReference imageReference = britneySpearsOriginal();
+	assertThat(imageReference.getOriginalParentReference(), is(sameInstance(imageReference)));
+    }
+    
+    @Test
+    public void shouldReturnOriginalParentReferenceOfDerivedImageReference() {
+	assertThat(britneySpearsResizedTo300x200InPng().getOriginalParentReference(), is((britneySpearsOriginal())));
     }
 
     @Test
