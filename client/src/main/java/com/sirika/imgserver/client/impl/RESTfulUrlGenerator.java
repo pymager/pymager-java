@@ -11,7 +11,7 @@ import com.sirika.imgserver.client.ImageReference;
  * @author Sami Dalouche (sami.dalouche@gmail.com)
  *
  */
-public class RESTfulUrlGenerator implements UrlGenerator {
+class RESTfulUrlGenerator implements UrlGenerator {
 
     private String baseImageServiceUrl;
 

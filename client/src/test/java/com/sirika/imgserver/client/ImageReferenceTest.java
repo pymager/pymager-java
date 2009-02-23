@@ -24,7 +24,7 @@ public class ImageReferenceTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void rescalingIsMandatoryBeforeConversion() {
-	originalImage("id").convertedTo(JPEG);
+	originalImage("yemmaGouraya").convertedTo(JPEG);
     }
     
     /**
@@ -34,7 +34,7 @@ public class ImageReferenceTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void formatShouldBeMandatoryWhenRescaling() {
-	originalImage("id").rescaledTo(width(800).by(600)).convertedTo(null);
+	originalImage("yemmaGouraya").rescaledTo(width(800).by(600)).convertedTo(null);
     }
     
     @Test

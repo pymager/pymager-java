@@ -8,7 +8,7 @@ import com.sirika.imgserver.client.ImageReference;
  * @author Sami Dalouche (sami.dalouche@gmail.com)
  *
  */
-public interface UrlGenerator {
+interface UrlGenerator {
     public abstract String urlFor(ImageReference imageReference);
 
 }

@@ -1,7 +1,5 @@
 package com.sirika.imgserver.client;
 
-
-
 import static com.sirika.imgserver.client.ImageId.imageId;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

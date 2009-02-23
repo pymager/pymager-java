@@ -20,6 +20,13 @@
 		<version>${project.version}</version>
 		<scope>compile</scope>
 	</dependency>
+	<dependency>
+		<groupId>com.sirika</groupId>
+		<artifactId>imgserver-java-client</artifactId>
+		<version>${project.version}</version>
+		<classifier>tests</classifier>
+		<scope>test</scope>
+	</dependency>
 	
 	<!-- Optional Logging dependencies -->
 	<dependency>
