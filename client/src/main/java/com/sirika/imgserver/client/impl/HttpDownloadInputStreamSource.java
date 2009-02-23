@@ -18,6 +18,7 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
+import com.sirika.imgserver.client.UnknownFailureException;
 
 class HttpDownloadInputStreamSource implements InputStreamSource{
     private final static Logger logger = LoggerFactory.getLogger(HttpDownloadInputStreamSource.class);
@@ -35,7 +36,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 	this.httpGet = new HttpGet(imageServer.getDownloadUrl(imageReference));
     }
 
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownFailureException {
 	logger.debug("Generating InputStream for {}", imageReference);
 	HttpResponse response = httpClient.execute(httpGet);
 	
@@ -61,7 +62,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     private void handleNon200OK(HttpResponse response) {
 	if(HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
 	    httpGet.abort();
-	    throw new ResourceNotExistingException(imageReference);
+	    throw new UnknownFailureException(imageReference, response.getStatusLine());
 	}
     }
 

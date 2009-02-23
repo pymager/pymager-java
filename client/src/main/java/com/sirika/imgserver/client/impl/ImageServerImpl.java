@@ -17,6 +17,8 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
+import com.sirika.imgserver.client.ResourceNotExistingException;
+import com.sirika.imgserver.client.UnknownFailureException;
 
 public class ImageServerImpl implements ImageServer {
     private static final Logger logger = LoggerFactory.getLogger(ImageServerImpl.class);
@@ -53,7 +55,7 @@ public class ImageServerImpl implements ImageServer {
 
     }
 
-    public InputStreamSource downloadImage(ImageReference imageReference) {
+    public InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownFailureException{
 	logger.debug("Generating InputStreamSource for Image Reference [{}]", imageReference);
 	return new HttpDownloadInputStreamSource(this, httpClient, imageReference);
     }
