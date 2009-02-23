@@ -4,9 +4,9 @@ import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageFormat.PNG;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.ImageScale.width;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsOriginal;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsResizedTo300x200InDefaultFormat;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsResizedTo300x200InPng;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGourayaResizedTo300x200InDefaultFormat;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGourayaResizedTo300x200InPng;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -39,16 +39,16 @@ public class ImageReferenceTest {
     
     @Test
     public void shouldCreateOriginalImageReference() {
-	ImageReference imageReference = britneySpearsOriginal();
-	assertThat(imageReference.getId(), is("britney"));
+	ImageReference imageReference = yemmaGouraya();
+	assertThat(imageReference.getId(), is("yemmaGouraya"));
 	assertThat(imageReference.isDerived(), is(false));
 	assertThat(imageReference.isConverted(), is(false));
     }
     
     @Test
     public void shouldCreateDerivedImageReference() {
-	ImageReference imageReference = britneySpearsResizedTo300x200InPng();
-	assertThat(imageReference.getId(), is("britney"));
+	ImageReference imageReference = yemmaGourayaResizedTo300x200InPng();
+	assertThat(imageReference.getId(), is("yemmaGouraya"));
 	assertThat(imageReference.isDerived(), is(true));
 	assertThat(imageReference.isConverted(), is(true));
 	assertThat(imageReference.getImageFormat(), is(PNG));
@@ -57,43 +57,43 @@ public class ImageReferenceTest {
     
     @Test
     public void originalParentReferenceOfOriginalImageReferenceShouldBeItself() {
-	ImageReference imageReference = britneySpearsOriginal();
+	ImageReference imageReference = yemmaGouraya();
 	assertThat(imageReference.getOriginalParentReference(), is(sameInstance(imageReference)));
     }
     
     @Test
     public void shouldReturnOriginalParentReferenceOfDerivedImageReference() {
-	assertThat(britneySpearsResizedTo300x200InPng().getOriginalParentReference(), is((britneySpearsOriginal())));
+	assertThat(yemmaGourayaResizedTo300x200InPng().getOriginalParentReference(), is((yemmaGouraya())));
     }
 
     @Test
     public void defaultFormatShouldBeJpeg() {
-	ImageReference imageReference = britneySpearsResizedTo300x200InDefaultFormat();
+	ImageReference imageReference = yemmaGourayaResizedTo300x200InDefaultFormat();
 	assertThat(imageReference.getImageFormat(), is(JPEG));
     }
     
     @Test
     public void originalImageReferencesShouldBeEqual() {
-	ImageReference britney1 = britneySpearsOriginal();
-	ImageReference britney2 = britneySpearsOriginal();
-	assertThat(britney1, equalTo(britney2));
-	assertThat(britney1.hashCode(), is(britney2.hashCode()));
+	ImageReference yemmaGouraya1 = yemmaGouraya();
+	ImageReference yemmaGouraya2 = yemmaGouraya();
+	assertThat(yemmaGouraya1, equalTo(yemmaGouraya2));
+	assertThat(yemmaGouraya1.hashCode(), is(yemmaGouraya2.hashCode()));
     }
     
     @Test
     public void originalImageReferencesShouldNotBeEqualBecauseOfId() {
-	ImageReference britney1 = originalImage("id1");
-	ImageReference britney2 = originalImage("id2");
-	assertThat(britney1, is(not(equalTo(britney2))));
-	assertThat(britney1.hashCode(), is(not(britney2.hashCode())));
+	ImageReference yemmaGouraya1 = originalImage("id1");
+	ImageReference yemmaGouraya2 = originalImage("id2");
+	assertThat(yemmaGouraya1, is(not(equalTo(yemmaGouraya2))));
+	assertThat(yemmaGouraya1.hashCode(), is(not(yemmaGouraya2.hashCode())));
     }
     
     @Test
     public void derivedImageReferencesShouldBeEqual() {
-	ImageReference britney1 = britneySpearsResizedTo300x200InPng();
-	ImageReference britney2 = britneySpearsResizedTo300x200InPng();
-	assertThat(britney1, equalTo(britney2));
-	assertThat(britney1.hashCode(), is(britney2.hashCode()));
+	ImageReference yemmaGouraya1 = yemmaGourayaResizedTo300x200InPng();
+	ImageReference yemmaGouraya2 = yemmaGourayaResizedTo300x200InPng();
+	assertThat(yemmaGouraya1, equalTo(yemmaGouraya2));
+	assertThat(yemmaGouraya1.hashCode(), is(yemmaGouraya2.hashCode()));
     }
     
     @Test

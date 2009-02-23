@@ -1,7 +1,7 @@
 package com.sirika.imgserver.client.impl;
 
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsOriginal;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.britneySpearsResizedTo300x200InPng;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGourayaResizedTo300x200InPng;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -20,11 +20,11 @@ public class RESTfulUrlGeneratorTest {
     
     @Test
     public void shouldGeneratUrlForOriginalImage() {
-	assertThat(urlGenerator.urlFor(britneySpearsOriginal()), is("http://localhost:8000/original/britney"));
+	assertThat(urlGenerator.urlFor(yemmaGouraya()), is("http://localhost:8000/original/yemmaGouraya"));
     }
     
     @Test
     public void shouldGeneratUrlForDerivedImage() {
-	assertThat(urlGenerator.urlFor(britneySpearsResizedTo300x200InPng()), is("http://localhost:8000/derived/britney-300x200.png"));
+	assertThat(urlGenerator.urlFor(yemmaGourayaResizedTo300x200InPng()), is("http://localhost:8000/derived/yemmaGouraya-300x200.png"));
     }
 }
