@@ -5,3 +5,4 @@ integration-tests/.classpath
 integration-tests/.project
 integration-tests/.settings/
 target/
+client/imgserverclient.log
