@@ -3,6 +3,8 @@ package com.sirika.imgserver.client;
 import static com.sirika.imgserver.client.ImageId.imageId;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * Identifies the image that we want to retrieve.
  * <ul>
@@ -72,6 +74,8 @@ public class ImageReference {
         return imageFormat;
     }
 
+    
+    
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -109,5 +113,13 @@ public class ImageReference {
 	} else if (!rescaling.equals(other.rescaling))
 	    return false;
 	return true;
+    }
+
+    @Override
+    public String toString() {
+	return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+		.append("id", id)
+		.append("imageScale", this.rescaling)
+		.append("imageFormat", this.imageFormat).toString();
     }
 }

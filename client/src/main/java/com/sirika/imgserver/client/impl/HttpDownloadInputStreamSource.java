@@ -30,9 +30,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     }
 
     public InputStream getInputStream() throws IOException {
-	if(logger.isDebugEnabled()) {
-	    logger.debug("Generating InputStream for URL [{}]", downloadUrl);
-	}
+	logger.debug("Generating InputStream for URL [{}]", downloadUrl);
 	
 	HttpResponse response = httpClient.execute(httpGet);
 	HttpEntity entity = response.getEntity();

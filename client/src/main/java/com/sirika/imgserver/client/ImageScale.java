@@ -63,6 +63,11 @@ public class ImageScale {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return String.format("%sx%s", width, height);
+    }
     
     
 }

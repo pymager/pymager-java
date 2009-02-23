@@ -54,6 +54,7 @@ public class ImageServerImpl implements ImageServer {
     }
 
     public InputStreamSource downloadImage(ImageReference imageReference) {
+	logger.debug("Generating InputStreamSource for Image Reference [{}]", imageReference);
 	return new HttpDownloadInputStreamSource(httpClient, getDownloadUrl(imageReference));
     }
 
