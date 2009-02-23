@@ -72,6 +72,10 @@ public class ImageServerImpl implements ImageServer {
 	// TODO Auto-generated method stub
 	return null;
     }
+    
+    public void destroy() throws Exception {
+	this.httpClient.getConnectionManager().shutdown();
+    }
 
     public void setUrlGenerator(UrlGenerator urlGenerator) {
 	Validate.notNull(urlGenerator);

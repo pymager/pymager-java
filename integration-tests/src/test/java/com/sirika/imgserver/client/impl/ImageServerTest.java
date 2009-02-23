@@ -65,19 +65,6 @@ public class ImageServerTest {
 	assertFalse(isCornicheKabylePicture(is));
 	IOUtils.closeQuietly(is);
     }
-    
-    @Test
-    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    source.getInputStream();
-	    Assert.fail();
-	} catch(ResourceNotExistingException e) {
-	    assertEquals(imageReference, e.getImageReference());
-	} 
-	
-    }
 
     private boolean isYemmaGourayaPicture(InputStream is) throws IOException {
 	InputStream yemmaGouraya = yemmaGourayaPictureStream().getInputStream();
@@ -96,6 +83,22 @@ public class ImageServerTest {
     
 
     /*
+     * 
+     should be moved to imgserver-interface-tests
+     @Test
+    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
+	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
+	try {
+	    InputStreamSource source = imageServer.downloadImage(imageReference);
+	    source.getInputStream();
+	    Assert.fail();
+	} catch(ResourceNotExistingException e) {
+	    assertEquals(imageReference, e.getImageReference());
+	} 
+	
+    }
+    
+    should be moved to imgserver-stress-tests
     @Test
     public void shouldDownloadImageThousandTimes() throws IOException {
 	for (int i = 0; i < 1000; i++) {
