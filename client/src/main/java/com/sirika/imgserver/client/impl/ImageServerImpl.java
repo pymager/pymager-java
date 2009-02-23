@@ -55,13 +55,13 @@ public class ImageServerImpl implements ImageServer {
 
     public InputStreamSource downloadImage(ImageReference imageReference) {
 	logger.debug("Generating InputStreamSource for Image Reference [{}]", imageReference);
-	return new HttpDownloadInputStreamSource(httpClient, getDownloadUrl(imageReference));
+	return new HttpDownloadInputStreamSource(this, httpClient, imageReference);
     }
 
     public String getDownloadUrl(ImageReference imageReference) {
 	String url = urlGenerator.urlFor(imageReference);
 	if(logger.isDebugEnabled()) {
-	    logger.debug("getDownloadUrl: generated URL [{}]", url);
+	    logger.debug("getDownloadUrl: generated URL : {}", url);
 	}
 	return url;
     }

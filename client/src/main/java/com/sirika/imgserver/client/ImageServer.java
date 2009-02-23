@@ -11,7 +11,7 @@ import org.springframework.core.io.InputStreamSource;
  */
 public interface ImageServer {
     String getDownloadUrl(ImageReference imageReference);
-    InputStreamSource downloadImage(ImageReference imageReference);
+    InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException;
     ImageReference uploadImage(ImageId id, InputStreamSource imageSource);
     void deleteImage(ImageId imageId);
 }

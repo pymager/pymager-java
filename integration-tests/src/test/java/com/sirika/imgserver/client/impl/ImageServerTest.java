@@ -1,5 +1,6 @@
 package com.sirika.imgserver.client.impl;
 
+import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaPictureStream;
 import static org.easymock.EasyMock.createMock;
@@ -7,6 +8,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -16,11 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.ImageReference;
+import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerTest {
@@ -60,6 +64,19 @@ public class ImageServerTest {
 	assertTrue(isYemmaGourayaPicture(is));
 	assertFalse(isCornicheKabylePicture(is));
 	IOUtils.closeQuietly(is);
+    }
+    
+    @Test
+    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
+	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
+	try {
+	    InputStreamSource source = imageServer.downloadImage(imageReference);
+	    source.getInputStream();
+	    Assert.fail();
+	} catch(ResourceNotExistingException e) {
+	    assertEquals(imageReference, e.getImageReference());
+	} 
+	
     }
 
     private boolean isYemmaGourayaPicture(InputStream is) throws IOException {
