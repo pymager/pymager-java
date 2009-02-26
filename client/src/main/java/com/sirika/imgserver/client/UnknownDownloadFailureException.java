@@ -1,7 +1,7 @@
 package com.sirika.imgserver.client;
 
 
-public class UnknownDownloadFailureException extends RuntimeException {
+public class UnknownDownloadFailureException extends ImageServerException {
     private static final long serialVersionUID = 1L;
     
     private ImageReference imageReference;

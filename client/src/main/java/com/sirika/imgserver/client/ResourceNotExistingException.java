@@ -1,7 +1,7 @@
 package com.sirika.imgserver.client;
 
 
-public class ResourceNotExistingException extends RuntimeException {
+public class ResourceNotExistingException extends ImageServerException {
     private static final long serialVersionUID = 1L;
     
     private ImageReference imageReference;

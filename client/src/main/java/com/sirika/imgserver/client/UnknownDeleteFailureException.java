@@ -1,7 +1,7 @@
 package com.sirika.imgserver.client;
 
 
-public class UnknownDeleteFailureException extends RuntimeException {
+public class UnknownDeleteFailureException extends ImageServerException {
     private static final long serialVersionUID = 1L;
     
     private ImageId imageId;
