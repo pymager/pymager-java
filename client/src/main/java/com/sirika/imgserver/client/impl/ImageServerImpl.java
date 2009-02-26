@@ -34,7 +34,13 @@ public class ImageServerImpl implements ImageServer {
     public ImageServerImpl(UrlGenerator urlGenerator) {
 	this.urlGenerator = urlGenerator ;
 	this.httpClient = defaultHttpClient();
-	logger.info("Creating Image Server using URLGenerator [{}], HttpClient [{}]", urlGenerator, httpClient);
+	logCreation();
+    }
+    
+    public ImageServerImpl(HttpClient httpClient, UrlGenerator urlGenerator) {
+	this.urlGenerator = urlGenerator ;
+	this.httpClient = httpClient;
+	logCreation();
     }
 
     private void logCreation() {
