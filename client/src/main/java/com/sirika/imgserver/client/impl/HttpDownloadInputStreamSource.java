@@ -10,6 +10,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +57,13 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 
     private void handleErrors(HttpResponse response) {
 	handle404NotFound(response);
-	handleNon200OK(response);
+	handleNon2xx(response);
     }
 
-    private void handleNon200OK(HttpResponse response) {
-	if(HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+    private void handleNon2xx(HttpResponse response) {
+	if(response.getStatusLine().getStatusCode() >= 300) {
 	    httpGet.abort();
-	    throw new UnknownFailureException(imageReference, response.getStatusLine());
+	    throw new UnknownFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while downloading"));
 	}
     }
 

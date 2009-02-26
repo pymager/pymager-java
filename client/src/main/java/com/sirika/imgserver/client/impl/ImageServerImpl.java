@@ -57,7 +57,7 @@ public class ImageServerImpl implements ImageServer {
     }
 
     public InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownFailureException{
-	logger.debug("Generating InputStreamSource for Image Reference [{}]", imageReference);
+	logger.debug("Downloading Image Reference [{}]", imageReference);
 	return new HttpDownloadInputStreamSource(this, httpClient, imageReference);
     }
 
