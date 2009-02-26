@@ -21,13 +21,17 @@ public class ImageServerImpl implements ImageServer {
     private HttpClient httpClient;
     
     public ImageServerImpl(String baseImageServiceUrl) {
-	this.urlGenerator = new RESTfulUrlGenerator(baseImageServiceUrl);
+	this.urlGenerator = defaultUrlGeneratorFor(baseImageServiceUrl);
 	this.httpClient = defaultHttpClient();
 	logCreation();
     }
 
     public ImageServerImpl(UrlGenerator urlGenerator) {
 	this(defaultHttpClient(), urlGenerator);
+    }
+    
+    public ImageServerImpl(HttpClient httpClient, String baseImageServiceUrl) {
+	this(httpClient, defaultUrlGeneratorFor(baseImageServiceUrl));
     }
     
     public ImageServerImpl(HttpClient httpClient, UrlGenerator urlGenerator) {
@@ -42,7 +46,10 @@ public class ImageServerImpl implements ImageServer {
 	logger.info("Creating Image Server using URLGenerator [{}], HttpClient [{}]", urlGenerator, httpClient);
     }
    
-    
+    private static RESTfulUrlGenerator defaultUrlGeneratorFor(String baseImageServiceUrl) {
+	Validate.notNull(baseImageServiceUrl);
+	return new RESTfulUrlGenerator(baseImageServiceUrl);
+    }
     
     public void deleteImage(ImageId imageId) {
 	// TODO Auto-generated method stub
