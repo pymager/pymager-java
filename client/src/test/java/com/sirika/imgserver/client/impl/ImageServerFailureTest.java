@@ -1,7 +1,11 @@
 package com.sirika.imgserver.client.impl;
 
+import static com.sirika.imgserver.client.ImageFormat.JPEG;
+import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaPictureStream;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -18,7 +22,8 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
-import com.sirika.imgserver.client.UnknownFailureException;
+import com.sirika.imgserver.client.UnknownDownloadFailureException;
+import com.sirika.imgserver.client.UnknownUploadFailureException;
 
 public class ImageServerFailureTest extends ServerTestBase {
 
@@ -47,8 +52,8 @@ public class ImageServerFailureTest extends ServerTestBase {
 	super(testName);
     }
 
-    public void testShouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	registerFakeService(HttpStatus.SC_NOT_FOUND);
+    public void testShouldThrowResourceNotExistingExceptionWhileDownloadingWhenResourceNotFound() throws IOException {
+	registerErrorService(HttpStatus.SC_NOT_FOUND);
 	
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
@@ -62,8 +67,8 @@ public class ImageServerFailureTest extends ServerTestBase {
 	
     }
     
-    public void testShouldThrowUnknownFailureExceptionWhenInternalServerError() throws IOException {
-	registerFakeService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    public void testShouldThrowUnknownFailureExceptionWhileDownloadingWhenInternalServerError() throws IOException {
+	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         
 	ImageReference imageReference = yemmaGouraya();
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
@@ -71,12 +76,24 @@ public class ImageServerFailureTest extends ServerTestBase {
 	    InputStreamSource iss = imageServer.downloadImage(imageReference);
 	    iss.getInputStream();
 	    fail();
-	} catch(UnknownFailureException e) {
-	    Assert.assertEquals(imageReference, e.getImageReference());
+	} catch(UnknownDownloadFailureException e) {
+	    assertEquals(imageReference, e.getImageReference());
 	}
     }
+    
+    public void testShouldUploadYemmaGourayaPicture() throws IOException {
+	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	try {
+	    imageServer.uploadImage(imageId("anyResourceThatWillThrowAnException"), JPEG, yemmaGourayaPictureStream());    
+	} catch(UnknownUploadFailureException e) {
+	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
+	    assertEquals(JPEG, e.getImageFormat());
+	}
+	
+    }
 
-    private void registerFakeService(int errorCode) {
+    private void registerErrorService(int errorCode) {
         this.localServer.register("*", new ErrorRequestHandler(errorCode));
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
-import com.sirika.imgserver.client.UnknownFailureException;
+import com.sirika.imgserver.client.UnknownDownloadFailureException;
 
 class HttpDownloadInputStreamSource implements InputStreamSource{
     private final static Logger logger = LoggerFactory.getLogger(HttpDownloadInputStreamSource.class);
@@ -34,10 +34,10 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 	this.httpClient = httpClient;
 	this.imageReference = imageReference;
 	
-	this.httpGet = new HttpGet(imageServer.getDownloadUrl(imageReference));
+	this.httpGet = new HttpGet(imageServer.getImageResourceUrl(imageReference));
     }
 
-    public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownFailureException {
+    public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownDownloadFailureException {
 	logger.debug("Generating InputStream for {}", imageReference);
 	HttpResponse response = httpClient.execute(httpGet);
 	
@@ -63,7 +63,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     private void handleNon2xx(HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
 	    httpGet.abort();
-	    throw new UnknownFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while downloading"));
+	    throw new UnknownDownloadFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while downloading"));
 	}
     }
 

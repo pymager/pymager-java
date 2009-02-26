@@ -32,7 +32,7 @@ import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
-public class ImageServerTest extends ServerTestBase {
+public class ImageServerDownloadTest extends ServerTestBase {
     
     private static class ImageGETRequestHandler implements HttpRequestHandler {
         public ImageGETRequestHandler() {
@@ -71,7 +71,7 @@ public class ImageServerTest extends ServerTestBase {
     }
 
 
-    public ImageServerTest(String testName) {
+    public ImageServerDownloadTest(String testName) {
 	super(testName);
     }
 
@@ -82,7 +82,7 @@ public class ImageServerTest extends ServerTestBase {
 	replay(urlGenerator);
 
 	ImageServer imageServer = new ImageServerImpl(urlGenerator);
-	assertThat(imageServer.getDownloadUrl(imageReference),is("http://anyurl.com/yemmaGouraya"));
+	assertThat(imageServer.getImageResourceUrl(imageReference),is("http://anyurl.com/yemmaGouraya"));
 	verify(urlGenerator);
     }
     
@@ -100,36 +100,7 @@ public class ImageServerTest extends ServerTestBase {
 	InputStreamSource actual = imageServer.downloadImage(imageReference);
 	assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, actual).isSameStream());
     }
-    /*
-    public void testThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	registerImageDownloadService();
-	
-	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    source.getInputStream();
-	    Assert.fail();
-	} catch(ResourceNotExistingException e) {
-	    assertEquals(imageReference, e.getImageReference());
-	} 
-	
-    }
     
-    public void testShouldThrowUnknownFailureExceptionWhenInternalServerError() throws IOException {
-	registerImageDownloadService();
-        
-	ImageReference imageReference = yemmaGouraya();
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
-	try {
-	    InputStreamSource iss = imageServer.downloadImage(imageReference);
-	    iss.getInputStream();
-	    fail();
-	} catch(UnknownFailureException e) {
-	    Assert.assertEquals(imageReference, e.getImageReference());
-	}
-    }
-     */
     private void registerImageDownloadService() {
         this.localServer.register("*", new ImageGETRequestHandler());
     }

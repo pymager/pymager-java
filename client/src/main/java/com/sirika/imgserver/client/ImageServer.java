@@ -10,9 +10,9 @@ import org.springframework.core.io.InputStreamSource;
  *
  */
 public interface ImageServer {
-    String getDownloadUrl(ImageReference imageReference);
-    InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownFailureException;
-    ImageReference uploadImage(ImageId id, InputStreamSource imageSource);
+    String getImageResourceUrl(ImageReference imageReference);
+    InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownDownloadFailureException;
+    ImageReference uploadImage(ImageId id, ImageFormat imageFormat, InputStreamSource imageSource);
     void deleteImage(ImageId imageId);
     void destroy() throws Exception;
 }
