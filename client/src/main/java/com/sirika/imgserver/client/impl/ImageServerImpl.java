@@ -11,6 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
+import com.sirika.imgserver.client.UnknownDeleteFailureException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
 
@@ -51,7 +53,14 @@ public class ImageServerImpl implements ImageServer {
     }
  
     public void deleteImage(ImageId imageId) {
-	// TODO Auto-generated method stub
+	logger.debug("Deleting Image [{}] ({})", imageId);
+	try {
+	    HttpDelete httpDelete = new HttpDelete(getImageResourceUrl(originalImage(imageId.toString())));
+	    HttpResponse response = httpClient.execute(httpDelete);
+	    handleDeleteResponse(imageId, httpDelete, response);
+	} catch (IOException e) {
+	    throw new UnknownDeleteFailureException(imageId, e);
+	}
 
     }
 
@@ -63,36 +72,50 @@ public class ImageServerImpl implements ImageServer {
     public String getImageResourceUrl(ImageReference imageReference) {
 	String url = urlGenerator.urlFor(imageReference);
 	if(logger.isDebugEnabled()) {
-	    logger.debug("getDownloadUrl: generated URL : {}", url);
+	    logger.debug("getImageResourceUrl: generated URL : {}", url);
 	}
 	return url;
     }
 
     public ImageReference uploadImage(ImageId id, ImageFormat imageFormat, InputStreamSource imageSource)  {
-	ImageReference imageReference = originalImage(id.toString());
 	logger.debug("Uploading Image [{}] ({})", id, imageFormat.mimeType());
-	
+	ImageReference imageReference = originalImage(id.toString());
 	try {
 	    HttpPost httpPost = createHttpPostFor(imageFormat, imageSource, imageReference);
 	    HttpResponse response = httpClient.execute(httpPost);
-	    handleResponse(id, imageFormat, httpPost, response);
+	    handleUploadResponse(id, imageFormat, httpPost, response);
 	} catch (IOException e) {
 	    throw new UnknownUploadFailureException(id, imageFormat, e);
 	}
 	return imageReference;
     }
 
-    private void handleResponse(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) throws IOException {
+    private void handleDeleteResponse(ImageId id, HttpDelete httpPost, HttpResponse response) throws IOException {
 	logger.debug("Received status : {}", response.getStatusLine());
-	handleNon2xxError(id, imageFormat, httpPost, response);
+	handleDeleteNon2xxError(id, httpPost, response);
+	HttpEntity entity = response.getEntity();
+	if(entity != null) {
+	    entity.consumeContent();
+	}
+    }
+    
+    private void handleDeleteNon2xxError(ImageId id, HttpDelete httpPost, HttpResponse response) {
+	if(response.getStatusLine().getStatusCode() >= 300) {
+	    httpPost.abort();
+	    throw new UnknownDeleteFailureException(id, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
+	}
+    }
+    
+    private void handleUploadResponse(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) throws IOException {
+	logger.debug("Received status : {}", response.getStatusLine());
+	handleUploadNon2xxError(id, imageFormat, httpPost, response);
 	HttpEntity entity = response.getEntity();
 	if(entity != null) {
 	    entity.consumeContent();
 	}
     }
 
-    private void handleNon2xxError(ImageId id, ImageFormat imageFormat,
-	    HttpPost httpPost, HttpResponse response) {
+    private void handleUploadNon2xxError(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
 	    httpPost.abort();
 	    throw new UnknownUploadFailureException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));

@@ -22,6 +22,7 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
+import com.sirika.imgserver.client.UnknownDeleteFailureException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
 
@@ -81,14 +82,13 @@ public class ImageServerFailureTest extends ServerTestBase {
 	}
     }
     
-    public void testShouldUploadYemmaGourayaPicture() throws IOException {
+    public void testShouldThrowUnknownFailureExceptionWhileUploadingYemmaGourayaPictureWhenInternalServerError() throws IOException {
 	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
 	try {
-	    imageServer.uploadImage(imageId("anyResourceThatWillThrowAnException"), JPEG, yemmaGourayaPictureStream());    
-	} catch(UnknownUploadFailureException e) {
+	    imageServer.deleteImage(imageId("anyResourceThatWillThrowAnException"));    
+	} catch(UnknownDeleteFailureException e) {
 	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
-	    assertEquals(JPEG, e.getImageFormat());
 	}
 	
     }
