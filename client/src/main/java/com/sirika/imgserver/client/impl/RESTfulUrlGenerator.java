@@ -37,4 +37,10 @@ class RESTfulUrlGenerator implements UrlGenerator {
 		    imageReference.getId());
 	}
     }
+
+    public String toString() {
+	return String.format("RESTful URL Generator pointing to %s", baseImageServiceUrl);
+    }
+    
+    
 }

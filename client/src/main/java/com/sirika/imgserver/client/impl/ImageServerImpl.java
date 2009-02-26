@@ -27,10 +27,22 @@ public class ImageServerImpl implements ImageServer {
     
     public ImageServerImpl(String baseImageServiceUrl) {
 	this.urlGenerator = new RESTfulUrlGenerator(baseImageServiceUrl);
-	this.httpClient = new DefaultHttpClient(threadSafeClientConnManager(), httpParams());
-	if(logger.isInfoEnabled()) {
-	    logger.info("Creating Image Server using URLGenerator [{}] and HttpClient [{}]", urlGenerator, httpClient);
-	}
+	this.httpClient = defaultHttpClient();
+	logCreation();
+    }
+
+    public ImageServerImpl(UrlGenerator urlGenerator) {
+	this.urlGenerator = urlGenerator ;
+	this.httpClient = defaultHttpClient();
+	logger.info("Creating Image Server using URLGenerator [{}], HttpClient [{}]", urlGenerator, httpClient);
+    }
+
+    private void logCreation() {
+	logger.info("Creating Image Server using URLGenerator [{}], HttpClient [{}]", urlGenerator, httpClient);
+    }
+   
+    private DefaultHttpClient defaultHttpClient() {
+	return new DefaultHttpClient(threadSafeClientConnManager(), httpParams());
     }
 
     private ThreadSafeClientConnManager threadSafeClientConnManager() {

@@ -21,7 +21,7 @@ import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownFailureException;
 
-public class ImageServerFailureTests extends ServerTestBase {
+public class ImageServerFailureTest extends ServerTestBase {
 
     private static class FakeErrorService implements HttpRequestHandler {
         
@@ -52,11 +52,11 @@ public class ImageServerFailureTests extends ServerTestBase {
     }
 
 
-    public ImageServerFailureTests(String testName) {
+    public ImageServerFailureTest(String testName) {
 	super(testName);
     }
 
-    public void testThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
+    public void testShouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
 	registerFakeService(HttpStatus.SC_NOT_FOUND);
 	
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");

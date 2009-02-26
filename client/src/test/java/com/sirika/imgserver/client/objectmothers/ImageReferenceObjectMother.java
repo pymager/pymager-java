@@ -27,6 +27,10 @@ public class ImageReferenceObjectMother {
 		.rescaledTo(width(300).by(200));
     }
     
+    public static ImageReference cornicheKabyle() {
+	return ImageReference.originalImage("cornicheKabyle");
+    }
+    
     public static ImageReference britneySpears() {
 	return ImageReference.originalImage("britneySpears");
     }
