@@ -9,7 +9,6 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.ProtocolVersion;
 import org.apache.http.localserver.ServerTestBase;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
@@ -23,31 +22,23 @@ import com.sirika.imgserver.client.UnknownFailureException;
 
 public class ImageServerFailureTest extends ServerTestBase {
 
-    private static class FakeErrorService implements HttpRequestHandler {
+    private static class ErrorRequestHandler implements HttpRequestHandler {
         
         private int statuscode = HttpStatus.SC_INTERNAL_SERVER_ERROR;
-        private String host = null;
-        private int port;
 
-        public FakeErrorService(final String host, int port, int statuscode) {
+        public ErrorRequestHandler(int statuscode) {
             super();
-            this.host = host;
-            this.port = port;
             if (statuscode > 0) {
                 this.statuscode = statuscode;
             }
         }
 
-        public FakeErrorService(final String host, int port) {
-            this(host, port, -1);
+        public ErrorRequestHandler() {
+            this(-1);
         }
 
-        public void handle(
-                final HttpRequest request, 
-                final HttpResponse response, 
-                final HttpContext context) throws HttpException, IOException {
-            ProtocolVersion ver = request.getRequestLine().getProtocolVersion();
-            response.setStatusLine(ver, this.statuscode);
+        public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+            response.setStatusLine(request.getRequestLine().getProtocolVersion(), this.statuscode);
         }
     }
 
@@ -86,8 +77,6 @@ public class ImageServerFailureTest extends ServerTestBase {
     }
 
     private void registerFakeService(int errorCode) {
-	int port = this.localServer.getServicePort();
-        String host = "localhost";
-        this.localServer.register("*", new FakeErrorService(host, port, errorCode));
+        this.localServer.register("*", new ErrorRequestHandler(errorCode));
     }
 }
