@@ -1,15 +1,10 @@
 package com.sirika.imgserver.client.impl;
 
 
+import static com.sirika.imgserver.httpclienthelpers.DefaultHttpClientFactory.defaultHttpClient;
+
 import org.apache.commons.lang.Validate;
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -32,12 +27,12 @@ public class ImageServerImpl implements ImageServer {
     }
 
     public ImageServerImpl(UrlGenerator urlGenerator) {
-	this.urlGenerator = urlGenerator ;
-	this.httpClient = defaultHttpClient();
-	logCreation();
+	this(defaultHttpClient(), urlGenerator);
     }
     
     public ImageServerImpl(HttpClient httpClient, UrlGenerator urlGenerator) {
+	Validate.notNull(urlGenerator);
+	Validate.notNull(httpClient);
 	this.urlGenerator = urlGenerator ;
 	this.httpClient = httpClient;
 	logCreation();
@@ -47,26 +42,7 @@ public class ImageServerImpl implements ImageServer {
 	logger.info("Creating Image Server using URLGenerator [{}], HttpClient [{}]", urlGenerator, httpClient);
     }
    
-    private DefaultHttpClient defaultHttpClient() {
-	return new DefaultHttpClient(threadSafeClientConnManager(), httpParams());
-    }
-
-    private ThreadSafeClientConnManager threadSafeClientConnManager() {
-	return new ThreadSafeClientConnManager(httpParams(), schemeRegistry());
-    }
-
-    private SchemeRegistry schemeRegistry() {
-	SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(
-                new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(
-                new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-        return schemeRegistry;
-    }
-
-    private BasicHttpParams httpParams() {
-	return new BasicHttpParams();
-    }
+    
     
     public void deleteImage(ImageId imageId) {
 	// TODO Auto-generated method stub
@@ -87,22 +63,10 @@ public class ImageServerImpl implements ImageServer {
     }
 
     public ImageReference uploadImage(ImageId id, InputStreamSource imageSource) {
-	// TODO Auto-generated method stub
 	return null;
     }
     
     public void destroy() throws Exception {
 	this.httpClient.getConnectionManager().shutdown();
     }
-
-    public void setUrlGenerator(UrlGenerator urlGenerator) {
-	Validate.notNull(urlGenerator);
-        this.urlGenerator = urlGenerator;
-    }
-
-    public void setHttpClient(HttpClient httpClient) {
-	Validate.notNull(httpClient);
-	this.httpClient = httpClient;
-    }
-
 }

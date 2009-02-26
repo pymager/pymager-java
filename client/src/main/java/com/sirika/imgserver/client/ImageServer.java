@@ -14,4 +14,5 @@ public interface ImageServer {
     InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownFailureException;
     ImageReference uploadImage(ImageId id, InputStreamSource imageSource);
     void deleteImage(ImageId imageId);
+    void destroy() throws Exception;
 }
