@@ -36,8 +36,8 @@ public class ImageServerUploadTest extends ServerTestBase {
             }
         }
 
-	public boolean isCalled() {
-	    return called;
+	public void verify() {
+	    assertTrue(called);
 	}
     }
 
@@ -52,7 +52,7 @@ public class ImageServerUploadTest extends ServerTestBase {
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
 	ImageReference imageReference = imageServer.uploadImage(imageId("yemmaGouraya"), JPEG, yemmaGourayaPictureStream());
 	assertEquals(yemmaGouraya(), imageReference);
-	assertTrue(imagePOSTRequestHandler.isCalled());
+	imagePOSTRequestHandler.verify();
 	
     }
     

@@ -32,8 +32,8 @@ public class ImageServerDeleteTest extends ServerTestBase {
             }
             
         }
-        public boolean isCalled() {
-	    return called;
+        public void verify() {
+	    assertTrue(called);
 	}
     }
 
@@ -47,7 +47,7 @@ public class ImageServerDeleteTest extends ServerTestBase {
 	registerImageUploadService();
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
 	imageServer.deleteImage(imageId("yemmaGouraya"));
-	assertTrue(imageDeleteRequestHandler.isCalled());
+	imageDeleteRequestHandler.verify();
 	
     }
     
