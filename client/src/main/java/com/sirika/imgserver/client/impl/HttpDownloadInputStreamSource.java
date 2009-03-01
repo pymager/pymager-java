@@ -28,7 +28,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     private HttpGet httpGet;
     private ImageReference imageReference;
     
-    public HttpDownloadInputStreamSource(UrlGenerator urlGenerator, HttpClient httpClient, ImageReference imageReference) {
+    public HttpDownloadInputStreamSource(HttpClient httpClient, UrlGenerator urlGenerator, ImageReference imageReference) {
 	super();
 	this.urlGenerator = urlGenerator;
 	this.httpClient = httpClient;
