@@ -26,6 +26,7 @@ import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownDeleteFailureException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
+import com.sirika.imgserver.client.UrlGenerator;
 
 public class ImageServerImpl implements ImageServer {
     private static final Logger logger = LoggerFactory.getLogger(ImageServerImpl.class);
@@ -70,10 +71,8 @@ public class ImageServerImpl implements ImageServer {
     }
 
     public String getImageResourceUrl(ImageReference imageReference) {
-	String url = urlGenerator.urlFor(imageReference);
-	if(logger.isDebugEnabled()) {
-	    logger.debug("getImageResourceUrl: generated URL : {}", url);
-	}
+	String url = urlGenerator.getImageResourceUrl(imageReference);
+	logger.debug("getImageResourceUrl: generated URL : {}", url);
 	return url;
     }
 

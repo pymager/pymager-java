@@ -17,24 +17,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.ImageReference;
-import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
+import com.sirika.imgserver.client.UrlGenerator;
 
 class HttpDownloadInputStreamSource implements InputStreamSource{
     private final static Logger logger = LoggerFactory.getLogger(HttpDownloadInputStreamSource.class);
     private HttpClient httpClient;
-    private ImageServer imageServer;
+    private UrlGenerator urlGenerator;
     private HttpGet httpGet;
     private ImageReference imageReference;
     
-    public HttpDownloadInputStreamSource(ImageServer imageServer, HttpClient httpClient, ImageReference imageReference) {
+    public HttpDownloadInputStreamSource(UrlGenerator urlGenerator, HttpClient httpClient, ImageReference imageReference) {
 	super();
-	this.imageServer = imageServer;
+	this.urlGenerator = urlGenerator;
 	this.httpClient = httpClient;
 	this.imageReference = imageReference;
 	
-	this.httpGet = new HttpGet(imageServer.getImageResourceUrl(imageReference));
+	this.httpGet = new HttpGet(urlGenerator.getImageResourceUrl(imageReference));
     }
 
     public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownDownloadFailureException {

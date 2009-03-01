@@ -29,6 +29,7 @@ import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
+import com.sirika.imgserver.client.UrlGenerator;
 import com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
@@ -78,7 +79,7 @@ public class ImageServerDownloadTest extends ServerTestBase {
     public void testShouldGenerateUrlByDelegatingToUrlGenerator() {
 	ImageReference imageReference = yemmaGouraya();
 	UrlGenerator urlGenerator = createMock(UrlGenerator.class);
-	expect(urlGenerator.urlFor(imageReference)).andReturn("http://anyurl.com/yemmaGouraya");
+	expect(urlGenerator.getImageResourceUrl(imageReference)).andReturn("http://anyurl.com/yemmaGouraya");
 	replay(urlGenerator);
 
 	ImageServer imageServer = new ImageServerImpl(urlGenerator);

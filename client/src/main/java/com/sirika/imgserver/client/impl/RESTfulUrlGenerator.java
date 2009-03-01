@@ -1,6 +1,7 @@
 package com.sirika.imgserver.client.impl;
 
 import com.sirika.imgserver.client.ImageReference;
+import com.sirika.imgserver.client.UrlGenerator;
 
 /**
  * Generates URLs such as :
@@ -23,7 +24,7 @@ class RESTfulUrlGenerator implements UrlGenerator {
     /* (non-Javadoc)
      * @see com.sirika.imgserver.client.UrlGenerator#urlFor(com.sirika.imgserver.client.ImageReference)
      */
-    public String urlFor(ImageReference imageReference) {
+    public String getImageResourceUrl(ImageReference imageReference) {
 	if(imageReference.isDerived()) {
 	    return String.format("%s/derived/%s-%sx%s.%s", 
 		    this.baseImageServiceUrl, 

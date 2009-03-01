@@ -8,6 +8,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sirika.imgserver.client.UrlGenerator;
+
 
 public class RESTfulUrlGeneratorTest {
 
@@ -20,11 +22,11 @@ public class RESTfulUrlGeneratorTest {
     
     @Test
     public void shouldGeneratUrlForOriginalImage() {
-	assertThat(urlGenerator.urlFor(yemmaGouraya()), is("http://localhost:8000/original/yemmaGouraya"));
+	assertThat(urlGenerator.getImageResourceUrl(yemmaGouraya()), is("http://localhost:8000/original/yemmaGouraya"));
     }
     
     @Test
     public void shouldGeneratUrlForDerivedImage() {
-	assertThat(urlGenerator.urlFor(yemmaGourayaResizedTo300x200InPng()), is("http://localhost:8000/derived/yemmaGouraya-300x200.png"));
+	assertThat(urlGenerator.getImageResourceUrl(yemmaGourayaResizedTo300x200InPng()), is("http://localhost:8000/derived/yemmaGouraya-300x200.png"));
     }
 }
