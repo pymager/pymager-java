@@ -10,6 +10,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -21,7 +23,7 @@ import com.sirika.imgserver.client.UnknownUploadFailureException;
 import com.sirika.imgserver.client.UrlGenerator;
 
 public class UploadImageCommand {
-    
+    private static final String UPLOAD_PARAMETER_NAME = "file";
     private static final Logger logger = LoggerFactory.getLogger(UploadImageCommand.class);
     
     private HttpClient httpClient;
@@ -76,10 +78,16 @@ public class UploadImageCommand {
 	return httpPost;
     }
 
-    private InputStreamEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
-	InputStreamEntity entity = new InputStreamEntity(imageSource.getInputStream(), -1);
-	entity.setChunked(true);
-	entity.setContentType(imageFormat.mimeType());
+//    private InputStreamEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
+//	InputStreamEntity entity = new InputStreamEntity(imageSource.getInputStream(), -1);
+//	entity.setChunked(true);
+//	entity.setContentType(imageFormat.mimeType());
+//	return entity;
+//    }
+    
+    private HttpEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
+	MultipartEntity entity = new MultipartEntity();
+	entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamBody(imageSource.getInputStream(), imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
 	return entity;
     }
 }
