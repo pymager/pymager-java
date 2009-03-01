@@ -8,8 +8,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sirika.imgserver</groupId>
-  <artifactId>imgserver-integration-tests</artifactId>
-  <name>Image Server Integration Tests</name>
+  <artifactId>imgserver-integration-stress-tests</artifactId>
+  <name>Image Server Integration Stress Tests</name>
   <version>0.1-SNAPSHOT</version>
   <dependencies>
   

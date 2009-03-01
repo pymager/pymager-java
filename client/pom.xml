@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-    <artifactId>imgserver-java-client-parent</artifactId>
-    <groupId>com.sirika</groupId>
-    <version>0.1-SNAPSHOT</version>
-  </parent>
+		<artifactId>imgserver-java-client-parent</artifactId>
+	    	<groupId>com.sirika.imgserver</groupId>
+	    	<version>0.1-SNAPSHOT</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.sirika</groupId>
+	<groupId>com.sirika.imgserver</groupId>
 	<artifactId>imgserver-java-client</artifactId>
 	<name>Image Server Java Client</name>
 	<version>0.1-SNAPSHOT</version>

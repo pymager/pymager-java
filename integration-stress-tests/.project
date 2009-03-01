@@ -1,0 +1,15 @@
+<projectDescription>
+  <name>imgserver-integration-stress-tests</name>
+  <comment/>
+  <projects>
+    <project>imgserver-java-client</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
