@@ -41,6 +41,9 @@ public class ImageReference {
     public static ImageReference originalImage(String id) {
 	return new ImageReference(imageId(id));
     }
+    public static ImageReference originalImage(ImageId id) {
+	return new ImageReference(id);
+    }
     
     public ImageReference rescaledTo(ImageScale imageScale) {
 	return new ImageReference(this.id, imageScale, ImageFormat.JPEG);

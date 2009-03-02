@@ -52,6 +52,7 @@ public class UploadImageCommand {
 	} catch (IOException e) {
 	    throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
 	}
+	logger.debug("Upload of {} done successfully. Download can be achieved using Image Reference: {}", this.imageId, imageReference);
 	return imageReference;
     }
     

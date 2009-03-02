@@ -1,6 +1,7 @@
 package com.sirika.imgserver.client.impl;
 
 import static com.sirika.imgserver.client.ImageId.imageId;
+import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.yemmaGourayaId;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 
 import com.sirika.imgserver.client.ImageServer;
+import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
 
 public class ImageServerDeleteTest extends ServerTestBase {
     
@@ -46,7 +48,7 @@ public class ImageServerDeleteTest extends ServerTestBase {
     public void testShouldDeleteYemmaGourayaPicture() throws IOException {
 	registerImageUploadService();
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
-	imageServer.deleteImage(imageId("yemmaGouraya"));
+	imageServer.deleteImage(yemmaGourayaId());
 	imageDeleteRequestHandler.verify();
 	
     }

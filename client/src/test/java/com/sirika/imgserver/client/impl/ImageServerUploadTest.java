@@ -2,6 +2,7 @@ package com.sirika.imgserver.client.impl;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageId.imageId;
+import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.yemmaGourayaId;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaPictureStream;
 
@@ -17,6 +18,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
+import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
 
 public class ImageServerUploadTest extends ServerTestBase {
     
@@ -50,7 +52,7 @@ public class ImageServerUploadTest extends ServerTestBase {
     public void testShouldUploadYemmaGourayaPicture() throws IOException {
 	registerImageUploadService();
 	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
-	ImageReference imageReference = imageServer.uploadImage(imageId("yemmaGouraya"), JPEG, yemmaGourayaPictureStream());
+	ImageReference imageReference = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaPictureStream());
 	assertEquals(yemmaGouraya(), imageReference);
 	imagePOSTRequestHandler.verify();
 	

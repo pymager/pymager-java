@@ -7,3 +7,4 @@ integration-tests/.settings/
 target/
 client/imgserverclient.log
 integration-tests/imgserverclient.log
+integration-stress-tests/.classpath

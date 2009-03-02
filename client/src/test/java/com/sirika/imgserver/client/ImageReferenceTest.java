@@ -19,7 +19,7 @@ public class ImageReferenceTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void idShouldBeMandatory() {
-	originalImage(null);
+	originalImage((String)null);
     }
     
     @Test(expected=IllegalArgumentException.class)
