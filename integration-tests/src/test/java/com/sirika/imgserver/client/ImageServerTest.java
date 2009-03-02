@@ -1,4 +1,4 @@
-package com.sirika.imgserver.client.impl;
+package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.isCornicheKabylePicture;
@@ -12,6 +12,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
+
+import com.sirika.imgserver.client.impl.ImageServerImpl;
 
 public class ImageServerTest {
 
