@@ -165,7 +165,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 				   <encoding>UTF-8</encoding>
-				  <aggregate>false</aggregate>
+				  <aggregate>true</aggregate>
 				</configuration>
 			</plugin>
 
@@ -176,6 +176,9 @@
 			<plugin>
                 		<artifactId>maven-pmd-plugin</artifactId>
             		</plugin>		
+ 			<plugin>	
+        			<artifactId>maven-surefire-report-plugin</artifactId>
+      			</plugin>
 		</plugins>
 	</reporting>
 
