@@ -38,24 +38,24 @@ import com.sirika.imgserver.client.UnknownDownloadFailureException;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
 import com.sirika.imgserver.client.UrlGenerator;
 
-public class ImageServerImpl implements ImageServer {
-    private static final Logger logger = LoggerFactory.getLogger(ImageServerImpl.class);
+public class HttpImageServer implements ImageServer {
+    private static final Logger logger = LoggerFactory.getLogger(HttpImageServer.class);
     private UrlGenerator urlGenerator;
     private HttpClient httpClient;
     
-    public ImageServerImpl(String baseImageServiceUrl) {
+    public HttpImageServer(String baseImageServiceUrl) {
 	this(defaultHttpClient(), defaultUrlGeneratorFor(baseImageServiceUrl));
     }
 
-    public ImageServerImpl(UrlGenerator urlGenerator) {
+    public HttpImageServer(UrlGenerator urlGenerator) {
 	this(defaultHttpClient(), urlGenerator);
     }
     
-    public ImageServerImpl(HttpClient httpClient, String baseImageServiceUrl) {
+    public HttpImageServer(HttpClient httpClient, String baseImageServiceUrl) {
 	this(httpClient, defaultUrlGeneratorFor(baseImageServiceUrl));
     }
     
-    public ImageServerImpl(HttpClient httpClient, UrlGenerator urlGenerator) {
+    public HttpImageServer(HttpClient httpClient, UrlGenerator urlGenerator) {
 	logger.info("Creating Image Server using , HttpClient [{}], URLGenerator [{}]", httpClient, urlGenerator);
 	Validate.notNull(urlGenerator);
 	Validate.notNull(httpClient);

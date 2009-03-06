@@ -72,7 +72,7 @@ public class ImageServerFailureTest extends ServerTestBase {
 	registerErrorService(HttpStatus.SC_NOT_FOUND);
 	
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	try {
 	    InputStreamSource source = imageServer.downloadImage(imageReference);
 	    source.getInputStream();
@@ -87,7 +87,7 @@ public class ImageServerFailureTest extends ServerTestBase {
 	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         
 	ImageReference imageReference = yemmaGouraya();
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	try {
 	    InputStreamSource iss = imageServer.downloadImage(imageReference);
 	    iss.getInputStream();
@@ -99,7 +99,7 @@ public class ImageServerFailureTest extends ServerTestBase {
     
     public void testShouldThrowUnknownFailureExceptionWhileUploadingYemmaGourayaPictureWhenInternalServerError() throws IOException {
 	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	try {
 	    imageServer.deleteImage(imageId("anyResourceThatWillThrowAnException"));    
 	} catch(UnknownDeleteFailureException e) {

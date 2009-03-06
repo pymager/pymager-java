@@ -66,7 +66,7 @@ public class ImageServerDeleteTest extends ServerTestBase {
     
     public void testShouldDeleteYemmaGourayaPicture() throws IOException {
 	registerImageUploadService();
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	imageServer.deleteImage(yemmaGourayaId());
 	imageDeleteRequestHandler.verify();
 	

@@ -101,7 +101,7 @@ public class ImageServerDownloadTest extends ServerTestBase {
 	expect(urlGenerator.getImageResourceUrl(imageReference)).andReturn("http://anyurl.com/yemmaGouraya");
 	replay(urlGenerator);
 
-	ImageServer imageServer = new ImageServerImpl(urlGenerator);
+	ImageServer imageServer = new HttpImageServer(urlGenerator);
 	assertThat(imageServer.getImageResourceUrl(imageReference),is("http://anyurl.com/yemmaGouraya"));
 	verify(urlGenerator);
     }
@@ -116,7 +116,7 @@ public class ImageServerDownloadTest extends ServerTestBase {
     
     private void doDownloadImage(ImageReference imageReference, InputStreamSource expectedInputStreamSource) throws IOException {
 	registerImageDownloadService();
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	InputStreamSource actual = imageServer.downloadImage(imageReference);
 	assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, actual).isSameStream());
     }

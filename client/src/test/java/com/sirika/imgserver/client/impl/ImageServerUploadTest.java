@@ -70,7 +70,7 @@ public class ImageServerUploadTest extends ServerTestBase {
     
     public void testShouldUploadYemmaGourayaPicture() throws IOException {
 	registerImageUploadService();
-	ImageServer imageServer = new ImageServerImpl(getServerHttp().toURI());
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	ImageReference imageReference = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaPictureStream());
 	assertEquals(yemmaGouraya(), imageReference);
 	imagePOSTRequestHandler.verify();

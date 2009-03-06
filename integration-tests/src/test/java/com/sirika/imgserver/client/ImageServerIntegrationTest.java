@@ -41,18 +41,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.imgserver.client.impl.ImageServerImpl;
+import com.sirika.imgserver.client.impl.HttpImageServer;
 import com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerIntegrationTest {
 
     private static final String IMGSERVER_LOCATION = "http://localhost:8000";
-    private ImageServerImpl imageServer;
+    private HttpImageServer imageServer;
 
     @Before
     public void setup() {
-	this.imageServer = new ImageServerImpl(IMGSERVER_LOCATION);
+	this.imageServer = new HttpImageServer(IMGSERVER_LOCATION);
     }
 
    
