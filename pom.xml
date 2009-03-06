@@ -152,6 +152,9 @@
 		            <groupId>com.google.code.maven-license-plugin</groupId>
 		            <artifactId>maven-license-plugin</artifactId>
 			    <version>1.4.0</version>
+		            <configuration>
+		                <header>src/etc/header.txt</header>
+		            </configuration>
 		        </plugin>
 		</plugins>
 	</build>
