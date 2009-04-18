@@ -24,11 +24,15 @@ import org.springframework.core.io.InputStreamSource;
 
 public class PictureStreamSourceObjectMother {
 
-    public static InputStreamSource yemmaGourayaPictureStream() {
-	return new ClassPathResource("/com/sirika/imgserver/samplePictures/yemmaGourayaInBejaia.jpg");
+    public static InputStreamSource yemmaGourayaOriginalPictureStream() {
+	return new ClassPathResource("/com/sirika/imgserver/samplepix/original/yemmaGourayaInBejaia.jpg");
     }
     
-    public static InputStreamSource cornicheKabylePictureStream() {
-	return new ClassPathResource("/com/sirika/imgserver/samplePictures/cornicheKabyle.jpg");
+    public static InputStreamSource yemmaGourayaDerived100x100PictureStream() {
+	return new ClassPathResource("/com/sirika/imgserver/samplepix/derived/yemmaGouraya-100x100.jpg");
+    }
+    
+    public static InputStreamSource cornicheKabyleOriginalPictureStream() {
+	return new ClassPathResource("/com/sirika/imgserver/samplepix/original/cornicheKabyle.jpg");
     }
 }

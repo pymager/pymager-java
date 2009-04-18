@@ -19,8 +19,9 @@
  */
 package com.sirika.imgserver.client.objectmothers;
 
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.cornicheKabylePictureStream;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaPictureStream;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaDerived100x100PictureStream;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,10 +51,14 @@ public class PictureStreamAssertionUtils {
     }
     
     public static boolean isYemmaGourayaPicture(InputStreamSource iss) throws IOException {
-	return new PictureStreamAsserter(yemmaGourayaPictureStream(), iss).isSameStream();
+	return new PictureStreamAsserter(yemmaGourayaOriginalPictureStream(), iss).isSameStream();
     }
     
     public static boolean isCornicheKabylePicture(InputStreamSource iss) throws IOException {
-	return new PictureStreamAsserter(cornicheKabylePictureStream(), iss).isSameStream();
+	return new PictureStreamAsserter(cornicheKabyleOriginalPictureStream(), iss).isSameStream();
+    }
+    
+    public static boolean is100x100CornicheKabylePicture(InputStreamSource iss) throws IOException {
+	return new PictureStreamAsserter(yemmaGourayaDerived100x100PictureStream(), iss).isSameStream();
     }
 }

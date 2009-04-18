@@ -21,8 +21,8 @@ package com.sirika.imgserver.client.impl;
 
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.cornicheKabylePictureStream;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaPictureStream;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -71,11 +71,11 @@ public class ImageServerDownloadTest extends ServerTestBase {
         }
 
 	private EntityTemplate yemmaGourayaHttpEntity() {
-	    return entityForInputStreamSource(yemmaGourayaPictureStream());
+	    return entityForInputStreamSource(yemmaGourayaOriginalPictureStream());
 	}
 	
 	private EntityTemplate cornicheKabyleHttpEntity() {
-	    return entityForInputStreamSource(cornicheKabylePictureStream());
+	    return entityForInputStreamSource(cornicheKabyleOriginalPictureStream());
 	}
 
 	private EntityTemplate entityForInputStreamSource(
@@ -107,11 +107,11 @@ public class ImageServerDownloadTest extends ServerTestBase {
     }
     
     public void testShouldDownloadYemmaGourayaPicture() throws IOException {
-	doDownloadImage(yemmaGouraya(), yemmaGourayaPictureStream());
+	doDownloadImage(yemmaGouraya(), yemmaGourayaOriginalPictureStream());
     }
 
     public void testShouldDownloadCornicheKabylePicture() throws IOException {
-	doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother.cornicheKabylePictureStream());
+	doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream());
     }
     
     private void doDownloadImage(ImageReference imageReference, InputStreamSource expectedInputStreamSource) throws IOException {

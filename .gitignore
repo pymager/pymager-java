@@ -9,3 +9,4 @@ client/imgserverclient.log
 integration-tests/imgserverclient.log
 integration-stress-tests/.classpath
 integration-stress-tests/.settings
+integration-stress-tests/bin/
