@@ -20,7 +20,6 @@
 package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
-import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.ImageScale.width;
 import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.cornicheKabyleId;
@@ -48,7 +47,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.sirika.imgserver.client.impl.HttpImageServer;
-import com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 @ContextConfiguration(locations = { "classpath:/com/sirika/imgserver/tests/integration/appcontext.xml"})

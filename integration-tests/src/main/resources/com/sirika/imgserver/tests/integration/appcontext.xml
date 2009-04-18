@@ -38,7 +38,7 @@
 	</bean>
 	 
 	<bean id="httpClient" class="com.sirika.imgserver.httpclienthelpers.HttpClientFactoryBean">
-		<!-- <property name="credentials">
+		 <property name="credentials">
 			<util:map>
 				<entry>
 					<key>
@@ -53,7 +53,7 @@
 					</bean>
 				</entry>
 			</util:map>
-		</property>-->
+		</property>
 	</bean>     
     
 </beans>
