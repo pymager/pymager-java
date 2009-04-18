@@ -19,31 +19,14 @@
  */
 package com.sirika.imgserver.httpclienthelpers;
 
-import static com.sirika.imgserver.httpclienthelpers.DefaultHttpClientFactory.defaultHttpClient;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.zip.GZIPInputStream;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.FactoryBean;
 /**
  * Spring {@link FactoryBean} helper that eases the creation and configuration of HttpComponents' {@link HttpClient}.
@@ -56,30 +39,6 @@ import org.springframework.beans.factory.FactoryBean;
  *
  */
 public class HttpClientFactoryBean implements FactoryBean {
-    static class GzipDecompressingEntity extends HttpEntityWrapper {
-
-        public GzipDecompressingEntity(final HttpEntity entity) {
-            super(entity);
-        }
-    
-        @Override
-        public InputStream getContent()
-            throws IOException, IllegalStateException {
-
-            // the wrapped entity's getContent() decides about repeatability
-            InputStream wrappedin = wrappedEntity.getContent();
-
-            return new GZIPInputStream(wrappedin);
-        }
-
-        @Override
-        public long getContentLength() {
-            // length of ungzipped content is not known
-            return -1;
-        }
-
-    } 
-
     private Map<AuthScope, Credentials> credentials = new HashMap<AuthScope, Credentials>();
     private Map<String,Object> params = new HashMap<String, Object>();
     private CookieStore cookieStore = null;
@@ -87,55 +46,18 @@ public class HttpClientFactoryBean implements FactoryBean {
     private boolean shouldUseGzipContentcompression = true;
     
     public Object getObject() throws Exception {
-	DefaultHttpClient httpClient = defaultHttpClient();
-	for(Entry<AuthScope, Credentials> e : credentials.entrySet()) {
-	    httpClient.getCredentialsProvider().setCredentials(e.getKey(), e.getValue());    
-	}
-	
-	for(Entry<String, Object> e : params.entrySet()) {
-	    httpClient.getParams().setParameter(e.getKey(), e.getValue());
-	}
-	
+	return DefaultHttpClientFactory.httpClient(credentials, params, cookieStore(), shouldUseGzipContentcompression);
+    }
+
+    private CookieStore cookieStore() {
+	CookieStore cookieStoreToUse = null;
 	if(shouldUseCookieStore == true) {
-	    httpClient.setCookieStore(cookieStore == null? new BasicCookieStore() : cookieStore);
+	    cookieStoreToUse = cookieStore == null? new BasicCookieStore() : cookieStore;
 	}
-	
-	if(shouldUseGzipContentcompression) {
-	    handleGzipContentCompression(httpClient);
-
-	}
-	
-	return httpClient;
+	return cookieStoreToUse;
     }
 
-    private void handleGzipContentCompression(DefaultHttpClient httpClient) {
-	httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
-	    public void process(HttpRequest request, HttpContext context)
-		    throws HttpException, IOException {
-		if (!request.containsHeader("Accept-Encoding")) {
-	                request.addHeader("Accept-Encoding", "gzip");
-	            }
-	    }
-
-	    });
-	    
-	httpClient.addResponseInterceptor(new HttpResponseInterceptor() {
-	public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
-	    HttpEntity entity = response.getEntity();
-	    Header ceheader = entity.getContentEncoding();
-	    if (ceheader != null) {
-		HeaderElement[] codecs = ceheader.getElements();
-		for (int i = 0; i < codecs.length; i++) {
-		    if (codecs[i].getName().equalsIgnoreCase("gzip")) {
-			response.setEntity(new GzipDecompressingEntity(response.getEntity())); 
-			return;
-		    }
-		}
-	    }
-	}
-	});
-    }
-
+  
     public Class getObjectType() {
 	return HttpClient.class;
     }
