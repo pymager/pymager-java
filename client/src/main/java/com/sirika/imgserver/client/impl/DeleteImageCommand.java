@@ -69,9 +69,9 @@ public class DeleteImageCommand {
 	}
     }
     
-    private void handleDeleteNon2xxError(ImageId id, HttpDelete httpPost, HttpResponse response) {
+    private void handleDeleteNon2xxError(ImageId id, HttpDelete httpDelete, HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
-	    httpPost.abort();
+	    httpDelete.abort();
 	    throw new UnknownDeleteFailureException(id, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
 	}
     }

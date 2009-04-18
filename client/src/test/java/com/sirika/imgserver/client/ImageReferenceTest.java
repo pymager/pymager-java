@@ -59,7 +59,7 @@ public class ImageReferenceTest {
     @Test
     public void shouldCreateOriginalImageReference() {
 	ImageReference imageReference = yemmaGouraya();
-	assertThat(imageReference.getId(), is("yemmaGouraya"));
+	assertThat(imageReference.getId().toString(), is("yemmaGouraya"));
 	assertThat(imageReference.isDerived(), is(false));
 	assertThat(imageReference.isConverted(), is(false));
     }
@@ -67,7 +67,7 @@ public class ImageReferenceTest {
     @Test
     public void shouldCreateDerivedImageReference() {
 	ImageReference imageReference = yemmaGourayaResizedTo300x200InPng();
-	assertThat(imageReference.getId(), is("yemmaGouraya"));
+	assertThat(imageReference.getId().toString(), is("yemmaGouraya"));
 	assertThat(imageReference.isDerived(), is(true));
 	assertThat(imageReference.isConverted(), is(true));
 	assertThat(imageReference.getImageFormat(), is(PNG));

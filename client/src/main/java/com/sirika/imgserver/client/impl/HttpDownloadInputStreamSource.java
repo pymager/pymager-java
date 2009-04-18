@@ -75,13 +75,17 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     }
 
     private void handleErrors(HttpResponse response) {
-	handle404NotFound(response);
-	handleNon2xx(response);
+	try {
+	    handle404NotFound(response);
+	    handleNon2xx(response);    
+	} catch(RuntimeException e) {
+	    httpGet.abort();
+	    throw e;
+	} 
     }
 
     private void handleNon2xx(HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
-	    httpGet.abort();
 	    throw new UnknownDownloadFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while downloading"));
 	}
     }

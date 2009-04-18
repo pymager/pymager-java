@@ -51,7 +51,8 @@ public class HttpImageServer implements ImageServer {
 	this(defaultHttpClient(), urlGenerator);
     }
     
-    public HttpImageServer(HttpClient httpClient, String baseImageServiceUrl) {
+    
+    public HttpImageServer(String baseImageServiceUrl, HttpClient httpClient) {
 	this(httpClient, defaultUrlGeneratorFor(baseImageServiceUrl));
     }
     

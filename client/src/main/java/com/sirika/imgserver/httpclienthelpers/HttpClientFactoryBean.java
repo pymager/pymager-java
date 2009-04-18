@@ -19,12 +19,12 @@
  */
 package com.sirika.imgserver.httpclienthelpers;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.FactoryBean;
@@ -39,7 +39,7 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class HttpClientFactoryBean implements FactoryBean {
     
-    private Map<AuthScope, Credentials> credentials;
+    private Map<AuthScope, Credentials> credentials = new HashMap<AuthScope, Credentials>();
     
     public Object getObject() throws Exception {
 	DefaultHttpClient httpClient = DefaultHttpClientFactory.defaultHttpClient();
@@ -55,6 +55,10 @@ public class HttpClientFactoryBean implements FactoryBean {
 
     public boolean isSingleton() {
 	return true;
+    }
+
+    public void setCredentials(Map<AuthScope, Credentials> credentials) {
+        this.credentials = credentials;
     }
 
 }

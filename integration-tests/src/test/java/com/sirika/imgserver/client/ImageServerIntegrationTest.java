@@ -20,10 +20,12 @@
 package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
+import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.ImageScale.width;
 import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.cornicheKabyleId;
 import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.is100x100CornicheKabylePicture;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.isCornicheKabylePicture;
@@ -36,26 +38,53 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.sirika.imgserver.client.impl.HttpImageServer;
-import com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils;
+import com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
-public class ImageServerIntegrationTest {
+@ContextConfiguration(locations = { "classpath:/com/sirika/imgserver/tests/integration/appcontext.xml"})
+public class ImageServerIntegrationTest extends AbstractJUnit4SpringContextTests {
 
-    private static final String IMGSERVER_LOCATION = "http://localhost:8000";
-    private HttpImageServer imageServer;
+    @Autowired private HttpImageServer imageServer;
 
     @Before
-    public void setup() {
-	this.imageServer = new HttpImageServer(IMGSERVER_LOCATION);
+    public void setup() throws IOException {
+	initialFailproofCleanup();
     }
 
-   
+    private void initialFailproofCleanup() throws IOException {
+	for(ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
+	    try {
+		InputStreamSource source = imageServer.downloadImage(imageReference);
+		source.getInputStream();
+		imageServer.deleteImage(imageReference.getId());
+	    } catch(ResourceNotExistingException e) {
+		// do nothing, it's fine
+	    }
+	}
+    }
+  
+    @Test
+    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
+	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
+	try {
+	    InputStreamSource source = imageServer.downloadImage(imageReference);
+	    source.getInputStream();
+	    fail();
+	} catch(ResourceNotExistingException e) {
+	    assertEquals(imageReference, e.getImageReference());
+	} 
+    }
+    
     @Test
     public void shouldUploadAndDownloadOriginalYemmaGourayaPicture() throws IOException {
 	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
@@ -73,7 +102,6 @@ public class ImageServerIntegrationTest {
 	ImageReference imageReference = yemmaGouraya();
 	InputStreamSource source = imageServer.downloadImage(imageReference);
 	source.getInputStream();
-	fail(); 
     }
     
     @Test
@@ -87,19 +115,6 @@ public class ImageServerIntegrationTest {
 	imageServer.deleteImage(yemmaGourayaId());
 	imageServer.deleteImage(cornicheKabyleId());
     }
-    
-    @Test
-    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    source.getInputStream();
-	    fail();
-	} catch(ResourceNotExistingException e) {
-	    assertEquals(imageReference, e.getImageReference());
-	} 
-    }
-    
     @Test
     public void shouldUploadYemmaGourayaAndDownloadDerivedPicture() throws IOException {
 	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
@@ -109,5 +124,4 @@ public class ImageServerIntegrationTest {
 	assertFalse(isCornicheKabylePicture(source));
 	imageServer.deleteImage(yemmaGourayaId());
     }
-    
 }

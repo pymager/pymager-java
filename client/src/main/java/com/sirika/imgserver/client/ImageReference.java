@@ -80,8 +80,8 @@ public class ImageReference {
 	return new ImageReference(this.id, this.rescaling, imageFormat);
     }
 
-    public String getId() {
-        return id.toString();
+    public ImageId getId() {
+        return id;
     }
 
     public ImageScale getRescaling() {
