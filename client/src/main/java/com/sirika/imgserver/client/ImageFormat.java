@@ -118,14 +118,6 @@ public enum ImageFormat {
 	    return "image/x-portable-pixmap";
 	}
     },
-    SPIDER{
-	public String extension() {
-	    return "spider";
-	}
-	public String mimeType() {
-	    return "binary/octet-stream";
-	}
-    },
     TIFF{
 	public String extension() {
 	    return "tiff";
