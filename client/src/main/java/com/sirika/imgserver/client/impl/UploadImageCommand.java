@@ -39,6 +39,7 @@ import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
 import com.sirika.imgserver.client.UrlGenerator;
+import com.sirika.imgserver.httpclienthelpers.InputStreamSourceBody;
 
 public class UploadImageCommand {
     private static final String UPLOAD_PARAMETER_NAME = "file";
@@ -105,8 +106,14 @@ public class UploadImageCommand {
 //    }
     
     private HttpEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
-	MultipartEntity entity = new MultipartEntity();
-	entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamBody(imageSource.getInputStream(), imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
+	MultipartEntity entity = new MultipartEntity() {
+	    @Override
+	    public boolean isRepeatable() {
+		return true;
+	    }
+	    
+	};
+	entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
 	return entity;
     }
 }
