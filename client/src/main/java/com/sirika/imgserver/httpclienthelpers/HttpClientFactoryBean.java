@@ -83,4 +83,13 @@ public class HttpClientFactoryBean implements FactoryBean {
         this.shouldUseGzipContentcompression = shouldUseGzipContentcompression;
     }
 
+    /**
+     * See http://hc.apache.org/httpclient-3.x/preference-api.html
+     * 
+     * @param params
+     */
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
 }
