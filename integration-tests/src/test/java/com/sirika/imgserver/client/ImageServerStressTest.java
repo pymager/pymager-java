@@ -45,7 +45,7 @@ import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
-public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
+public class ImageServerStressTest extends AbstractImageServerIntegrationTestCase {
 
     @Before
     public void setup() throws IOException {
@@ -63,7 +63,12 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	    }
 	}
     }
-  
+    
+    @Test
+    public void doIt(){
+	
+    }
+  /*
     @Test
     public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
@@ -114,5 +119,5 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	assertTrue(is100x100CornicheKabylePicture(source));
 	assertFalse(isCornicheKabylePicture(source));
 	imageServer.deleteImage(yemmaGourayaId());
-    }
+    }*/
 }
