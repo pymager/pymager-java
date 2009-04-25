@@ -68,7 +68,7 @@ import com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerStressTest extends AbstractImageServerIntegrationTestCase {
-    private final static long TIMEOUT_IN_SECONDS = 60;
+    private final static long TIMEOUT_IN_SECONDS = 120;
     private final static int THREAD_POOL_SIZE = 50;
     private final static int TOTAL_NUMBER_OF_THREADS = 50;
     private ExecutorService executorService;
