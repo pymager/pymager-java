@@ -145,6 +145,20 @@ public class ImageServerStressTest extends AbstractImageServerIntegrationTestCas
 	imageServer.deleteImage(yemmaGourayaId());
     }
     
+    @Test
+    public void shouldCorrectlyReleaseConnectionsWhenExceptionsAreThrown() throws IOException {
+	for(int i = 0 ; i < 100 ; i++) {
+	    ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
+	    try {
+		InputStreamSource source = imageServer.downloadImage(imageReference);
+		source.getInputStream();
+		fail();
+	    } catch(ResourceNotExistingException e) {
+		assertEquals(imageReference, e.getImageReference());
+	    }    
+	}
+    }
+    
     private void uploadYemmaGourayaPicture() {
 	imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
     }
@@ -209,19 +223,4 @@ public class ImageServerStressTest extends AbstractImageServerIntegrationTestCas
 	return jobs;
     }
    
-    
-  /*
-    @Test
-    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    source.getInputStream();
-	    fail();
-	} catch(ResourceNotExistingException e) {
-	    assertEquals(imageReference, e.getImageReference());
-	} 
-    }
-    
-    */
 }
