@@ -26,6 +26,8 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.params.AllClientPNames;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.springframework.beans.factory.FactoryBean;
 /**
@@ -44,8 +46,17 @@ public class HttpClientFactoryBean implements FactoryBean {
     private CookieStore cookieStore = null;
     private boolean shouldUseCookieStore = false;
     private boolean shouldUseGzipContentcompression = true;
+    private Integer maxTotalConnections = null;
+    private Integer defaultMaxConnectionsPerRoute = null;
     
     public Object getObject() throws Exception {
+	if(maxTotalConnections != null) {
+	    params.put(AllClientPNames.MAX_TOTAL_CONNECTIONS, maxTotalConnections);
+	}
+	if(defaultMaxConnectionsPerRoute != null) {
+	    params.put(AllClientPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean(defaultMaxConnectionsPerRoute));
+	}
+	
 	return DefaultHttpClientFactory.httpClient(credentials, params, cookieStore(), shouldUseGzipContentcompression);
     }
 
@@ -90,6 +101,15 @@ public class HttpClientFactoryBean implements FactoryBean {
      */
     public void setParams(Map<String, Object> params) {
         this.params = params;
+    }
+
+    public void setMaxTotalConnections(Integer maxTotalConnections) {
+        this.maxTotalConnections = maxTotalConnections;
+    }
+
+    public void setDefaultMaxConnectionsPerRoute(
+    	Integer defaultMaxConnectionsPerRoute) {
+        this.defaultMaxConnectionsPerRoute = defaultMaxConnectionsPerRoute;
     }
 
 }

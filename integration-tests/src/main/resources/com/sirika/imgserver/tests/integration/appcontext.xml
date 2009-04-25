@@ -38,6 +38,12 @@
 	</bean>
 	 
 	<bean id="httpClient" class="com.sirika.imgserver.httpclienthelpers.HttpClientFactoryBean">
+		<property name="maxTotalConnections"><value>100</value></property>
+		<property name="defaultMaxConnectionsPerRoute"><value>10</value></property>
+		 
+		<property name="params">
+			<util:map></util:map>
+		 </property>
 		 <property name="credentials">
 			<util:map>
 				<entry>
