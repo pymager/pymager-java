@@ -91,6 +91,19 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
     }
     
     @Test
+    public void shouldThrowImageIdAlreadyExistsExceptionWhenUploadingSameImageTwice() throws IOException {
+	ImageId imageId = imageId("anImageThatIsNeverGoingToBeUploaded");
+	imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
+	try {
+	    imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
+	    fail();
+	} catch(ImageAlreadyExistsException e) {
+	    assertEquals(imageId, e.getImageId());
+	    assertEquals(JPEG, e.getImageFormat());
+	} 
+    }
+    
+    @Test
     public void shouldUploadAndDownloadOriginalYemmaGourayaPicture() throws IOException {
 	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
 	InputStreamSource source = imageServer.downloadImage(yemmaGouraya);

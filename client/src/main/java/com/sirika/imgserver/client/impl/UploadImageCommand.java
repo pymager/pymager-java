@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.BadUploadRequestException;
+import com.sirika.imgserver.client.ImageAlreadyExistsException;
 import com.sirika.imgserver.client.ImageFormat;
 import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;
@@ -91,6 +92,7 @@ public class UploadImageCommand {
 
     private void handleErrors(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
 	try {
+	    handleConflictError(id, imageFormat, httpPost, response); 
 	    handleBadUploadRequestError(id, imageFormat, httpPost, response); 
 	    handleUploadNon2xxError(id, imageFormat, httpPost, response); 
 	} catch(RuntimeException e) {
@@ -102,6 +104,12 @@ public class UploadImageCommand {
     private void handleBadUploadRequestError(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
 	    throw new BadUploadRequestException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+	}
+    }
+    
+    private void handleConflictError(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
+	if(response.getStatusLine().getStatusCode() == HttpStatus.SC_CONFLICT) {
+	    throw new ImageAlreadyExistsException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 	}
     }
     

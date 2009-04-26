@@ -38,6 +38,7 @@ import org.junit.Assert;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.BadUploadRequestException;
+import com.sirika.imgserver.client.ImageAlreadyExistsException;
 import com.sirika.imgserver.client.ImageFormat;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
@@ -120,6 +121,19 @@ public class ImageServerFailureTest extends ServerTestBase {
 	    imageServer.uploadImage(imageId("anyResourceThatWillThrowAnException"), JPEG, yemmaGourayaOriginalPictureStream());
 	    fail();
 	} catch(BadUploadRequestException e) {
+	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
+	    assertEquals(JPEG, e.getImageFormat());
+	}
+	
+    }
+    
+    public void testShouldThrowImageAlreadyExistsExceptionWhenConflict() throws IOException {
+	registerErrorService(HttpStatus.SC_CONFLICT);
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+	try {
+	    imageServer.uploadImage(imageId("anyResourceThatWillThrowAnException"), JPEG, yemmaGourayaOriginalPictureStream());
+	    fail();
+	} catch(ImageAlreadyExistsException e) {
 	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
 	    assertEquals(JPEG, e.getImageFormat());
 	}
