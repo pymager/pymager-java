@@ -40,13 +40,16 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +61,7 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.impl.RESTfulUrlGenerator;
 import com.sirika.imgserver.client.impl.RESTfulUrlGeneratorTest;
 import com.sirika.imgserver.client.impl.UploadImageCommand;
+import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 import com.sirika.imgserver.httpclienthelpers.InputStreamSourceBody;
 import com.sirika.imgserver.httpclienthelpers.RepeatableMultipartEntity;
@@ -78,14 +82,11 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
     @Autowired private HttpClient httpClient;
     @Autowired @Qualifier("baseUrl") private String baseUrl;
     
-    @Before
-    public void setup() throws IOException {
-	
-	//initialFailproofCleanup();
+    @Before @After public void clean() throws IOException {
+	cleanup();
     }
 
-    private void initialFailproofCleanup() throws IOException {
-	/*
+    private void cleanup() throws IOException {
 	for(ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
 	    try {
 		InputStreamSource source = imageServer.downloadImage(imageReference);
@@ -94,16 +95,22 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	    } catch(ResourceNotExistingException e) {
 		// do nothing, it's fine
 	    }
-	}*/
+	}
     }
     
-    @Test public void shouldRaise404WhenOriginalResourceDoesNotExist() throws ClientProtocolException, IOException {
+    @Test public void shouldRaise404WhenDownloadingNotExistingOriginalResource() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
     
-    @Test public void shouldRaise404WhenDerivedResourceDoesNotExist() throws ClientProtocolException, IOException {
+    @Test public void shouldRaise404WhenDeletingNonExistingOriginalResource() throws ClientProtocolException, IOException {
+	HttpDelete httpGet = new HttpDelete(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+    }
+    
+    @Test public void shouldRaise404WhenDownloadingNotExistingDerivedResource() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/someDerivedResourceThatDoesNotExist-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
@@ -125,6 +132,37 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	
 	HttpResponse response = httpClient.execute(httpPost);
 	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+    
+    @Test public void shouldRaise400WhenMultipartEntityDoesNotContainRequiredField() throws ClientProtocolException, IOException {
+	
+	HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
+	MultipartEntity entity = new RepeatableMultipartEntity();
+	entity.addPart("fuckedupParameterName", new InputStreamSourceBody(yemmaGourayaOriginalPictureStream(), JPEG.mimeType(), "fuckedupParameterName"));
+	
+	httpPost.setEntity(entity);
+	
+	HttpResponse response = httpClient.execute(httpPost);
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+	;
+    }
+    
+    @Test public void shouldRaise409WhenImageIdAlreadyExists() throws ClientProtocolException, IOException {
+	
+	uploadYemmaGouraya();
+	HttpResponse response = uploadYemmaGouraya();
+	
+	assertEquals(HttpStatus.SC_CONFLICT, response.getStatusLine().getStatusCode());
+	
+    }
+
+    private HttpResponse uploadYemmaGouraya() throws IOException, ClientProtocolException {
+	HttpPost httpPost = new HttpPost(baseUrl + "/original/" + yemmaGourayaId());
+	MultipartEntity entity = new RepeatableMultipartEntity();
+	entity.addPart(UploadImageCommand.UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(yemmaGourayaOriginalPictureStream(), JPEG.mimeType(), UploadImageCommand.UPLOAD_PARAMETER_NAME));
+	httpPost.setEntity(entity);
+	HttpResponse response = httpClient.execute(httpPost);
+	return response;
     }
 
     /*
