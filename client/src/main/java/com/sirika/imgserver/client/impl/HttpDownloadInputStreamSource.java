@@ -86,7 +86,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 
     private void handleNon2xx(HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
-	    throw new UnknownDownloadFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while downloading"));
+	    throw new UnknownDownloadFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 	}
     }
 

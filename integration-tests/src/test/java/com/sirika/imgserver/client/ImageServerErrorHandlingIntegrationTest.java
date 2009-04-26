@@ -20,7 +20,6 @@
 package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
-import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.ImageScale.width;
 import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.cornicheKabyleId;
@@ -41,20 +40,52 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.imgserver.client.impl.RESTfulUrlGenerator;
+import com.sirika.imgserver.client.impl.RESTfulUrlGeneratorTest;
+import com.sirika.imgserver.client.impl.UploadImageCommand;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
+import com.sirika.imgserver.httpclienthelpers.InputStreamSourceBody;
+import com.sirika.imgserver.httpclienthelpers.RepeatableMultipartEntity;
 
-public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
+/** 
+ * The idea of this class is to specify the behavior (executable specification) of Image Server for borderline cases.
+ * 
+ * Some of the tests do not directly hit the ImageServer client API as 
+ * <ul>
+ * <li>the goal is to explicitly reproduce errors that are not possible when using the API (e.g. the client API always generates a correct URLs).</li>
+ * <li>we want a clearly-readable specification of image server's behavior</li>
+ * </ul>
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
+public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServerIntegrationTestCase {
 
+    @Autowired private HttpClient httpClient;
+    @Autowired @Qualifier("baseUrl") private String baseUrl;
+    
     @Before
     public void setup() throws IOException {
-	initialFailproofCleanup();
+	
+	//initialFailproofCleanup();
     }
 
     private void initialFailproofCleanup() throws IOException {
+	/*
 	for(ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
 	    try {
 		InputStreamSource source = imageServer.downloadImage(imageReference);
@@ -63,9 +94,40 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	    } catch(ResourceNotExistingException e) {
 		// do nothing, it's fine
 	    }
-	}
+	}*/
     }
-  
+    
+    @Test public void shouldRaise404WhenOriginalResourceDoesNotExist() throws ClientProtocolException, IOException {
+	HttpGet httpGet = new HttpGet(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+    }
+    
+    @Test public void shouldRaise404WhenDerivedResourceDoesNotExist() throws ClientProtocolException, IOException {
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/someDerivedResourceThatDoesNotExist-100x100.jpg");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+    }
+    
+    @Test public void shouldRaise404WhenDerivedResourceUrlFormatIsInvalid() throws ClientProtocolException, IOException {
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/derivedResourceThatHasNoSizeNorFormat");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+    }
+    
+    @Test public void shouldRaise400WhenImageFormatIsNotRecognized() throws ClientProtocolException, IOException {
+	
+	HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
+	MultipartEntity entity = new RepeatableMultipartEntity();
+	entity.addPart(UploadImageCommand.UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(textfileresource(), "text/plain", UploadImageCommand.UPLOAD_PARAMETER_NAME));
+	
+	httpPost.setEntity(entity);
+	
+	HttpResponse response = httpClient.execute(httpPost);
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    /*
     @Test
     public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
@@ -75,18 +137,6 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	    fail();
 	} catch(ResourceNotExistingException e) {
 	    assertEquals(imageReference, e.getImageReference());
-	} 
-    }
-    
-    @Test
-    public void shouldThrowBadUploadRequestExceptionWhenUploadingGarbage() throws IOException {
-	ImageId imageId = imageId("anImageThatIsNeverGoingToBeUploaded");
-	try {
-	    imageServer.uploadImage(imageId, JPEG, textfileresource());
-	    fail();
-	} catch(BadUploadRequestException e) {
-	    assertEquals(imageId, e.getImageId());
-	    assertEquals(JPEG, e.getImageFormat());
 	} 
     }
     
@@ -128,5 +178,5 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	assertTrue(is100x100CornicheKabylePicture(source));
 	assertFalse(isCornicheKabylePicture(source));
 	imageServer.deleteImage(yemmaGourayaId());
-    }
+    }*/
 }

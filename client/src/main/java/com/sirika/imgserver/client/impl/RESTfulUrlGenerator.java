@@ -31,7 +31,7 @@ import com.sirika.imgserver.client.UrlGenerator;
  * @author Sami Dalouche (sami.dalouche@gmail.com)
  *
  */
-class RESTfulUrlGenerator implements UrlGenerator {
+public class RESTfulUrlGenerator implements UrlGenerator {
 
     private String baseImageServiceUrl;
 

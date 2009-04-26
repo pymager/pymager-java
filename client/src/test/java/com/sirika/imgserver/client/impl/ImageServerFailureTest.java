@@ -19,9 +19,11 @@
  */
 package com.sirika.imgserver.client.impl;
 
+import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
 import java.io.IOException;
 
@@ -35,11 +37,14 @@ import org.apache.http.protocol.HttpRequestHandler;
 import org.junit.Assert;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.imgserver.client.BadUploadRequestException;
+import com.sirika.imgserver.client.ImageFormat;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownDeleteFailureException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
+import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerFailureTest extends ServerTestBase {
 
@@ -101,9 +106,22 @@ public class ImageServerFailureTest extends ServerTestBase {
 	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
 	try {
-	    imageServer.deleteImage(imageId("anyResourceThatWillThrowAnException"));    
+	    imageServer.deleteImage(imageId("anyResourceThatWillThrowAnException")); 
+	    fail();
 	} catch(UnknownDeleteFailureException e) {
 	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
+	}
+    }
+    
+    public void testShouldThrowBadUploadRequestExceptionWhileUploading() throws IOException {
+	registerErrorService(HttpStatus.SC_BAD_REQUEST);
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+	try {
+	    imageServer.uploadImage(imageId("anyResourceThatWillThrowAnException"), JPEG, yemmaGourayaOriginalPictureStream());
+	    fail();
+	} catch(BadUploadRequestException e) {
+	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
+	    assertEquals(JPEG, e.getImageFormat());
 	}
 	
     }

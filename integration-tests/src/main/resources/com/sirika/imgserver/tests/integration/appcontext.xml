@@ -36,7 +36,11 @@
 		<constructor-arg><value>${imgserver.baseurl}</value></constructor-arg>
 		<constructor-arg><ref bean="httpClient" /></constructor-arg>
 	</bean>
-	 
+	
+	<bean id="baseUrl" class="java.lang.String">
+		<constructor-arg><value>${imgserver.baseurl}</value></constructor-arg>
+	</bean>
+	
 	<bean id="httpClient" class="com.sirika.imgserver.httpclienthelpers.HttpClientFactoryBean">
 		<property name="maxTotalConnections"><value>100</value></property>
 		<property name="defaultMaxConnectionsPerRoute"><value>10</value></property>

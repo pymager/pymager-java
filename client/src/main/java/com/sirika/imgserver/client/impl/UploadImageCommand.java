@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
@@ -34,15 +35,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.imgserver.client.BadUploadRequestException;
 import com.sirika.imgserver.client.ImageFormat;
 import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.UnknownUploadFailureException;
 import com.sirika.imgserver.client.UrlGenerator;
 import com.sirika.imgserver.httpclienthelpers.InputStreamSourceBody;
+import com.sirika.imgserver.httpclienthelpers.RepeatableMultipartEntity;
 
 public class UploadImageCommand {
-    private static final String UPLOAD_PARAMETER_NAME = "file";
+    public static final String UPLOAD_PARAMETER_NAME = "file";
     private static final Logger logger = LoggerFactory.getLogger(UploadImageCommand.class);
     
     private HttpClient httpClient;
@@ -78,17 +81,33 @@ public class UploadImageCommand {
     
     private void handleUploadResponse(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) throws IOException {
 	logger.debug("Received status : {}", response.getStatusLine());
-	handleUploadNon2xxError(id, imageFormat, httpPost, response);
+	handleErrors(id, imageFormat, httpPost, response);
+	
 	HttpEntity entity = response.getEntity();
 	if(entity != null) {
 	    entity.consumeContent();
 	}
     }
 
+    private void handleErrors(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
+	try {
+	    handleBadUploadRequestError(id, imageFormat, httpPost, response); 
+	    handleUploadNon2xxError(id, imageFormat, httpPost, response); 
+	} catch(RuntimeException e) {
+	    httpPost.abort();
+	    throw e;
+	} 
+    }
+    
+    private void handleBadUploadRequestError(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
+	if(response.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+	    throw new BadUploadRequestException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+	}
+    }
+    
     private void handleUploadNon2xxError(ImageId id, ImageFormat imageFormat,HttpPost httpPost, HttpResponse response) {
 	if(response.getStatusLine().getStatusCode() >= 300) {
-	    httpPost.abort();
-	    throw new UnknownUploadFailureException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
+	    throw new UnknownUploadFailureException(id, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 	}
     }
 
@@ -106,13 +125,7 @@ public class UploadImageCommand {
 //    }
     
     private HttpEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
-	MultipartEntity entity = new MultipartEntity() {
-	    @Override
-	    public boolean isRepeatable() {
-		return true;
-	    }
-	    
-	};
+	MultipartEntity entity = new RepeatableMultipartEntity();
 	entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
 	return entity;
     }

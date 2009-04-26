@@ -35,4 +35,8 @@ public class PictureStreamSourceObjectMother {
     public static InputStreamSource cornicheKabyleOriginalPictureStream() {
 	return new ClassPathResource("/com/sirika/imgserver/samplepix/original/cornicheKabyle.jpg");
     }
+    
+    public static InputStreamSource textfileresource() {
+	return new ClassPathResource("/com/sirika/imgserver/samplepix/somethingthatisnotanimage.txt");
+    }
 }
