@@ -41,20 +41,19 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.GNOME.Accessibility.ImageImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
 
-    @Before
-    public void setup() throws IOException {
-	initialFailproofCleanup();
-    }
-
-    private void initialFailproofCleanup() throws IOException {
+    @Before @After
+    public void clean() throws IOException {
 	for(ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
 	    try {
 		InputStreamSource source = imageServer.downloadImage(imageReference);
@@ -65,7 +64,7 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	    }
 	}
     }
-  
+
     @Test
     public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
 	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
@@ -92,7 +91,7 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
     
     @Test
     public void shouldThrowImageIdAlreadyExistsExceptionWhenUploadingSameImageTwice() throws IOException {
-	ImageId imageId = imageId("anImageThatIsNeverGoingToBeUploaded");
+	ImageId imageId = yemmaGourayaId();
 	imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
 	try {
 	    imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
@@ -110,7 +109,6 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	assertNotNull(source);
 	assertTrue(isYemmaGourayaPicture(source));
 	assertFalse(isCornicheKabylePicture(source));
-	imageServer.deleteImage(yemmaGourayaId());
     }
     
     @Test(expected=ResourceNotExistingException.class)
@@ -130,8 +128,6 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	assertNotNull(source);
 	assertFalse(isYemmaGourayaPicture(source));
 	assertTrue(isCornicheKabylePicture(source));
-	imageServer.deleteImage(yemmaGourayaId());
-	imageServer.deleteImage(cornicheKabyleId());
     }
     @Test
     public void shouldUploadYemmaGourayaAndDownloadDerivedPicture() throws IOException {
@@ -140,6 +136,17 @@ public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTe
 	assertNotNull(source);
 	assertTrue(is100x100CornicheKabylePicture(source));
 	assertFalse(isCornicheKabylePicture(source));
-	imageServer.deleteImage(yemmaGourayaId());
+    }
+    
+    @Test
+    public void shouldNotDownloadDerivedPictureWhenRequestedSizeIsForbidden() throws IOException {
+	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
+	try {
+	    InputStreamSource source = imageServer.downloadImage(yemmaGouraya.rescaledTo(width(10000).by(10000)).convertedTo(JPEG));
+	    source.getInputStream();
+	    fail();
+	} catch(ForbiddenRequestException e) {
+	    // ok
+	}
     }
 }

@@ -38,6 +38,7 @@ import org.junit.Assert;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.imgserver.client.BadUploadRequestException;
+import com.sirika.imgserver.client.ForbiddenRequestException;
 import com.sirika.imgserver.client.ImageAlreadyExistsException;
 import com.sirika.imgserver.client.ImageFormat;
 import com.sirika.imgserver.client.ImageReference;
@@ -136,6 +137,18 @@ public class ImageServerFailureTest extends ServerTestBase {
 	} catch(ImageAlreadyExistsException e) {
 	    assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
 	    assertEquals(JPEG, e.getImageFormat());
+	}
+    }
+    
+    public void testShouldThrowForbiddenRequestExceptionWhenForbidden() throws IOException {
+	registerErrorService(HttpStatus.SC_FORBIDDEN);
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+	try {
+	    InputStreamSource iss = imageServer.downloadImage(yemmaGouraya());
+	    iss.getInputStream();
+	    fail();
+	} catch(ForbiddenRequestException e) {
+	    
 	}
 	
     }

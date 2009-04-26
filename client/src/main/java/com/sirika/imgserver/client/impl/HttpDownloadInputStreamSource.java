@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.imgserver.client.ForbiddenRequestException;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
@@ -76,6 +77,7 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 
     private void handleErrors(HttpResponse response) {
 	try {
+	    handleForbidden(response);
 	    handle404NotFound(response);
 	    handleNon2xx(response);    
 	} catch(RuntimeException e) {
@@ -93,6 +95,12 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
     private void handle404NotFound(HttpResponse response) {
 	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()) {
 	    throw new ResourceNotExistingException(imageReference);
+	}
+    }
+    
+    private void handleForbidden(HttpResponse response) {
+	if(HttpStatus.SC_FORBIDDEN == response.getStatusLine().getStatusCode()) {
+	    throw new ForbiddenRequestException(new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 	}
     }
     

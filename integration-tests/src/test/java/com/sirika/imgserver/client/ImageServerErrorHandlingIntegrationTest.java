@@ -102,24 +102,28 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	HttpGet httpGet = new HttpGet(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+	httpGet.abort();
     }
     
     @Test public void shouldRaise404WhenDeletingNonExistingOriginalResource() throws ClientProtocolException, IOException {
-	HttpDelete httpGet = new HttpDelete(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
-	HttpResponse response = httpClient.execute(httpGet);
+	HttpDelete httpDelete = new HttpDelete(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
+	HttpResponse response = httpClient.execute(httpDelete);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+	httpDelete.abort();
     }
     
     @Test public void shouldRaise404WhenDownloadingNotExistingDerivedResource() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/someDerivedResourceThatDoesNotExist-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+	httpGet.abort();
     }
     
     @Test public void shouldRaise404WhenDerivedResourceUrlFormatIsInvalid() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/derivedResourceThatHasNoSizeNorFormat");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+	httpGet.abort();
     }
     
     @Test public void shouldRaise400WhenImageFormatIsNotRecognized() throws ClientProtocolException, IOException {
@@ -132,10 +136,10 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	
 	HttpResponse response = httpClient.execute(httpPost);
 	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+	httpPost.abort();
     }
     
     @Test public void shouldRaise400WhenMultipartEntityDoesNotContainRequiredField() throws ClientProtocolException, IOException {
-	
 	HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
 	MultipartEntity entity = new RepeatableMultipartEntity();
 	entity.addPart("fuckedupParameterName", new InputStreamSourceBody(yemmaGourayaOriginalPictureStream(), JPEG.mimeType(), "fuckedupParameterName"));
@@ -144,24 +148,30 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	
 	HttpResponse response = httpClient.execute(httpPost);
 	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
-	;
+	httpPost.abort();
     }
     
     @Test public void shouldRaise409WhenImageIdAlreadyExists() throws ClientProtocolException, IOException {
-	
 	uploadYemmaGouraya();
 	HttpResponse response = uploadYemmaGouraya();
-	
 	assertEquals(HttpStatus.SC_CONFLICT, response.getStatusLine().getStatusCode());
-	
     }
-
+    
+    @Test public void shouldRaise403WhenSpecifyingUnauthorizedResizeCharacteristics() throws ClientProtocolException, IOException {
+	uploadYemmaGouraya();
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-25000x25000.jpg");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+	httpGet.abort();
+    }
+    
     private HttpResponse uploadYemmaGouraya() throws IOException, ClientProtocolException {
 	HttpPost httpPost = new HttpPost(baseUrl + "/original/" + yemmaGourayaId());
 	MultipartEntity entity = new RepeatableMultipartEntity();
 	entity.addPart(UploadImageCommand.UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(yemmaGourayaOriginalPictureStream(), JPEG.mimeType(), UploadImageCommand.UPLOAD_PARAMETER_NAME));
 	httpPost.setEntity(entity);
 	HttpResponse response = httpClient.execute(httpPost);
+	httpPost.abort();
 	return response;
     }
 
