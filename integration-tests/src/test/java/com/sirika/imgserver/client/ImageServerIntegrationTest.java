@@ -41,13 +41,11 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.GNOME.Accessibility.ImageImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
 import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
