@@ -25,6 +25,7 @@ import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
+import java.awt.image.ImageProducer;
 import java.io.IOException;
 
 import org.apache.http.HttpException;
@@ -90,6 +91,25 @@ public class ImageServerFailureTest extends ServerTestBase {
 	
     }
     
+    /**
+     * Should theoretically _NEVER_ happen !!
+     * @throws IOException
+     */
+    public void testShouldThrowUnknownDownloadFailureExceptionWhenServerSendsBadRequest() throws IOException {
+	registerErrorService(HttpStatus.SC_BAD_REQUEST);
+	
+	ImageReference imageReference = originalImage("abadrequestthatshouldtheoreticallyneverhappen");
+	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+	try {
+	    InputStreamSource source = imageServer.downloadImage(imageReference);
+	    source.getInputStream();
+	    Assert.fail();
+	} catch(UnknownDownloadFailureException e) {
+	    assertEquals(imageReference, e.getImageReference());
+	} 
+	
+    }
+    
     public void testShouldThrowUnknownFailureExceptionWhileDownloadingWhenInternalServerError() throws IOException {
 	registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         
@@ -127,6 +147,8 @@ public class ImageServerFailureTest extends ServerTestBase {
 	}
 	
     }
+
+    
     
     public void testShouldThrowImageAlreadyExistsExceptionWhenConflict() throws IOException {
 	registerErrorService(HttpStatus.SC_CONFLICT);

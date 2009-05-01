@@ -120,13 +120,21 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
     }
     
     @Test public void shouldRaise404WhenDerivedResourceUrlFormatIsInvalid() throws ClientProtocolException, IOException {
-	HttpGet httpGet = new HttpGet(baseUrl + "/derived/derivedResourceThatHasNoSizeNorFormat");
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/derivedResourceThatHasNoSizeNorFormat-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
 	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 	httpGet.abort();
     }
     
-    @Test public void shouldRaise400WhenImageFormatIsNotRecognized() throws ClientProtocolException, IOException {
+    @Test public void shouldRaise400WhenRequestingNotSupportedImageFormat() throws ClientProtocolException, IOException {
+	uploadYemmaGouraya();
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.pixar");
+	HttpResponse response = httpClient.execute(httpGet);
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+	httpGet.abort();
+    }
+
+    @Test public void shouldRaise400WhenImageStreamIsNotRecognized() throws ClientProtocolException, IOException {
 	
 	HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
 	MultipartEntity entity = new RepeatableMultipartEntity();
