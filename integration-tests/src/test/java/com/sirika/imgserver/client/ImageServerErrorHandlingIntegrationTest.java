@@ -133,6 +133,14 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
 	httpGet.abort();
     }
+    
+    @Test public void shouldRaise405WhenHttpMethodNotSupported() throws ClientProtocolException, IOException {
+	uploadYemmaGouraya();
+	HttpDelete httpDelete = new HttpDelete(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
+	HttpResponse response = httpClient.execute(httpDelete);
+	assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine().getStatusCode());
+	httpDelete.abort();
+    }
 
     @Test public void shouldRaise400WhenImageStreamIsNotRecognized() throws ClientProtocolException, IOException {
 	
