@@ -32,6 +32,9 @@ public class ImageId {
     
     private ImageId(String id) {
 	Validate.notNull(id);
+	if(id.contains("/")) {
+	    throw new IllegalArgumentException("ID cannot contain the slash (/) character");
+	}
 	this.id = id;
     }
     

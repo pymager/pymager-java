@@ -40,6 +40,11 @@ public class ImageIdTest {
 	assertThat(imageId.toString(), is("britney"));
     }
     
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldNotAllowSlashCharacterInId() {
+	imageId("my/id");
+    }
+    
     @Test
     public void shouldBeEqual() {
 	ImageId britney1 = imageId("britney");
