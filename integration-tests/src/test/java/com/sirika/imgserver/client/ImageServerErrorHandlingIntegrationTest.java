@@ -20,11 +20,11 @@
 package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.yemmaGourayaId;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.textfileresource;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.cornicheKabyle;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.textfileresource;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sirika.imgserver</groupId>
-	<artifactId>imgserver-java-client-master</artifactId>
+	<artifactId>imgserver-java-client-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>Image Server Java Client Master</name>
+	<name>Image Server Java Client Parent</name>
 	<version>0.1-SNAPSHOT</version>
 	<url>http://opensource.sirika.com/imgserver</url>
 	<inceptionYear>2009</inceptionYear>
 	<prerequisites>
 		<maven>2.1.0</maven>
 	</prerequisites>
-	
-	<properties>	
+
+	<properties>
+		<currentVersion>${pom.version}</currentVersion>
 		<springframework.version>2.5.6</springframework.version>
 		<slf4j.version>1.5.2</slf4j.version>
 	</properties>
-	
+
 	<scm>
 		<connection>
 			scm:svn:http://www.sirika.com/svn/funala/imgserver-java-client
@@ -35,8 +37,8 @@
 	</licenses>
 
 	<issueManagement>
-		<system/>
-		<url/>
+		<system />
+		<url />
 	</issueManagement>
 
 	<ciManagement>
@@ -52,20 +54,20 @@
 	</ciManagement>
 	<distributionManagement>
 		<repository>
-		    <id>sirika-releases</id>
-		    <name>Sirika Releases Repository</name>
-		    <url>scp://sirika.com/srv/http/sirika.com/maven2/releases</url>
+			<id>sirika-releases</id>
+			<name>Sirika Releases Repository</name>
+			<url>scp://sirika.com/srv/http/sirika.com/maven2/releases</url>
 		</repository>
 		<snapshotRepository>
-		    <id>sirika-snapshots</id>
-		    <name>Sirika Snapshots Repository</name>
-		    <url>scp://sirika.com/srv/http/sirika.com/maven2/snapshots</url>
+			<id>sirika-snapshots</id>
+			<name>Sirika Snapshots Repository</name>
+			<url>scp://sirika.com/srv/http/sirika.com/maven2/snapshots</url>
 		</snapshotRepository>
 		<site>
-		    <id>sirika-site</id>
-		    <url>scp://sirika.com/srv/http/sirika.com/projects/imgserver-java-client</url>
+			<id>sirika-site</id>
+			<url>scp://sirika.com/srv/http/sirika.com/projects/imgserver-java-client</url>
 		</site>
-    	</distributionManagement>
+	</distributionManagement>
 	<developers>
 		<developer>
 			<id>samokk</id>
@@ -78,9 +80,9 @@
 		</developer>
 	</developers>
 	<organization>
-        	<name>Sirika</name>
-        	<url>http://www.sirika.com</url>
-    	</organization>
+		<name>Sirika</name>
+		<url>http://www.sirika.com</url>
+	</organization>
 	<modules>
 		<module>client</module>
 		<module>assembly</module>
@@ -104,32 +106,32 @@
 			</modules>
 		</profile>
 		<profile>
-                        <id>release</id>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
 						<executions>
-						    <execution>
-							<id>attach-sources</id>
-							<goals>
-							    <goal>jar</goal>
-							</goals>
-						    </execution>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
 						</executions>
-			    		</plugin>
+					</plugin>
 					<plugin>
-					  <groupId>org.apache.maven.plugins</groupId>
-					  <artifactId>maven-javadoc-plugin</artifactId>
-					  <executions>
-					    <execution>
-					      <id>attach-javadocs</id>
-					      <goals>
-						<goal>jar</goal>
-					      </goals>
-					    </execution>
-					  </executions>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -139,8 +141,8 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
-						   <encoding>UTF-8</encoding>
-						  <aggregate>true</aggregate>
+							<encoding>UTF-8</encoding>
+							<aggregate>true</aggregate>
 						</configuration>
 					</plugin>
 
@@ -150,13 +152,13 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-pmd-plugin</artifactId>
-			    		</plugin>		
-		 			<plugin>	
+					</plugin>
+					<plugin>
 						<artifactId>maven-surefire-report-plugin</artifactId>
-		      			</plugin>
+					</plugin>
 				</plugins>
 			</reporting>
-                </profile>
+		</profile>
 	</profiles>
 
 	<build>
@@ -190,60 +192,52 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
-			
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
+
+			<!--
+				<plugin> <groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId> <executions> <execution>
+				<goals> <goal>test-jar</goal> </goals> </execution> </executions>
+				</plugin>
+			-->
+			<plugin>
+				<groupId>com.google.code.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.4.0</version>
+				<configuration>
+					<header>src/etc/header.txt</header>
+					<includes>
+						<include>**/src/**</include>
+					</includes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
-							<goal>test-jar</goal>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>
-			</plugin>-->
-			 <plugin>
-		            <groupId>com.google.code.maven-license-plugin</groupId>
-		            <artifactId>maven-license-plugin</artifactId>
-			    <version>1.4.0</version>
-		            <configuration>
-		                <header>src/etc/header.txt</header>
-		                <includes>
-                    	            <include>**/src/**</include>
-                                </includes>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>check</goal>
-                                    </goals>
-                                </execution>
-                            </executions>			    
-		        </plugin>
+			</plugin>
 		</plugins>
 	</build>
-	
+
 
 	<repositories>
-		<!--  Our own repository 
-		<repository>
-			<id>sirika.com-maven2</id>
+		<!--
+			Our own repository <repository> <id>sirika.com-maven2</id>
 			<name>Sirika Repository</name>
-			<url>http://www.sirika.com/maven2</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-			</snapshots>
-		</repository>-->
+			<url>http://www.sirika.com/maven2</url> <snapshots>
+			<enabled>true</enabled> <updatePolicy>daily</updatePolicy>
+			</snapshots> </repository>
+		-->
 	</repositories>
 
-	<pluginRepositories/>
+	<pluginRepositories />
 
-	<dependencies>
-	</dependencies>
-  
+	<dependencies />
+
+
 </project>

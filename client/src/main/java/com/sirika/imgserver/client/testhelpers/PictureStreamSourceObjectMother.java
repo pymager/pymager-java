@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ImgServer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.imgserver.client.testhelpers.objectmothers;
+package com.sirika.imgserver.client.testhelpers;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;

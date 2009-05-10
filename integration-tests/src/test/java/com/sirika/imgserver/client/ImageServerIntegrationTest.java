@@ -23,15 +23,15 @@ import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
 import static com.sirika.imgserver.client.ImageScale.width;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.cornicheKabyleId;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.yemmaGourayaId;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamAssertionUtils.is100x100CornicheKabylePicture;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamAssertionUtils.isCornicheKabylePicture;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamAssertionUtils.isYemmaGourayaPicture;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.textfileresource;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.ImageIdObjectMother.cornicheKabyleId;
+import static com.sirika.imgserver.client.testhelpers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.cornicheKabyle;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamAssertionUtils.is100x100CornicheKabylePicture;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamAssertionUtils.isCornicheKabylePicture;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamAssertionUtils.isYemmaGourayaPicture;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.textfileresource;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother;
+import com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother;
 
 public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
 

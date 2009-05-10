@@ -19,10 +19,10 @@
  */
 package com.sirika.imgserver.client.impl;
 
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.cornicheKabyle;
+import static com.sirika.imgserver.client.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -49,8 +49,8 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.UrlGenerator;
-import com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamAssertionUtils;
-import com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother;
+import com.sirika.imgserver.client.testhelpers.PictureStreamAssertionUtils;
+import com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother;
 
 public class ImageServerDownloadTest extends ServerTestBase {
     

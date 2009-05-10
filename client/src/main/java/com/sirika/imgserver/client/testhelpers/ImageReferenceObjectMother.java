@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ImgServer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.imgserver.client.testhelpers.objectmothers;
+package com.sirika.imgserver.client.testhelpers;
 
 import static com.sirika.imgserver.client.ImageFormat.PNG;
 import static com.sirika.imgserver.client.ImageScale.width;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.cornicheKabyleId;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.testhelpers.ImageIdObjectMother.cornicheKabyleId;
+import static com.sirika.imgserver.client.testhelpers.ImageIdObjectMother.yemmaGourayaId;
 
 import com.sirika.imgserver.client.ImageId;
 import com.sirika.imgserver.client.ImageReference;

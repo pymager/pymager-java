@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ImgServer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.imgserver.client.testhelpers.objectmothers;
+package com.sirika.imgserver.client.testhelpers;
 
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaDerived100x100PictureStream;
-import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaDerived100x100PictureStream;
+import static com.sirika.imgserver.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
 import java.io.IOException;
 import java.io.InputStream;
