@@ -19,8 +19,8 @@
  */
 package com.sirika.imgserver.client.impl;
 
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGourayaResizedTo300x200InPng;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGourayaResizedTo300x200InPng;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

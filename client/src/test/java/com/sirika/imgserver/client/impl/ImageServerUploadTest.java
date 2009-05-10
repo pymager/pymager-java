@@ -21,9 +21,9 @@ package com.sirika.imgserver.client.impl;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageId.imageId;
-import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.yemmaGourayaId;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
 import java.io.IOException;
 
@@ -37,7 +37,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
-import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
+import com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother;
 
 public class ImageServerUploadTest extends ServerTestBase {
     

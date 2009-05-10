@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ImgServer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.imgserver.client.objectmothers;
+package com.sirika.imgserver.client.testhelpers.objectmothers;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
@@ -25,18 +25,18 @@ import org.springframework.core.io.InputStreamSource;
 public class PictureStreamSourceObjectMother {
 
     public static InputStreamSource yemmaGourayaOriginalPictureStream() {
-	return new ClassPathResource("/com/sirika/imgserver/samplepix/original/yemmaGourayaInBejaia.jpg");
+	return new ClassPathResource("/com/sirika/imgserver/testhelpers/samplepix/original/yemmaGourayaInBejaia.jpg");
     }
     
     public static InputStreamSource yemmaGourayaDerived100x100PictureStream() {
-	return new ClassPathResource("/com/sirika/imgserver/samplepix/derived/yemmaGouraya-100x100.jpg");
+	return new ClassPathResource("/com/sirika/imgserver/testhelpers/samplepix/derived/yemmaGouraya-100x100.jpg");
     }
     
     public static InputStreamSource cornicheKabyleOriginalPictureStream() {
-	return new ClassPathResource("/com/sirika/imgserver/samplepix/original/cornicheKabyle.jpg");
+	return new ClassPathResource("/com/sirika/imgserver/testhelpers/samplepix/original/cornicheKabyle.jpg");
     }
     
     public static InputStreamSource textfileresource() {
-	return new ClassPathResource("/com/sirika/imgserver/samplepix/somethingthatisnotanimage.txt");
+	return new ClassPathResource("/com/sirika/imgserver/testhelpers/samplepix/somethingthatisnotanimage.txt");
     }
 }

@@ -20,27 +20,16 @@
 package com.sirika.imgserver.client;
 
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
-import static com.sirika.imgserver.client.ImageReference.originalImage;
-import static com.sirika.imgserver.client.ImageScale.width;
-import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.cornicheKabyleId;
-import static com.sirika.imgserver.client.objectmothers.ImageIdObjectMother.yemmaGourayaId;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.is100x100CornicheKabylePicture;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.isCornicheKabylePicture;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils.isYemmaGourayaPicture;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.textfileresource;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageIdObjectMother.yemmaGourayaId;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.cornicheKabyle;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.textfileresource;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -50,19 +39,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.imgserver.client.impl.RESTfulUrlGenerator;
-import com.sirika.imgserver.client.impl.RESTfulUrlGeneratorTest;
 import com.sirika.imgserver.client.impl.UploadImageCommand;
-import com.sirika.imgserver.client.objectmothers.ImageIdObjectMother;
-import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
 import com.sirika.imgserver.httpclienthelpers.InputStreamSourceBody;
 import com.sirika.imgserver.httpclienthelpers.RepeatableMultipartEntity;
 

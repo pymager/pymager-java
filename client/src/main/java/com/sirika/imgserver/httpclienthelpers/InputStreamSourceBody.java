@@ -60,7 +60,7 @@ public class InputStreamSourceBody extends AbstractContentBody implements Binary
             IOUtils.copy(in, out);
             out.flush();
         } finally {
-            in.close();
+            IOUtils.closeQuietly(in);
         }
     }
     

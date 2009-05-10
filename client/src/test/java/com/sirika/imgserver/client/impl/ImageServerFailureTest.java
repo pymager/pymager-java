@@ -22,8 +22,8 @@ package com.sirika.imgserver.client.impl;
 import static com.sirika.imgserver.client.ImageFormat.JPEG;
 import static com.sirika.imgserver.client.ImageId.imageId;
 import static com.sirika.imgserver.client.ImageReference.originalImage;
-import static com.sirika.imgserver.client.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.ImageReferenceObjectMother.yemmaGouraya;
+import static com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
 import java.awt.image.ImageProducer;
 import java.io.IOException;
@@ -47,7 +47,7 @@ import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ResourceNotExistingException;
 import com.sirika.imgserver.client.UnknownDeleteFailureException;
 import com.sirika.imgserver.client.UnknownDownloadFailureException;
-import com.sirika.imgserver.client.objectmothers.PictureStreamSourceObjectMother;
+import com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamSourceObjectMother;
 
 public class ImageServerFailureTest extends ServerTestBase {
 

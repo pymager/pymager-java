@@ -28,7 +28,7 @@ import org.springframework.core.io.InputStreamSource;
 import com.sirika.imgserver.client.ImageReference;
 import com.sirika.imgserver.client.ImageServer;
 import com.sirika.imgserver.client.ImageServerException;
-import com.sirika.imgserver.client.objectmothers.PictureStreamAssertionUtils;
+import com.sirika.imgserver.client.testhelpers.objectmothers.PictureStreamAssertionUtils;
 
 /**
  * Downloads a picture and returns a {@link OperationStatus} that informs

@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sirika.imgserver</groupId>
-	<artifactId>imgserver-java-client-parent</artifactId>
+	<artifactId>imgserver-java-client-master</artifactId>
 	<packaging>pom</packaging>
-	<name>Image Server Java Client Parent</name>
+	<name>Image Server Java Client Master</name>
 	<version>0.1-SNAPSHOT</version>
 	<url>http://opensource.sirika.com/imgserver</url>
 	<inceptionYear>2009</inceptionYear>
@@ -40,7 +40,7 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>continuum</system>
+		<system>hudson</system>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
@@ -50,7 +50,22 @@
 			</notifier>
 		</notifiers>
 	</ciManagement>
-
+	<distributionManagement>
+		<repository>
+		    <id>sirika-releases</id>
+		    <name>Sirika Releases Repository</name>
+		    <url>scp://sirika.com/srv/http/sirika.com/maven2/releases</url>
+		</repository>
+		<snapshotRepository>
+		    <id>sirika-snapshots</id>
+		    <name>Sirika Snapshots Repository</name>
+		    <url>scp://sirika.com/srv/http/sirika.com/maven2/snapshots</url>
+		</snapshotRepository>
+		<site>
+		    <id>sirika-site</id>
+		    <url>scp://sirika.com/srv/http/sirika.com/projects/imgserver-java-client</url>
+		</site>
+    	</distributionManagement>
 	<developers>
 		<developer>
 			<id>samokk</id>
@@ -62,8 +77,13 @@
 			<timezone>-5</timezone>
 		</developer>
 	</developers>
+	<organization>
+        	<name>Sirika</name>
+        	<url>http://www.sirika.com</url>
+    	</organization>
 	<modules>
 		<module>client</module>
+		<module>assembly</module>
 		<!-- integration-tests only available with integration profile -->
 	</modules>
 
@@ -85,6 +105,57 @@
 		</profile>
 		<profile>
                         <id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+						    <execution>
+							<id>attach-sources</id>
+							<goals>
+							    <goal>jar</goal>
+							</goals>
+						    </execution>
+						</executions>
+			    		</plugin>
+					<plugin>
+					  <groupId>org.apache.maven.plugins</groupId>
+					  <artifactId>maven-javadoc-plugin</artifactId>
+					  <executions>
+					    <execution>
+					      <id>attach-javadocs</id>
+					      <goals>
+						<goal>jar</goal>
+					      </goals>
+					    </execution>
+					  </executions>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+						   <encoding>UTF-8</encoding>
+						  <aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>jxr-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<artifactId>maven-pmd-plugin</artifactId>
+			    		</plugin>		
+		 			<plugin>	
+						<artifactId>maven-surefire-report-plugin</artifactId>
+		      			</plugin>
+				</plugins>
+			</reporting>
                 </profile>
 	</profiles>
 
@@ -103,8 +174,8 @@
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<downloadSources>false</downloadSources>
-					<downloadJavadocs>false</downloadJavadocs>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -123,22 +194,10 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-				    <execution>
-				        <id>attach-source</id>
-				        <goals>
-				            <goal>jar</goal>
-				        </goals>
-				    </execution>
-				</executions>
-            		</plugin>
-			<plugin>
+			
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<!-- <version>2.2</version>  -->
 				<executions>
 					<execution>
 						<goals>
@@ -146,7 +205,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			 <plugin>
 		            <groupId>com.google.code.maven-license-plugin</groupId>
 		            <artifactId>maven-license-plugin</artifactId>
@@ -167,29 +226,7 @@
 		        </plugin>
 		</plugins>
 	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-				   <encoding>UTF-8</encoding>
-				  <aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jxr-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-                		<artifactId>maven-pmd-plugin</artifactId>
-            		</plugin>		
- 			<plugin>	
-        			<artifactId>maven-surefire-report-plugin</artifactId>
-      			</plugin>
-		</plugins>
-	</reporting>
+	
 
 	<repositories>
 		<!--  Our own repository 
@@ -202,9 +239,6 @@
 				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 		</repository>-->
-		
-		
-		
 	</repositories>
 
 	<pluginRepositories/>
