@@ -2,21 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>imgserver-java-client-master</artifactId>
-		<groupId>com.sirika.imgserver</groupId>
+		<artifactId>pymager-java-client-parent</artifactId>
+		<groupId>com.sirika.pymager</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.sirika.imgserver</groupId>
-	<artifactId>imgserver-integration-tests</artifactId>
-	<name>Image Server Integration Tests</name>
+	<groupId>com.sirika.pymager</groupId>
+	<artifactId>pymager-integration-tests</artifactId>
+	<name>PyMager Server Integration Tests</name>
 	<version>0.1-SNAPSHOT</version>
 	<dependencies>
 
 		<!-- Internal Dependencies that we test in integration -->
 		<dependency>
-			<groupId>com.sirika.imgserver</groupId>
-			<artifactId>imgserver-java-client</artifactId>
+			<groupId>com.sirika.pymager</groupId>
+			<artifactId>pymager-java-client</artifactId>
 			<version>${currentVersion}</version>
 			<scope>compile</scope>
 		</dependency>

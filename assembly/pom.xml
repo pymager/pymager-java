@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>imgserver-java-client-parent</artifactId>
-		<groupId>com.sirika.imgserver</groupId>
+		<artifactId>pymager-java-client-parent</artifactId>
+		<groupId>com.sirika.pymager</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.sirika.imgserver</groupId>
-	<artifactId>imgserver-java-client-assembly</artifactId>
+	<groupId>com.sirika.pymager</groupId>
+	<artifactId>pymager-java-client-assembly</artifactId>
 	<packaging>pom</packaging>
-	<name>Image Server Java Client Assembly</name>
+	<name>PyMager Server Java Client Assembly</name>
 	<version>0.1-SNAPSHOT</version>
 	<properties>
 		<slf4j.version>1.5.2</slf4j.version>
