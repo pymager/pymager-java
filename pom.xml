@@ -5,7 +5,7 @@
 	<artifactId>pymager-java-client-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>PyMager Java Client Parent</name>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	<url>http://opensource.sirika.com/pymager</url>
 	<inceptionYear>2009</inceptionYear>
 	<prerequisites>
