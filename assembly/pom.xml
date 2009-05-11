@@ -12,14 +12,38 @@
 	<packaging>pom</packaging>
 	<name>PyMager Server Java Client Assembly</name>
 	<version>0.1-SNAPSHOT</version>
-	<properties>
-		<slf4j.version>1.5.2</slf4j.version>
-	</properties>
-	<dependencies />
-
+	<dependencies>
+		<dependency>
+			<groupId>com.sirika.pymager</groupId>
+			<artifactId>pymager-java-client</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
-		<plugins />
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/all.xml</descriptor>
+					</descriptors>
+					<finalName>pymager-java-client-${version}</finalName>
+					<outputDirectory>target/assembly/out</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
 
 	</build>
 </project>
