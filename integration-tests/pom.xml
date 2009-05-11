@@ -9,7 +9,7 @@
 	<groupId>com.sirika.pymager</groupId>
 	<artifactId>pymager-integration-tests</artifactId>
 	<name>PyMager Server Integration Tests</name>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	<dependencies>
 
 		<!-- Internal Dependencies that we test in integration -->
