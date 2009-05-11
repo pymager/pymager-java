@@ -84,7 +84,6 @@
 	</organization>
 	<modules>
 		<module>client</module>
-		<module>assembly</module>
 		<module>integration-tests</module>
 	</modules>
 
@@ -106,6 +105,9 @@
 		</profile>
 		<profile>
 			<id>release</id>
+			<modules>
+				<module>assembly</module>
+			</modules>
 			<build>
 				<plugins>
 					<plugin>

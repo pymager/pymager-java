@@ -42,8 +42,8 @@
 	</bean>
 	
 	<bean id="httpClient" class="com.sirika.pymager.httpclienthelpers.HttpClientFactoryBean">
-		<property name="maxTotalConnections"><value>100</value></property>
-		<property name="defaultMaxConnectionsPerRoute"><value>2</value></property>
+		<property name="maxTotalConnections"><value>${imgserver.httpclient.maxTotalConnections}</value></property>
+		<property name="defaultMaxConnectionsPerRoute"><value>${imgsevrer.httpclient.defaultMaxConnectionsPerRoute}</value></property>
 		 
 		<property name="params">
 			<util:map></util:map>
