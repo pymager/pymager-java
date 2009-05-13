@@ -17,7 +17,7 @@
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
 			<version>0.2-SNAPSHOT</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Optional Logging dependencies -->
