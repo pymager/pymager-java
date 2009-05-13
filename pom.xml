@@ -26,7 +26,7 @@
 		<developerConnection>
 			scm:svn:http://www.sirika.com/svn/funala/pymager-java-client/trunk
 		</developerConnection>
-		<url>http://www.sirika.com/svn/funala/pymager-java-client/tags/trunk</url>
+		<url>http://www.sirika.com/svn/funala/pymager-java-client/trunk</url>
 	</scm>
 
 	<licenses>
@@ -186,6 +186,8 @@
 				<configuration>
 					<remoteTagging>true</remoteTagging>
 					<releaseProfiles>release</releaseProfiles>
+					<!-- See http://jira.codehaus.org/browse/MRELEASE-271 -->
+					<preparationGoals>clean install</preparationGoals>
 				</configuration>
 			</plugin>
 
