@@ -40,7 +40,6 @@
 					<finalName>pymager-java-client-${version}</finalName>
 					<outputDirectory>target/assembly/out</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
-					<goals>install deploy</goals>
 				</configuration>
 			</plugin>
 		</plugins>

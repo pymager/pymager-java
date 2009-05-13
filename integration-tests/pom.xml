@@ -17,7 +17,6 @@
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
 			<version>0.2-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- Optional Logging dependencies -->
@@ -25,37 +24,31 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<version>${springframework.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${springframework.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${springframework.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${springframework.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -67,7 +60,6 @@
 			<groupId>com.google.collections</groupId>
 			<artifactId>google-collections</artifactId>
 			<version>1.0-rc1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -123,6 +115,7 @@
 				</plugins>
 			</build>
 		</profile>
+		<!-- 
 		<profile>
 			<id>release</id>
 			<build>
@@ -136,6 +129,6 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
+		</profile> -->
 	</profiles>
 </project>
