@@ -18,6 +18,13 @@
 			<artifactId>pymager-java-client</artifactId>
 			<version>0.3-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.sirika.pymager</groupId>
+			<artifactId>pymager-java-client</artifactId>
+			<version>0.3-SNAPSHOT</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Optional Logging dependencies -->
 		<dependency>
