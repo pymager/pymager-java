@@ -3,19 +3,19 @@
 	<parent>
 		<artifactId>pymager-java-client-parent</artifactId>
 		<groupId>com.sirika.pymager</groupId>
-		<version>0.6</version>
+		<version>0.7-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sirika.pymager</groupId>
 	<artifactId>pymager-java-client-assembly</artifactId>
 	<packaging>pom</packaging>
 	<name>PyMager Server Java Client Assembly</name>
-	<version>0.6</version>
+	<version>0.7-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
-			<version>0.6</version>
+			<version>0.7-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
