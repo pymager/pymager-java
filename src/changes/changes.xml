@@ -25,7 +25,11 @@
     <author email="sami.dalouche@gmail.com">Sami Dalouche</author>
   </properties>
   <body>
-    
+    <release version="0.5" date="2009-05-15" description="First release">
+      <action dev="sdalouche" type="fix">
+      	Fixed stupid release mistake in 0.3 and 0.4 (included test resources)
+      </action>
+    </release>
     <release version="0.3" date="2009-05-15" description="First release">
       <action dev="sdalouche" type="add">
       	Created first version of pymager-java-client
