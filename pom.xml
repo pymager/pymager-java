@@ -212,7 +212,7 @@
 				<version>2.0-beta-9</version>
 				<configuration>
 					<remoteTagging>true</remoteTagging>
-					<!-- <releaseProfiles>release</releaseProfiles> -->
+					<releaseProfiles>release</releaseProfiles>
 					<!-- See http://jira.codehaus.org/browse/MRELEASE-271 -->
 					<preparationGoals>clean install</preparationGoals>
 				</configuration>
