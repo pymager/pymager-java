@@ -28,9 +28,20 @@
 	</formats>
 	<dependencySets>
 		<dependencySet>
+			<useStrictFiltering>false</useStrictFiltering>
 			<outputDirectory>lib</outputDirectory>
-			<useProjectArtifact>false</useProjectArtifact>
+			<excludes>
+				<exclude>com.sirika.pymager:pymager-java-client:jar:tests</exclude>
+			</excludes>
 		</dependencySet>
+		<!-- 
+		<dependencySet>
+			<useStrictFiltering>true</useStrictFiltering>
+			<outputDirectory>lib</outputDirectory>
+			<includes>
+				<include>com.sirika.pymager:pymager-java-client:jar:</include>
+			</includes>
+		</dependencySet> -->
 	</dependencySets>
 	<fileSets>
 		<fileSet>
