@@ -29,7 +29,7 @@
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
-			<scope>runtime</scope>
+			<useProjectArtifact>false</useProjectArtifact>
 		</dependencySet>
 	</dependencySets>
 	<fileSets>
