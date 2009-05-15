@@ -30,9 +30,10 @@
 		<dependencySet>
 			<useStrictFiltering>false</useStrictFiltering>
 			<outputDirectory>lib</outputDirectory>
+			 <!-- 
 			<excludes>
 				<exclude>com.sirika.pymager:pymager-java-client:jar:tests</exclude>
-			</excludes>
+			</excludes>  -->
 		</dependencySet>
 		<!-- 
 		<dependencySet>
