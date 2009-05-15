@@ -3,25 +3,25 @@
 	<parent>
 		<artifactId>pymager-java-client-parent</artifactId>
 		<groupId>com.sirika.pymager</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sirika.pymager</groupId>
 	<artifactId>pymager-integration-tests</artifactId>
 	<name>PyMager Server Integration Tests</name>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9</version>
 	<dependencies>
 
 		<!-- Internal Dependencies that we test in integration -->
 		<dependency>
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
-			<version>0.9-SNAPSHOT</version>
+			<version>0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
-			<version>0.9-SNAPSHOT</version>
+			<version>0.9</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
