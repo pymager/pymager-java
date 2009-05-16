@@ -149,7 +149,10 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!-- Only activate at release time because only works when called from top module, and slows things down -->
+					<!--
+						Only activate at release time because only works when called from
+						top module, and slows things down
+					-->
 					<plugin>
 						<groupId>com.google.code.maven-license-plugin</groupId>
 						<artifactId>maven-license-plugin</artifactId>
@@ -290,18 +293,27 @@
 
 
 	<repositories>
-		<!--
-			Our own repository <repository> <id>sirika.com-maven2</id>
-			<name>Sirika Repository</name>
-			<url>http://www.sirika.com/maven2</url> <snapshots>
-			<enabled>true</enabled> <updatePolicy>daily</updatePolicy>
-			</snapshots> </repository>
-		-->
+
+		<repository>
+			<id>sirika-releases</id>
+			<name>Sirika Releases Repository</name>
+			<url>http://www.sirika.com/maven2/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>sirika-snapshots</id>
+			<name>Sirika Snapshots Repository</name>
+			<url>http://www.sirika.com/maven2/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 
 	<pluginRepositories />
 
 	<dependencies />
-
-
 </project>
