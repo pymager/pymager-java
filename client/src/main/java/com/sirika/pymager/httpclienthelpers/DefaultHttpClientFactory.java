@@ -81,6 +81,10 @@ public class DefaultHttpClientFactory {
 	httpClient.addResponseInterceptor(new HttpResponseInterceptor() {
 	public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
 	    HttpEntity entity = response.getEntity();
+	    if(entity == null) {
+		return;
+	    }
+	    
 	    Header ceheader = entity.getContentEncoding();
 	    if (ceheader != null) {
 		HeaderElement[] codecs = ceheader.getElements();

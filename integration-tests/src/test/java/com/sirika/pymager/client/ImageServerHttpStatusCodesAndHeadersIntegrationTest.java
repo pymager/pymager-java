@@ -26,10 +26,15 @@ import static com.sirika.pymager.client.testhelpers.ImageReferenceObjectMother.y
 import static com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother.textfileresource;
 import static com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -38,7 +43,11 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.impl.cookie.DateUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +65,16 @@ import com.sirika.pymager.httpclienthelpers.RepeatableMultipartEntity;
  * 
  * Some of the tests do not directly hit the ImageServer client API as 
  * <ul>
- * <li>the goal is to explicitly reproduce errors that are not possible when using the API (e.g. the client API always generates a correct URLs).</li>
+ * <li>the goal is to explicitly reproduce errors that are not possible when using the API (e.g. the client API always generates correct URLs).</li>
  * <li>we want a clearly-readable specification of image server's behavior</li>
  * </ul>
  * @author Sami Dalouche (sami.dalouche@gmail.com)
  *
  */
-public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServerIntegrationTestCase {
+public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends AbstractImageServerIntegrationTestCase {
 
+    private static final String IF_MODIFIED_SINCE_HEADER_NAME = "If-Modified-Since";
+    private static final String LAST_MODIFIED_HEADER_NAME = "Last-Modified";
     @Autowired private HttpClient httpClient;
     @Autowired @Qualifier("baseUrl") private String baseUrl;
     
@@ -83,48 +94,96 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	}
     }
     
+    @Test public void shouldReturnLastModifiedHeaderForOriginalResource() throws ClientProtocolException, IOException, InterruptedException {
+	uploadYemmaGouraya();
+	HttpGet firstHttpGet = new HttpGet(baseUrl + "/original/" + yemmaGourayaId());
+	HttpResponse httpResponse = httpClient.execute(firstHttpGet);
+	firstHttpGet.abort();
+	assertTrue(StringUtils.isNotEmpty(lastModifiedValue(httpResponse)));
+    }
+    
+    @Test public void shouldReturnLastModifiedHeaderForDerivedResource() throws ClientProtocolException, IOException, InterruptedException {
+	uploadYemmaGouraya();
+	HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
+	HttpResponse httpResponse = httpClient.execute(httpGet);
+	httpGet.abort();
+	assertTrue(StringUtils.isNotEmpty(lastModifiedValue(httpResponse)));
+    }
+
+    private String lastModifiedValue(HttpResponse httpResponse) {
+	return httpResponse.getFirstHeader(LAST_MODIFIED_HEADER_NAME).getValue();
+    }
+    
+    @Test public void shouldRaise304WhenOriginalResourceHasNotBeenModified() throws ClientProtocolException, IOException, InterruptedException {
+	uploadYemmaGouraya();
+	shouldRaise304WithModifiedSinceHeaderForUrl(baseUrl + "/original/" + yemmaGourayaId());
+    }
+    
+    @Test public void shouldRaise304WhenDerivedResourceHasNotBeenModified() throws ClientProtocolException, IOException, InterruptedException {
+	uploadYemmaGouraya();
+	shouldRaise304WithModifiedSinceHeaderForUrl(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
+    }
+    
+    private void shouldRaise304WithModifiedSinceHeaderForUrl(String url) throws ClientProtocolException, IOException, InterruptedException {
+	//DateTime now = new DateTime(DateTimeZone.UTC);
+	HttpGet firstHttpGet = new HttpGet(url);
+	HttpResponse firstResponse = httpClient.execute(firstHttpGet);
+	firstHttpGet.abort();
+
+	HttpGet secondHttpGet = new HttpGet(url);
+	secondHttpGet.addHeader(IF_MODIFIED_SINCE_HEADER_NAME, lastModifiedValue(firstResponse));
+	HttpResponse secondResponse = httpClient.execute(secondHttpGet);
+	
+	secondHttpGet.abort();
+	assertEquals(HttpStatus.SC_NOT_MODIFIED, secondResponse.getStatusLine().getStatusCode());
+    }
+
+    private Date dateInFuture() {
+	return new DateTime().plusDays(1).toDate();
+    }
+    
     @Test public void shouldRaise404WhenDownloadingNotExistingOriginalResource() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
 	HttpResponse response = httpClient.execute(httpGet);
-	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 	httpGet.abort();
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise404WhenDeletingNonExistingOriginalResource() throws ClientProtocolException, IOException {
 	HttpDelete httpDelete = new HttpDelete(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
 	HttpResponse response = httpClient.execute(httpDelete);
-	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 	httpDelete.abort();
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise404WhenDownloadingNotExistingDerivedResource() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/someDerivedResourceThatDoesNotExist-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
-	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 	httpGet.abort();
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise404WhenDerivedResourceUrlFormatIsInvalid() throws ClientProtocolException, IOException {
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/derivedResourceThatHasNoSizeNorFormat-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
-	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 	httpGet.abort();
+	assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise400WhenRequestingNotSupportedImageFormat() throws ClientProtocolException, IOException {
 	uploadYemmaGouraya();
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.pixar");
 	HttpResponse response = httpClient.execute(httpGet);
-	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
 	httpGet.abort();
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise405WhenHttpMethodNotSupported() throws ClientProtocolException, IOException {
 	uploadYemmaGouraya();
 	HttpDelete httpDelete = new HttpDelete(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
 	HttpResponse response = httpClient.execute(httpDelete);
-	assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine().getStatusCode());
 	httpDelete.abort();
+	assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine().getStatusCode());
     }
 
     @Test public void shouldRaise400WhenImageStreamIsNotRecognized() throws ClientProtocolException, IOException {
@@ -136,8 +195,8 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	httpPost.setEntity(entity);
 	
 	HttpResponse response = httpClient.execute(httpPost);
-	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
 	httpPost.abort();
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise400WhenMultipartEntityDoesNotContainRequiredField() throws ClientProtocolException, IOException {
@@ -148,8 +207,8 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	httpPost.setEntity(entity);
 	
 	HttpResponse response = httpClient.execute(httpPost);
-	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
 	httpPost.abort();
+	assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
     
     @Test public void shouldRaise409WhenImageIdAlreadyExists() throws ClientProtocolException, IOException {
@@ -162,8 +221,8 @@ public class ImageServerErrorHandlingIntegrationTest extends AbstractImageServer
 	uploadYemmaGouraya();
 	HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-25000x25000.jpg");
 	HttpResponse response = httpClient.execute(httpGet);
-	assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
 	httpGet.abort();
+	assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
     
     private HttpResponse uploadYemmaGouraya() throws IOException, ClientProtocolException {

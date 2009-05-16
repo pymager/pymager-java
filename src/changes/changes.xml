@@ -25,6 +25,14 @@
     <author email="sami.dalouche@gmail.com">Sami Dalouche</author>
   </properties>
   <body>
+  	<release version="0.11" date="2009-05-16" description="Added caching tests and fixed miscellaneous bugs">
+      <action dev="sdalouche" type="add">
+      	Added tests to make sure the If-Modified-Since / Last-Modified headers are taken into consideration
+      </action>
+      <action dev="sdalouche" type="fix">
+      	Wrapped unknown client protocol exceptions into our custom exceptions
+      </action>
+    </release>
     <release version="0.5" date="2009-05-15" description="First release">
       <action dev="sdalouche" type="fix">
       	Fixed stupid release mistake in 0.3 and 0.4 (included test resources)

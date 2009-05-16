@@ -69,13 +69,21 @@ public class UploadImageCommand {
     
     public ImageReference execute() throws UnknownUploadFailureException{
 	ImageReference imageReference = originalImage(this.imageId.toString());
+	HttpPost httpPost = null;
+	HttpResponse response = null;
 	try {
-	    HttpPost httpPost = createHttpPostFor(imageFormat, imageSource, imageReference);
-	    HttpResponse response = httpClient.execute(httpPost);
+	    httpPost = createHttpPostFor(imageFormat, imageSource, imageReference);
+	    response = httpClient.execute(httpPost);
+	} catch (Exception e) {
+	    throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
+	}
+	
+	try {
 	    handleUploadResponse(this.imageId, imageFormat, httpPost, response);
 	} catch (IOException e) {
 	    throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
 	}
+	
 	logger.debug("Upload of {} done successfully. Download can be achieved using Image Reference: {}", this.imageId, imageReference);
 	return imageReference;
     }

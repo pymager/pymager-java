@@ -55,7 +55,7 @@ public class DeleteImageCommand {
 	    HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
 	    HttpResponse response = httpClient.execute(httpDelete);
 	    handleDeleteResponse(imageId, httpDelete, response);
-	} catch (IOException e) {
+	} catch (Exception e) {
 	    throw new UnknownDeleteFailureException(imageId, e);
 	}
     }

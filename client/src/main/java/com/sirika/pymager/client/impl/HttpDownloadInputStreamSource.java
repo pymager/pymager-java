@@ -59,7 +59,13 @@ class HttpDownloadInputStreamSource implements InputStreamSource{
 
     public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownDownloadFailureException {
 	logger.debug("Generating InputStream for {}", imageReference);
-	HttpResponse response = httpClient.execute(httpGet);
+	HttpResponse response = null;
+	try {
+	    response = httpClient.execute(httpGet);    
+	} catch(Exception e) {
+	    throw new UnknownDownloadFailureException(imageReference, e);
+	}
+	
 	
 	logger.debug("Received Status: {}", response.getStatusLine());
 	handleErrors(response);
