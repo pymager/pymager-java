@@ -17,14 +17,14 @@
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
 			<version>0.10-SNAPSHOT</version>
-		</dependency>
+		</dependency><!-- 
 		<dependency>
 			<groupId>com.sirika.pymager</groupId>
 			<artifactId>pymager-java-client</artifactId>
 			<version>0.10-SNAPSHOT</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- Optional Logging dependencies -->
 		<dependency>
