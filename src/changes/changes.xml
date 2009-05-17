@@ -32,6 +32,9 @@
       <action dev="sdalouche" type="fix">
       	Wrapped unknown client protocol exceptions into our custom exceptions
       </action>
+      <action dev="sdalouche" type="fix">
+      	Abstracted the notion of HttpClientTemplate, and added a generic error handling mechanism
+      </action>
     </release>
     <release version="0.5" date="2009-05-15" description="First release">
       <action dev="sdalouche" type="fix">
