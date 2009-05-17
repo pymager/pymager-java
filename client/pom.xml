@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>pymager-java-client-parent</artifactId>
 		<groupId>com.sirika.pymager</groupId>
-		<version>0.11-SNAPSHOT</version>
+		<version>0.11</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sirika.pymager</groupId>
 	<artifactId>pymager-java-client</artifactId>
 	<name>PyMager Java Client</name>
-	<version>0.11-SNAPSHOT</version>
+	<version>0.11</version>
 	<properties>
 	</properties>
 	<dependencies>
