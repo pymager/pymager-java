@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.sirika.httpclienthelpers;
+package com.sirika.httpclienthelpers.gzip;
 
 import java.io.IOException;
 

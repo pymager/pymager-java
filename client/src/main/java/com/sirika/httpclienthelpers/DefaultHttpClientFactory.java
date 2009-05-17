@@ -35,6 +35,9 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
+import com.sirika.httpclienthelpers.gzip.GzipRequestInterceptor;
+import com.sirika.httpclienthelpers.gzip.GzipResponseInterceptor;
+
 /**
  * Helper class to ease the creation of {@link HttpClient}
  * 
