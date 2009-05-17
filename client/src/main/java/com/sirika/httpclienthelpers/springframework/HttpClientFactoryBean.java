@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with PyMager Java REST Client.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.httpclienthelpers;
+package com.sirika.httpclienthelpers.springframework;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,8 @@ import org.apache.http.client.params.AllClientPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.springframework.beans.factory.FactoryBean;
+
+import com.sirika.httpclienthelpers.DefaultHttpClientFactory;
 /**
  * Spring {@link FactoryBean} helper that eases the creation and configuration of HttpComponents' {@link HttpClient}.
  * Configuring HttpClient authentication, number of connections, ... cannot be done declaratively using HttpClient's 

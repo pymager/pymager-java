@@ -29,6 +29,12 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.HttpEntityWrapper;
 
+/**t 
+ * {@link HttpEntityWrapper} that adds GZIP decompressoin support
+ * 
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
 class GzipDecompressingEntity extends HttpEntityWrapper {
 
     public GzipDecompressingEntity(final HttpEntity entity) {

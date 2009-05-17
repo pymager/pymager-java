@@ -19,32 +19,28 @@
  */
 package com.sirika.httpclienthelpers;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HttpContext;
 
+/**
+ * Helper class to ease the creation of {@link HttpClient}
+ * 
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
 public class DefaultHttpClientFactory {
     public static DefaultHttpClient defaultHttpClient() {
 	return new DefaultHttpClient(threadSafeClientConnManager(defaultHttpParams()), defaultHttpParams());
@@ -68,35 +64,8 @@ public class DefaultHttpClientFactory {
     }
     
     private static void handleGzipContentCompression(DefaultHttpClient httpClient) {
-	httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
-	    public void process(HttpRequest request, HttpContext context)
-		    throws HttpException, IOException {
-		if (!request.containsHeader("Accept-Encoding")) {
-	                request.addHeader("Accept-Encoding", "gzip");
-	            }
-	    }
-
-	    });
-	    
-	httpClient.addResponseInterceptor(new HttpResponseInterceptor() {
-	public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
-	    HttpEntity entity = response.getEntity();
-	    if(entity == null) {
-		return;
-	    }
-	    
-	    Header ceheader = entity.getContentEncoding();
-	    if (ceheader != null) {
-		HeaderElement[] codecs = ceheader.getElements();
-		for (int i = 0; i < codecs.length; i++) {
-		    if (codecs[i].getName().equalsIgnoreCase("gzip")) {
-			response.setEntity(new GzipDecompressingEntity(response.getEntity())); 
-			return;
-		    }
-		}
-	    }
-	}
-	});
+	httpClient.addRequestInterceptor(new GzipRequestInterceptor());
+	httpClient.addResponseInterceptor(new GzipResponseInterceptor());
     }
 
     public static ThreadSafeClientConnManager threadSafeClientConnManager(HttpParams httpParams) {
@@ -105,10 +74,8 @@ public class DefaultHttpClientFactory {
 
     public static SchemeRegistry defaultSchemeRegistry() {
 	SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(
-                new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(
-                new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
         return schemeRegistry;
     }
 

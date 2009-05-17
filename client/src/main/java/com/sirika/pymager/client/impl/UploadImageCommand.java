@@ -37,12 +37,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
 import com.google.common.collect.ImmutableList;
-import com.sirika.httpclienthelpers.InputStreamSourceBody;
-import com.sirika.httpclienthelpers.RepeatableMultipartEntity;
+import com.sirika.httpclienthelpers.springframework.InputStreamSourceBody;
+import com.sirika.httpclienthelpers.springframework.RepeatableMultipartEntity;
 import com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler;
 import com.sirika.httpclienthelpers.template.HttpClientTemplate;
 import com.sirika.httpclienthelpers.template.HttpErrorHandler;
-import com.sirika.httpclienthelpers.template.HttpResponseCallback;
 import com.sirika.pymager.client.BadUploadRequestException;
 import com.sirika.pymager.client.ImageAlreadyExistsException;
 import com.sirika.pymager.client.ImageFormat;
@@ -80,15 +79,7 @@ public class UploadImageCommand {
 	    throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
 	}
 	
-	this.httpClientTemplate.execute(httpPost, new HttpResponseCallback() {
-	    public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
-		HttpEntity entity = httpResponse.getEntity();
-		if(entity != null) {
-		    entity.consumeContent();
-		}
-		return null;
-	    }    
-	}, httpErrorHandlers());
+	this.httpClientTemplate.executeWithoutResult(httpPost, httpErrorHandlers());
 	
 	logger.debug("Upload of {} done successfully. Download can be achieved using Image Reference: {}", this.imageId, imageReference);
 	return imageReference;

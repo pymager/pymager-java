@@ -5,7 +5,16 @@ package com.sirika.httpclienthelpers.template;
 
 import org.apache.http.StatusLine;
 
-
+/**
+ * Abstract implementation for {@link HttpErrorHandler} helper class, that provides a 
+ * facility to match errors.
+ * 
+ * TODO: At some point, the {@link ErrorMatcher} abstraction should probably be reworked into a 
+ * Specification system, allowing to combine conditions, etc.
+ * 
+ * @author Sami Dalouche (sami.dalouche@gmail.com)
+ *
+ */
 public abstract class AbstractHttpErrorHandler implements HttpErrorHandler {
     public interface ErrorMatcher {
 	boolean matches(StatusLine statusLine);

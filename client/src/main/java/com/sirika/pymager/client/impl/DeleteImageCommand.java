@@ -22,7 +22,6 @@ package com.sirika.pymager.client.impl;
 import static com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler.statusCodeGreaterOrEquals;
 import static com.sirika.pymager.client.ImageReference.originalImage;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
@@ -34,7 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler;
 import com.sirika.httpclienthelpers.template.HttpClientTemplate;
 import com.sirika.httpclienthelpers.template.HttpErrorHandler;
-import com.sirika.httpclienthelpers.template.HttpResponseCallback;
 import com.sirika.pymager.client.ImageId;
 import com.sirika.pymager.client.UnknownDeleteFailureException;
 import com.sirika.pymager.client.UrlGenerator;
@@ -57,15 +55,7 @@ public class DeleteImageCommand {
     public void execute() throws UnknownDeleteFailureException{
 	HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
 	
-	this.httpClientTemplate.execute(httpDelete, new HttpResponseCallback() {
-	    public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
-		HttpEntity entity = httpResponse.getEntity();
-		if(entity != null) {
-		    entity.consumeContent();
-		}
-		return null;
-	    }    
-	}, httpErrorHandlers());
+	this.httpClientTemplate.executeWithoutResult(httpDelete, httpErrorHandlers());
     }
     
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
