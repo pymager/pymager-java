@@ -35,6 +35,9 @@
       <action dev="sdalouche" type="fix">
       	Abstracted the notion of HttpClientTemplate, and added a generic error handling mechanism
       </action>
+      <action dev="sdalouche" type="fix">
+      	Moved the Httpclient helpers into a different project
+      </action>
     </release>
     <release version="0.5" date="2009-05-15" description="First release">
       <action dev="sdalouche" type="fix">
