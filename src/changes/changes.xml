@@ -25,6 +25,11 @@
     <author email="sami.dalouche@gmail.com">Sami Dalouche</author>
   </properties>
   <body>
+  	<release version="0.12" date="2009-05-17" description="Makes sure ID does not contain special characters">
+      <action dev="sdalouche" type="update">
+      	Added tests and implementation to make sure IDs do not contain special characters
+      </action>
+    </release>
   	<release version="0.11" date="2009-05-16" description="Added caching tests and fixed miscellaneous bugs">
       <action dev="sdalouche" type="add">
       	Added tests to make sure the If-Modified-Since / Last-Modified headers are taken into consideration

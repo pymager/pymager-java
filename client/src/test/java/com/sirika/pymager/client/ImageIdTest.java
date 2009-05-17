@@ -47,6 +47,21 @@ public class ImageIdTest {
 	imageId("my/id");
     }
     
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldNotAllowUnicodeCharacters() {
+	imageId("myéèàid");
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldNotAllowHyphen() {
+	imageId("my-id");
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldNotAllowUnderscore() {
+	imageId("my_id");
+    }
+    
     @Test
     public void shouldBeEqual() {
 	ImageId britney1 = imageId("britney");

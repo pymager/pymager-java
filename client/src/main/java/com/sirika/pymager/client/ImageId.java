@@ -19,6 +19,7 @@
  */
 package com.sirika.pymager.client;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -32,8 +33,8 @@ public class ImageId {
     
     private ImageId(String id) {
 	Validate.notNull(id);
-	if(id.contains("/")) {
-	    throw new IllegalArgumentException("ID cannot contain the slash (/) character");
+	if((!StringUtils.isAsciiPrintable(id)) || (!StringUtils.isAlphanumeric(id))) {
+	    throw new IllegalArgumentException("ID cannot contain special characters");
 	}
 	this.id = id;
     }
