@@ -19,9 +19,8 @@
  */
 package com.sirika.pymager.client.impl;
 
+import static com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler.statusCodeGreaterOrEquals;
 import static com.sirika.pymager.client.ImageReference.originalImage;
-
-import java.io.IOException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +30,11 @@ import org.apache.http.client.methods.HttpDelete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
+import com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler;
+import com.sirika.httpclienthelpers.template.HttpClientTemplate;
+import com.sirika.httpclienthelpers.template.HttpErrorHandler;
+import com.sirika.httpclienthelpers.template.HttpResponseCallback;
 import com.sirika.pymager.client.ImageId;
 import com.sirika.pymager.client.UnknownDeleteFailureException;
 import com.sirika.pymager.client.UrlGenerator;
@@ -38,41 +42,42 @@ import com.sirika.pymager.client.UrlGenerator;
 public class DeleteImageCommand {
     private static final Logger logger = LoggerFactory.getLogger(DeleteImageCommand.class);
     
-    private HttpClient httpClient;
+    private HttpClientTemplate httpClientTemplate;
     private UrlGenerator urlGenerator;
     private ImageId imageId;
     
     public DeleteImageCommand(HttpClient httpClient, UrlGenerator urlGenerator,
 	    ImageId imageId) {
 	super();
-	this.httpClient = httpClient;
+	this.httpClientTemplate = new HttpClientTemplate(httpClient);
 	this.urlGenerator = urlGenerator;
 	this.imageId = imageId;
     }
     
     public void execute() throws UnknownDeleteFailureException{
-	try {
-	    HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
-	    HttpResponse response = httpClient.execute(httpDelete);
-	    handleDeleteResponse(imageId, httpDelete, response);
-	} catch (Exception e) {
-	    throw new UnknownDeleteFailureException(imageId, e);
-	}
+	HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
+	
+	this.httpClientTemplate.execute(httpDelete, new HttpResponseCallback() {
+	    public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
+		HttpEntity entity = httpResponse.getEntity();
+		if(entity != null) {
+		    entity.consumeContent();
+		}
+		return null;
+	    }    
+	}, httpErrorHandlers());
     }
     
-    private void handleDeleteResponse(ImageId id, HttpDelete httpPost, HttpResponse response) throws IOException {
-	logger.debug("Received status : {}", response.getStatusLine());
-	handleDeleteNon2xxError(id, httpPost, response);
-	HttpEntity entity = response.getEntity();
-	if(entity != null) {
-	    entity.consumeContent();
-	}
+    private Iterable<HttpErrorHandler> httpErrorHandlers() {
+	return ImmutableList.of(defaultHandler());
     }
     
-    private void handleDeleteNon2xxError(ImageId id, HttpDelete httpDelete, HttpResponse response) {
-	if(response.getStatusLine().getStatusCode() >= 300) {
-	    httpDelete.abort();
-	    throw new UnknownDeleteFailureException(id, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
-	}
+    private HttpErrorHandler defaultHandler() {
+	return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
+	    public void handle(HttpResponse response) throws Exception {
+		throw new UnknownDeleteFailureException(imageId, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
+	    }
+	};
     }
+    
 }

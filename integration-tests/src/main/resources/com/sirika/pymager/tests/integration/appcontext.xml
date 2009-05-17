@@ -41,7 +41,7 @@
 		<constructor-arg><value>${imgserver.baseurl}</value></constructor-arg>
 	</bean>
 	
-	<bean id="httpClient" class="com.sirika.pymager.httpclienthelpers.HttpClientFactoryBean">
+	<bean id="httpClient" class="com.sirika.httpclienthelpers.HttpClientFactoryBean">
 		<property name="maxTotalConnections"><value>${imgserver.httpclient.maxTotalConnections}</value></property>
 		<property name="defaultMaxConnectionsPerRoute"><value>${imgsevrer.httpclient.defaultMaxConnectionsPerRoute}</value></property>
 		 

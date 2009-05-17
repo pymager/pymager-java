@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with PyMager Java REST Client.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.sirika.pymager.httpclienthelpers;
+package com.sirika.httpclienthelpers;
 
 import java.io.IOException;
 import java.util.Map;

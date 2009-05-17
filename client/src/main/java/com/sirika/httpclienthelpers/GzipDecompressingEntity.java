@@ -20,7 +20,7 @@
 /**
  * 
  */
-package com.sirika.pymager.httpclienthelpers;
+package com.sirika.httpclienthelpers;
 
 import java.io.IOException;
 import java.io.InputStream;

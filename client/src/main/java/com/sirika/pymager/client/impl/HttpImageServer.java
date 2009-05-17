@@ -20,7 +20,7 @@
 package com.sirika.pymager.client.impl;
 
 
-import static com.sirika.pymager.httpclienthelpers.DefaultHttpClientFactory.defaultHttpClient;
+import static com.sirika.httpclienthelpers.DefaultHttpClientFactory.defaultHttpClient;
 
 import org.apache.commons.lang.Validate;
 import org.apache.http.client.HttpClient;

@@ -54,11 +54,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamSource;
 
+import com.sirika.httpclienthelpers.InputStreamSourceBody;
+import com.sirika.httpclienthelpers.RepeatableMultipartEntity;
 import com.sirika.pymager.client.ImageReference;
 import com.sirika.pymager.client.ResourceNotExistingException;
 import com.sirika.pymager.client.impl.UploadImageCommand;
-import com.sirika.pymager.httpclienthelpers.InputStreamSourceBody;
-import com.sirika.pymager.httpclienthelpers.RepeatableMultipartEntity;
 
 /** 
  * The idea of this class is to specify the behavior (executable specification) of Image Server for borderline cases.
