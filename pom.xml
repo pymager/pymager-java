@@ -22,10 +22,10 @@
 
 	<scm>
 		<connection>
-			git://github.com/samokk/pymager-java-client.git
+			scm:gitgit://github.com/samokk/pymager-java-client.git
 		</connection>
 		<developerConnection>
-			git@github.com:samokk/pymager-java-client.git
+			scm:gitgit@github.com:samokk/pymager-java-client.git
 		</developerConnection>
 		<url>http://github.com/samokk/pymager-java-client</url>
 	</scm>
@@ -53,22 +53,6 @@
 		</notifiers>
 	</ciManagement>
 
-	<distributionManagement>
-		<repository>
-			<id>sirika-releases</id>
-			<name>Sirika Releases Repository</name>
-			<url>scp://sirika.com/srv/http/sirika.com/maven2/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>sirika-snapshots</id>
-			<name>Sirika Snapshots Repository</name>
-			<url>scp://sirika.com/srv/http/sirika.com/maven2/snapshots</url>
-		</snapshotRepository>
-		<site>
-			<id>sirika-site</id>
-			<url>scp://sirika.com/srv/http/sirika.com/projects/pymager-java-client</url>
-		</site>
-	</distributionManagement>
 	<developers>
 		<developer>
 			<id>sdalouche</id>
@@ -116,10 +100,7 @@
 			</activation>
 		</profile>
 		<profile>
-			<id>release</id>
-			<properties>
-				<skip-integration-tests>true</skip-integration-tests>
-			</properties>
+			<id>all</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -150,24 +131,6 @@
 						Only activate at release time because only works when called from
 						top module, and slows things down
 					-->
-					<plugin>
-						<groupId>com.google.code.maven-license-plugin</groupId>
-						<artifactId>maven-license-plugin</artifactId>
-						<version>1.4.0</version>
-						<configuration>
-							<header>src/etc/header.txt</header>
-							<includes>
-								<include>**/src/**</include>
-							</includes>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 			<reporting>
@@ -204,22 +167,40 @@
 					<plugin>
 						<artifactId>maven-surefire-report-plugin</artifactId>
 					</plugin>
-					<plugin>
-						<artifactId>maven-pmd-plugin</artifactId>
-						<configuration>
-							<targetJdk>${compileSource}</targetJdk>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-checkstyle-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>cobertura-maven-plugin</artifactId>
-					</plugin>
 				</plugins>
 			</reporting>
+		</profile>
+		<profile>
+			<id>release</id>
+			<properties>
+				<skip-integration-tests>true</skip-integration-tests>
+			</properties>
+			<build>
+				<plugins>
+					<!--
+						Only activate at release time because only works when called from
+						top module, and slows things down
+					-->
+					<plugin>
+						<groupId>com.google.code.maven-license-plugin</groupId>
+						<artifactId>maven-license-plugin</artifactId>
+						<version>1.4.0</version>
+						<configuration>
+							<header>src/etc/header.txt</header>
+							<includes>
+								<include>**/src/**</include>
+							</includes>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
