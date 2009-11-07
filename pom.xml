@@ -5,8 +5,9 @@
 	<artifactId>pymager-java-client-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>PyMager Java Client Parent</name>
+	<description>Java client for PyMager</description>
 	<version>0.12-SNAPSHOT</version>
-	<url>http://opensource.sirika.com/pymager</url>
+	<url>http://developers.sirika.com/pymager-java-client</url>
 	<inceptionYear>2009</inceptionYear>
 	<prerequisites>
 		<maven>2.1.0</maven>
@@ -21,37 +22,37 @@
 
 	<scm>
 		<connection>
-			scm:svn:http://www.sirika.com/svn/funala/pymager-java-client/trunk
+			git://github.com/samokk/pymager-java-client.git
 		</connection>
 		<developerConnection>
-			scm:svn:http://www.sirika.com/svn/funala/pymager-java-client/trunk
+			git@github.com:samokk/pymager-java-client.git
 		</developerConnection>
-		<url>http://www.sirika.com/svn/funala/pymager-java-client/trunk</url>
+		<url>http://github.com/samokk/pymager-java-client</url>
 	</scm>
 
 	<licenses>
 		<license>
-			<name>LGPLv3</name>
-			<url>http://www.gnu.org/copyleft/lesser.html</url>
+			<name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
 	<issueManagement>
-		<system />
-		<url />
+		<system>Launchpad</system
+		<url>https://launchpad.net/pymager-java-client</url>
 	</issueManagement>
 
 	<ciManagement>
+		<url>http://developers.sirika.com:9191/</url>
 		<system>hudson</system>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
-				<configuration>
-					<address>skoobi@free.fr</address>
-				</configuration>
 			</notifier>
 		</notifiers>
 	</ciManagement>
+
 	<distributionManagement>
 		<repository>
 			<id>sirika-releases</id>
@@ -79,10 +80,7 @@
 			<timezone>-5</timezone>
 		</developer>
 	</developers>
-	<organization>
-		<name>Sirika</name>
-		<url>http://www.sirika.com</url>
-	</organization>
+
 	<modules>
 		<module>client</module>
 		<module>integration-tests</module>
@@ -290,27 +288,45 @@
 		</plugins>
 	</build>
 
+	<distributionManagement>
+		<repository>
+			<id>sirika-repo-releases</id>
+			<name>Sirika Releases Repository</name>
+			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>sirika-repo-snapshots</id>
+			<name>Sirika Snapshots Repository</name>
+			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
+		</snapshotRepository>
+		<site>
+			<id>sirika-site</id>
+			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java-client</url>
+		</site>
+	</distributionManagement>
 
+<!--
 	<repositories>
 
 		<repository>
-			<id>sirika-releases</id>
+			<id>sirika-repo-releases</id>
 			<name>Sirika Releases Repository</name>
-			<url>http://www.sirika.com/maven2/releases</url>
+			<url>http://developers.sirika.com/maven2/releases</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 
 		<repository>
-			<id>sirika-snapshots</id>
+			<id>sirika-repo-snapshots</id>
 			<name>Sirika Snapshots Repository</name>
-			<url>http://www.sirika.com/maven2/snapshots</url>
+			<url>http://developers.sirika.com/maven2/snapshots</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
+-->
 
 	<pluginRepositories />
 
