@@ -22,10 +22,10 @@
 
 	<scm>
 		<connection>
-			scm:gitgit://github.com/samokk/pymager-java-client.git
+			scm:git:git://github.com/samokk/pymager-java-client.git
 		</connection>
 		<developerConnection>
-			scm:gitgit@github.com:samokk/pymager-java-client.git
+			scm:git:git@github.com:samokk/pymager-java-client.git
 		</developerConnection>
 		<url>http://github.com/samokk/pymager-java-client</url>
 	</scm>
