@@ -21,7 +21,7 @@
 	</dependencies>
 <profiles>
 	<profile>
-		<id>release</id>
+		<id>all</id>
 		<build>
 			<plugins>
 				<plugin>
