@@ -129,7 +129,6 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends Abstrac
 	HttpGet firstHttpGet = new HttpGet(url);
 	HttpResponse firstResponse = httpClient.execute(firstHttpGet);
 	firstHttpGet.abort();
-
 	HttpGet secondHttpGet = new HttpGet(url);
 	secondHttpGet.addHeader(IF_MODIFIED_SINCE_HEADER_NAME, lastModifiedValue(firstResponse));
 	HttpResponse secondResponse = httpClient.execute(secondHttpGet);

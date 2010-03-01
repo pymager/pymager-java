@@ -72,7 +72,7 @@ import com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother;
 public class ImageServerStressTest extends AbstractImageServerIntegrationTestCase {
     private final static long TIMEOUT_IN_SECONDS = 500;
     private final static int THREAD_POOL_SIZE = 10;
-    private final static int TOTAL_NUMBER_OF_THREADS = 20;
+    private final static int TOTAL_NUMBER_OF_THREADS = 200;
     private ExecutorService executorService;
     
     @Before
