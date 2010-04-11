@@ -1,316 +1,309 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.sirika.pymager</groupId>
-	<artifactId>pymager-java-client-parent</artifactId>
-	<packaging>pom</packaging>
-	<name>PyMager Java Client Parent</name>
-	<description>Java client for PyMager</description>
-	<version>0.13-SNAPSHOT</version>
-	<url>http://developers.sirika.com/pymager-java-client</url>
-	<inceptionYear>2009</inceptionYear>
-	<prerequisites>
-		<maven>2.1.0</maven>
-	</prerequisites>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sirika.pymager</groupId>
+    <artifactId>pymager-java-client-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>PyMager Java Client Parent</name>
+    <description>Java client for PyMager</description>
+    <version>0.13-SNAPSHOT</version>
+    <url>http://developers.sirika.com/pymager-java-client</url>
+    <inceptionYear>2009</inceptionYear>
+    <prerequisites>
+        <maven>2.1.0</maven>
+    </prerequisites>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<springframework.version>2.5.6</springframework.version>
-		<slf4j.version>1.5.2</slf4j.version>
-		<skip-integration-tests>false</skip-integration-tests>
-		<compileSource>1.5</compileSource>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <httpcomponents.version>4.1-alpha1</httpcomponents.version>
+        <slf4j.version>1.5.2</slf4j.version>
+        <skip-integration-tests>false</skip-integration-tests>
+        <compileSource>1.5</compileSource>
+    </properties>
 
-	<scm>
-		<connection>
+    <scm>
+        <connection>
 			scm:git:git://github.com/samokk/pymager-java-client.git
 		</connection>
-		<developerConnection>
+        <developerConnection>
 			scm:git:git@github.com:samokk/pymager-java-client.git
 		</developerConnection>
-		<url>http://github.com/samokk/pymager-java-client</url>
-	</scm>
+        <url>http://github.com/samokk/pymager-java-client</url>
+    </scm>
 
-	<licenses>
-		<license>
-			<name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<issueManagement>
-		<system>Launchpad</system>
-		<url>https://launchpad.net/pymager-java-client</url>
-	</issueManagement>
+    <issueManagement>
+        <system>Launchpad</system>
+        <url>https://launchpad.net/pymager-java-client</url>
+    </issueManagement>
 
-	<ciManagement>
-		<url>http://developers.sirika.com:9191/</url>
-		<system>hudson</system>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-			</notifier>
-		</notifiers>
-	</ciManagement>
+    <ciManagement>
+        <url>http://developers.sirika.com:9191/</url>
+        <system>hudson</system>
+        <notifiers>
+            <notifier>
+                <type>mail</type>
+            </notifier>
+        </notifiers>
+    </ciManagement>
 
-	<developers>
-		<developer>
-			<id>sdalouche</id>
-			<name>Sami Dalouche</name>
-			<email>sami.dalouche@gmail.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>-5</timezone>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>sdalouche</id>
+            <name>Sami Dalouche</name>
+            <email>sami.dalouche@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
 
-	<modules>
-		<module>client</module>
-		<module>integration-tests</module>
-		<module>assembly</module>
-	</modules>
+    <modules>
+        <module>client</module>
+        <module>integration-tests</module>
+        <module>assembly</module>
+    </modules>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<skip-integration-tests>true</skip-integration-tests>
-			</properties>
-		</profile>
-		<profile>
-			<id>skip-integration-tests</id>
-			<activation>
-				<property>
-					<name>skip-integration-tests</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<properties>
-				<skip-integration-tests>true</skip-integration-tests>
-			</properties>
-		</profile>
-		<profile>
-			<id>integration</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>all</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!--
-						Only activate at release time because only works when called from
-						top module, and slows things down
-					-->
-				</plugins>
-			</build>
-			<reporting>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-changes-plugin</artifactId>
-						<reportSets>
-							<reportSet>
-								<reports>
-									<report>changes-report</report>
-								</reports>
-							</reportSet>
-						</reportSets>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<encoding>UTF-8</encoding>
-							<aggregate>true</aggregate>
-						</configuration>
-					</plugin>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip-integration-tests>true</skip-integration-tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>skip-integration-tests</id>
+            <activation>
+                <property>
+                    <name>skip-integration-tests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <skip-integration-tests>true</skip-integration-tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>integration</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>all</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--
+                        Only activate at release time because only works
+                        when called from top module, and slows things
+                        down
+                    -->
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changes-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>changes-report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                    </plugin>
 
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jxr-plugin</artifactId>
-						<configuration>
-							<aggregate>true</aggregate>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <configuration>
+                            <aggregate>true</aggregate>
 
-						</configuration>
-					</plugin>
+                        </configuration>
+                    </plugin>
 
-					<plugin>
-						<artifactId>maven-surefire-report-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</reporting>
-		</profile>
-		<profile>
-			<id>release</id>
-			<properties>
-				<skip-integration-tests>true</skip-integration-tests>
-			</properties>
-			<build>
-				<plugins>
-					<!--
-						Only activate at release time because only works when called from
-						top module, and slows things down
-					-->
-					<plugin>
-						<groupId>com.google.code.maven-license-plugin</groupId>
-						<artifactId>maven-license-plugin</artifactId>
-						<version>1.4.0</version>
-						<configuration>
-							<header>src/etc/header.txt</header>
-							<includes>
-								<include>**/src/**</include>
-							</includes>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                    <plugin>
+                        <artifactId>maven-surefire-report-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+        <profile>
+            <id>release</id>
+            <properties>
+                <skip-integration-tests>true</skip-integration-tests>
+            </properties>
+            <build>
+                <plugins>
+                    <!--
+                        Only activate at release time because only works
+                        when called from top module, and slows things
+                        down
+                    -->
+                    <plugin>
+                        <groupId>com.google.code.maven-license-plugin</groupId>
+                        <artifactId>maven-license-plugin</artifactId>
+                        <version>1.4.0</version>
+                        <configuration>
+                            <header>src/etc/header.txt</header>
+                            <includes>
+                                <include>**/src/**</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
-	<build>
-		<defaultGoal>install</defaultGoal>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.0-beta-9</version>
-				<configuration>
-					<remoteTagging>true</remoteTagging>
-					<releaseProfiles>release</releaseProfiles>
-					<!-- See http://jira.codehaus.org/browse/MRELEASE-271 -->
-					<preparationGoals>clean install</preparationGoals>
-				</configuration>
-			</plugin>
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.0-beta-9</version>
+                <configuration>
+                    <remoteTagging>true</remoteTagging>
+                    <releaseProfiles>release</releaseProfiles>
+                    <!-- See http://jira.codehaus.org/browse/MRELEASE-271 -->
+                    <preparationGoals>clean install</preparationGoals>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/*TestHelper.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-idea-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-					<dependenciesAsLibraries>true</dependenciesAsLibraries>
-					<useFullNames>false</useFullNames>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${compileSource}</source>
-					<target>${compileSource}</target>
-				</configuration>
-			</plugin>
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*TestHelper.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-idea-plugin</artifactId>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                    <dependenciesAsLibraries>true</dependenciesAsLibraries>
+                    <useFullNames>false</useFullNames>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${compileSource}</source>
+                    <target>${compileSource}</target>
+                </configuration>
+            </plugin>
 
 
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-	<distributionManagement>
-		<repository>
-			<id>sirika-repo-releases</id>
-			<name>Sirika Releases Repository</name>
-			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>sirika-repo-snapshots</id>
-			<name>Sirika Snapshots Repository</name>
-			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
-		</snapshotRepository>
-		<site>
-			<id>sirika-site</id>
-			<url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java-client</url>
-		</site>
-	</distributionManagement>
 
-<!--
-	<repositories>
+        </plugins>
+    </build>
 
-		<repository>
-			<id>sirika-repo-releases</id>
-			<name>Sirika Releases Repository</name>
-			<url>http://developers.sirika.com/maven2/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
+    <distributionManagement>
+        <repository>
+            <id>sirika-repo-releases</id>
+            <name>Sirika Releases Repository</name>
+            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>sirika-repo-snapshots</id>
+            <name>Sirika Snapshots Repository</name>
+            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>sirika-site</id>
+            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java-client</url>
+        </site>
+    </distributionManagement>
 
-		<repository>
-			<id>sirika-repo-snapshots</id>
-			<name>Sirika Snapshots Repository</name>
-			<url>http://developers.sirika.com/maven2/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
--->
+    <!--
+        <repositories> <repository> <id>sirika-repo-releases</id>
+        <name>Sirika Releases Repository</name>
+        <url>http://developers.sirika.com/maven2/releases</url>
+        <snapshots> <enabled>false</enabled> </snapshots> </repository>
 
-	<pluginRepositories />
+        <repository> <id>sirika-repo-snapshots</id> <name>Sirika
+        Snapshots Repository</name>
+        <url>http://developers.sirika.com/maven2/snapshots</url>
+        <snapshots> <enabled>true</enabled> </snapshots> </repository>
+        </repositories>
+    -->
 
-	<dependencies />
+    <pluginRepositories />
+
+    <dependencies />
 </project>
