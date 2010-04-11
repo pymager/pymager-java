@@ -23,12 +23,9 @@ import static com.sirika.pymager.client.testhelpers.ImageReferenceObjectMother.c
 import static com.sirika.pymager.client.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream;
 import static com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,12 +41,12 @@ import org.apache.http.entity.EntityTemplate;
 import org.apache.http.localserver.ServerTestBase;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.mockito.Mockito;
 import org.springframework.core.io.InputStreamSource;
 
 import com.sirika.pymager.client.ImageReference;
 import com.sirika.pymager.client.ImageServer;
 import com.sirika.pymager.client.UrlGenerator;
-import com.sirika.pymager.client.impl.HttpImageServer;
 import com.sirika.pymager.client.testhelpers.PictureStreamAssertionUtils;
 import com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother;
 
@@ -102,15 +99,13 @@ public class ImageServerDownloadTest extends ServerTestBase {
 
     public void testShouldGenerateUrlByDelegatingToUrlGenerator() {
         ImageReference imageReference = yemmaGouraya();
-        UrlGenerator urlGenerator = createMock(UrlGenerator.class);
-        expect(urlGenerator.getImageResourceUrl(imageReference)).andReturn(
-                "http://anyurl.com/yemmaGouraya");
-        replay(urlGenerator);
+        UrlGenerator urlGenerator = mock(UrlGenerator.class);
+        Mockito.when(urlGenerator.getImageResourceUrl(imageReference)).thenReturn("http://anyurl.com/yemmaGouraya");
 
         ImageServer imageServer = new HttpImageServer(urlGenerator);
         assertThat(imageServer.getImageResourceUrl(imageReference),
                 is("http://anyurl.com/yemmaGouraya"));
-        verify(urlGenerator);
+        Mockito.verify(urlGenerator).getImageResourceUrl(imageReference);
     }
 
     public void testShouldDownloadYemmaGourayaPicture() throws IOException {

@@ -16,6 +16,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springframework.version>3.0.2.RELEASE</springframework.version>
+        <junit.version>4.8.1</junit.version>
         <httpcomponents.version>4.1-alpha1</httpcomponents.version>
         <slf4j.version>1.5.2</slf4j.version>
         <skip-integration-tests>false</skip-integration-tests>
