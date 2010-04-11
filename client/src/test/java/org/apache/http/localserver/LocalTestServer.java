@@ -42,7 +42,6 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpServerConnection;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.DefaultHttpResponseFactory;
@@ -83,9 +82,6 @@ public class LocalTestServer {
     /** The server-side connection re-use strategy. */
     private final ConnectionReuseStrategy reuseStrategy;
 
-    /** The response factory */
-    private final HttpResponseFactory responseFactory;
-    
     /**
      * The HTTP processor.
      * If the interceptors are thread safe and the list is not
@@ -128,13 +124,11 @@ public class LocalTestServer {
     public LocalTestServer(
             BasicHttpProcessor proc, 
             ConnectionReuseStrategy reuseStrat,
-            HttpResponseFactory responseFactory,
             HttpParams params, 
             SSLContext sslcontext) {
         super();
         this.handlerRegistry = new HttpRequestHandlerRegistry();
         this.reuseStrategy = (reuseStrat != null) ? reuseStrat: newConnectionReuseStrategy();
-        this.responseFactory = (responseFactory != null) ? responseFactory: newHttpResponseFactory();
         this.httpProcessor = (proc != null) ? proc : newProcessor();
         this.serverParams = (params != null) ? params : newDefaultParams();
         this.sslcontext = sslcontext;
@@ -154,7 +148,7 @@ public class LocalTestServer {
     public LocalTestServer(
             BasicHttpProcessor proc, 
             HttpParams params) {
-        this(proc, null, null, params, null);
+        this(proc, null, params, null);
     }
 
     /**
@@ -199,9 +193,6 @@ public class LocalTestServer {
         return new DefaultConnectionReuseStrategy();
     }
     
-    protected HttpResponseFactory newHttpResponseFactory() {
-        return new DefaultHttpResponseFactory();
-    }
     
     /**
      * Returns the number of connections this test server has accepted.
@@ -403,10 +394,9 @@ public class LocalTestServer {
             HttpService httpService = new HttpService(
                 httpProcessor, 
                 reuseStrategy, 
-                responseFactory, 
-                handlerRegistry, 
-                null, 
-                serverParams);
+                new DefaultHttpResponseFactory());
+            httpService.setParams(serverParams);
+            httpService.setHandlerResolver(handlerRegistry);
 
             // Start worker thread
             Thread t = new Thread(new Worker(httpService, conn));
