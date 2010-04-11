@@ -1,22 +1,30 @@
-/**
- * PyMager Java REST Client
- * Copyright (C) 2008 Sami Dalouche
+/*
+ * ====================================================================
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * This file is part of PyMager Java REST Client.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * PyMager Java REST Client is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * ====================================================================
  *
- * PyMager Java REST Client is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with PyMager Java REST Client.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.apache.http.localserver;
 
 import java.io.IOException;
@@ -34,56 +42,54 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.http.util.EntityUtils;
 
+
+
 /**
  * A handler that echos the incoming request entity.
  * 
- * @author <a href="mailto:rolandw at apache.org">Roland Weber</a>
- * @author <a href="mailto:oleg at ural.ru">Oleg Kalnichevski</a>
- * 
- * 
- *         <!-- empty lines to avoid 'svn diff' problems -->
- * @version $Revision: 652950 $
+ *
+ *
+ * <!-- empty lines to avoid 'svn diff' problems -->
  */
-public class EchoHandler implements HttpRequestHandler {
+public class EchoHandler
+    implements HttpRequestHandler {
 
     // public default constructor
 
     /**
-     * Handles a request by echoing the incoming request entity. If there is no
-     * request entity, an empty document is returned.
-     * 
-     * @param request
-     *            the request
-     * @param response
-     *            the response
-     * @param context
-     *            the context
-     * 
-     * @throws HttpException
-     *             in case of a problem
-     * @throws IOException
-     *             in case of an IO problem
+     * Handles a request by echoing the incoming request entity.
+     * If there is no request entity, an empty document is returned.
+     *
+     * @param request   the request
+     * @param response  the response
+     * @param context   the context
+     *
+     * @throws HttpException    in case of a problem
+     * @throws IOException      in case of an IO problem
      */
-    public void handle(final HttpRequest request, final HttpResponse response,
-            final HttpContext context) throws HttpException, IOException {
+    public void handle(final HttpRequest request, 
+                       final HttpResponse response,
+                       final HttpContext context)
+        throws HttpException, IOException {
 
-        String method = request.getRequestLine().getMethod().toUpperCase(
-                Locale.ENGLISH);
-        if (!"GET".equals(method) && !"POST".equals(method)
-                && !"PUT".equals(method)) {
-            throw new MethodNotSupportedException(method + " not supported by "
-                    + getClass().getName());
+        String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
+        if (!"GET".equals(method) &&
+            !"POST".equals(method) &&
+            !"PUT".equals(method)
+            ) {
+            throw new MethodNotSupportedException
+                (method + " not supported by " + getClass().getName());
         }
 
         HttpEntity entity = null;
         if (request instanceof HttpEntityEnclosingRequest)
-            entity = ((HttpEntityEnclosingRequest) request).getEntity();
+            entity = ((HttpEntityEnclosingRequest)request).getEntity();
 
         // For some reason, just putting the incoming entity into
         // the response will not work. We have to buffer the message.
         byte[] data;
         if (entity == null) {
-            data = new byte[0];
+            data = new byte [0];
         } else {
             data = EntityUtils.toByteArray(entity);
         }
@@ -98,5 +104,6 @@ public class EchoHandler implements HttpRequestHandler {
         response.setEntity(entity);
 
     } // handle
+
 
 } // class EchoHandler

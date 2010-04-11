@@ -1,22 +1,30 @@
-/**
- * PyMager Java REST Client
- * Copyright (C) 2008 Sami Dalouche
+/*
+ * ====================================================================
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * This file is part of PyMager Java REST Client.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * PyMager Java REST Client is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * ====================================================================
  *
- * PyMager Java REST Client is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with PyMager Java REST Client.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.apache.http.localserver;
 
 import java.io.IOException;
@@ -34,14 +42,15 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpException;
+import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpServerConnection;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.DefaultHttpResponseFactory;
 import org.apache.http.impl.DefaultHttpServerConnection;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.SyncBasicHttpParams;
 import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.BasicHttpContext;
@@ -54,25 +63,19 @@ import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
 
 /**
- * Local HTTP server for tests that require one. Based on the
- * <code>ElementalHttpServer</code> example in HttpCore.
- * 
- * @author <a href="mailto:rolandw at apache.org">Roland Weber</a>
- * @author <a href="mailto:oleg at ural.ru">Oleg Kalnichevski</a>
- * 
- * 
- *         <!-- empty lines to avoid 'svn diff' problems -->
- * @version $Revision: 722185 $
+ * Local HTTP server for tests that require one.
+ * Based on the <code>ElementalHttpServer</code> example in HttpCore.
  */
 public class LocalTestServer {
 
     /**
-     * The local address to bind to. The host is an IP number rather than
-     * "localhost" to avoid surprises on hosts that map "localhost" to an IPv6
-     * address or something else. The port is 0 to let the system pick one.
+     * The local address to bind to.
+     * The host is an IP number rather than "localhost" to avoid surprises
+     * on hosts that map "localhost" to an IPv6 address or something else.
+     * The port is 0 to let the system pick one.
      */
-    public final static InetSocketAddress TEST_SERVER_ADDR = new InetSocketAddress(
-            "127.0.0.1", 0);
+    public final static InetSocketAddress TEST_SERVER_ADDR =
+        new InetSocketAddress("127.0.0.1", 0);
 
     /** The request handler registry. */
     private final HttpRequestHandlerRegistry handlerRegistry;
@@ -80,9 +83,13 @@ public class LocalTestServer {
     /** The server-side connection re-use strategy. */
     private final ConnectionReuseStrategy reuseStrategy;
 
+    /** The response factory */
+    private final HttpResponseFactory responseFactory;
+    
     /**
-     * The HTTP processor. If the interceptors are thread safe and the list is
-     * not modified during operation, the processor is thread safe.
+     * The HTTP processor.
+     * If the interceptors are thread safe and the list is not
+     * modified during operation, the processor is thread safe.
      */
     private final BasicHttpProcessor httpProcessor;
 
@@ -91,65 +98,69 @@ public class LocalTestServer {
 
     /** Optional SSL context */
     private final SSLContext sslcontext;
-
+    
     /** The server socket, while being served. */
     protected volatile ServerSocket servicedSocket;
 
     /** The request listening thread, while listening. */
     protected volatile Thread listenerThread;
-
+    
     /** The number of connections this accepted. */
     private final AtomicInteger acceptedConnections = new AtomicInteger(0);
 
+
     /**
      * Creates a new test server.
-     * 
-     * @param proc
-     *            the HTTP processors to be used by the server, or
-     *            <code>null</code> to use a {@link #newProcessor default}
-     *            processor
-     * @param reuseStrat
-     *            the connection reuse strategy to be used by the server, or
-     *            <code>null</code> to use {@link #newConnectionReuseStrategy()
-     *            default} strategy.
-     * @param params
-     *            the parameters to be used by the server, or <code>null</code>
-     *            to use {@link #newDefaultParams default} parameters
-     * @param sslcontext
-     *            optional SSL context if the server is to leverage SSL/TLS
-     *            transport security
+     *
+     * @param proc      the HTTP processors to be used by the server, or
+     *                  <code>null</code> to use a
+     *                  {@link #newProcessor default} processor
+     * @param reuseStrat the connection reuse strategy to be used by the 
+     *                  server, or <code>null</code> to use
+     *                  {@link #newConnectionReuseStrategy() default}
+     *                  strategy.                 
+     * @param params    the parameters to be used by the server, or
+     *                  <code>null</code> to use
+     *                  {@link #newDefaultParams default} parameters
+     * @param sslcontext optional SSL context if the server is to leverage
+     *                   SSL/TLS transport security
      */
-    public LocalTestServer(BasicHttpProcessor proc,
-            ConnectionReuseStrategy reuseStrat, HttpParams params,
+    public LocalTestServer(
+            BasicHttpProcessor proc, 
+            ConnectionReuseStrategy reuseStrat,
+            HttpResponseFactory responseFactory,
+            HttpParams params, 
             SSLContext sslcontext) {
         super();
         this.handlerRegistry = new HttpRequestHandlerRegistry();
-        this.reuseStrategy = (reuseStrat != null) ? reuseStrat
-                : newConnectionReuseStrategy();
+        this.reuseStrategy = (reuseStrat != null) ? reuseStrat: newConnectionReuseStrategy();
+        this.responseFactory = (responseFactory != null) ? responseFactory: newHttpResponseFactory();
         this.httpProcessor = (proc != null) ? proc : newProcessor();
         this.serverParams = (params != null) ? params : newDefaultParams();
         this.sslcontext = sslcontext;
     }
 
+
     /**
      * Creates a new test server.
-     * 
-     * @param proc
-     *            the HTTP processors to be used by the server, or
-     *            <code>null</code> to use a {@link #newProcessor default}
-     *            processor
-     * @param params
-     *            the parameters to be used by the server, or <code>null</code>
-     *            to use {@link #newDefaultParams default} parameters
+     *
+     * @param proc      the HTTP processors to be used by the server, or
+     *                  <code>null</code> to use a
+     *                  {@link #newProcessor default} processor
+     * @param params    the parameters to be used by the server, or
+     *                  <code>null</code> to use
+     *                  {@link #newDefaultParams default} parameters
      */
-    public LocalTestServer(BasicHttpProcessor proc, HttpParams params) {
-        this(proc, null, params, null);
+    public LocalTestServer(
+            BasicHttpProcessor proc, 
+            HttpParams params) {
+        this(proc, null, null, params, null);
     }
 
     /**
      * Obtains an HTTP protocol processor with default interceptors.
-     * 
-     * @return a protocol processor for server-side use
+     *
+     * @return  a protocol processor for server-side use
      */
     protected BasicHttpProcessor newProcessor() {
 
@@ -162,27 +173,36 @@ public class LocalTestServer {
         return httpproc;
     }
 
+
     /**
      * Obtains a set of reasonable default parameters for a server.
-     * 
-     * @return default parameters
+     *
+     * @return  default parameters
      */
     protected HttpParams newDefaultParams() {
-        HttpParams params = new BasicHttpParams();
-        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000)
-                .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE,
-                        8 * 1024).setBooleanParameter(
-                        CoreConnectionPNames.STALE_CONNECTION_CHECK, false)
-                .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)
-                .setParameter(CoreProtocolPNames.ORIGIN_SERVER,
-                        "LocalTestServer/1.1");
+        HttpParams params = new SyncBasicHttpParams();
+        params
+            .setIntParameter(CoreConnectionPNames.SO_TIMEOUT,
+                             60000)
+            .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE,
+                             8 * 1024)
+            .setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK,
+                                 false)
+            .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY,
+                                 true)
+            .setParameter(CoreProtocolPNames.ORIGIN_SERVER,
+                          "LocalTestServer/1.1");
         return params;
     }
-
+    
     protected ConnectionReuseStrategy newConnectionReuseStrategy() {
         return new DefaultConnectionReuseStrategy();
     }
-
+    
+    protected HttpResponseFactory newHttpResponseFactory() {
+        return new DefaultHttpResponseFactory();
+    }
+    
     /**
      * Returns the number of connections this test server has accepted.
      */
@@ -192,7 +212,6 @@ public class LocalTestServer {
 
     /**
      * {@link #register Registers} a set of default request handlers.
-     * 
      * <pre>
      * URI pattern      Handler
      * -----------      -------
@@ -205,36 +224,37 @@ public class LocalTestServer {
         handlerRegistry.register("/random/*", new RandomHandler());
     }
 
+
     /**
      * Registers a handler with the local registry.
-     * 
-     * @param pattern
-     *            the URL pattern to match
-     * @param handler
-     *            the handler to apply
+     *
+     * @param pattern   the URL pattern to match
+     * @param handler   the handler to apply
      */
     public void register(String pattern, HttpRequestHandler handler) {
         handlerRegistry.register(pattern, handler);
     }
 
+
     /**
      * Unregisters a handler from the local registry.
-     * 
-     * @param pattern
-     *            the URL pattern
+     *
+     * @param pattern   the URL pattern
      */
     public void unregister(String pattern) {
         handlerRegistry.unregister(pattern);
     }
 
+
     /**
-     * Starts this test server. Use {@link #getServicePort getServicePort} to
-     * obtain the port number afterwards.
+     * Starts this test server.
+     * Use {@link #getServicePort getServicePort}
+     * to obtain the port number afterwards.
      */
     public void start() throws Exception {
         if (servicedSocket != null)
-            throw new IllegalStateException(this.toString()
-                    + " already running");
+            throw new IllegalStateException
+                (this.toString() + " already running");
 
         ServerSocket ssock;
         if (sslcontext != null) {
@@ -243,7 +263,7 @@ public class LocalTestServer {
         } else {
             ssock = new ServerSocket();
         }
-
+        
         ssock.setReuseAddress(true); // probably pointless for port '0'
         ssock.bind(TEST_SERVER_ADDR);
         servicedSocket = ssock;
@@ -274,16 +294,17 @@ public class LocalTestServer {
         }
     }
 
+
     public void awaitTermination(long timeMs) throws InterruptedException {
         if (listenerThread != null) {
             listenerThread.join(timeMs);
         }
     }
-
+    
     @Override
     public String toString() {
         ServerSocket ssock = servicedSocket; // avoid synchronization
-        StringBuffer sb = new StringBuffer(80);
+        StringBuilder sb = new StringBuilder(80);
         sb.append("LocalTestServer/");
         if (ssock == null)
             sb.append("stopped");
@@ -292,10 +313,11 @@ public class LocalTestServer {
         return sb.toString();
     }
 
+
     /**
      * Obtains the port this server is servicing.
-     * 
-     * @return the service port
+     *
+     * @return  the service port
      */
     public int getServicePort() {
         ServerSocket ssock = servicedSocket; // avoid synchronization
@@ -305,23 +327,24 @@ public class LocalTestServer {
         return ssock.getLocalPort();
     }
 
+
     /**
      * Obtains the hostname of the server.
-     * 
-     * @return the hostname
+     *
+     * @return  the hostname
      */
     public String getServiceHostName() {
         ServerSocket ssock = servicedSocket; // avoid synchronization
         if (ssock == null)
             throw new IllegalStateException("not running");
 
-        return ((InetSocketAddress) ssock.getLocalSocketAddress())
-                .getHostName();
+        return ((InetSocketAddress) ssock.getLocalSocketAddress()).getHostName();
     }
+
 
     /**
      * Obtains the local address the server is listening on
-     * 
+     *  
      * @return the service address
      */
     public SocketAddress getServiceAddress() {
@@ -333,28 +356,30 @@ public class LocalTestServer {
     }
 
     /**
-     * The request listener. Accepts incoming connections and launches a service
-     * thread.
+     * The request listener.
+     * Accepts incoming connections and launches a service thread.
      */
     public class RequestListener implements Runnable {
 
         /** The workers launched from here. */
-        private Set<Thread> workerThreads = Collections
-                .synchronizedSet(new HashSet<Thread>());
+        private Set<Thread> workerThreads =
+            Collections.synchronizedSet(new HashSet<Thread>());
+
 
         public void run() {
 
             try {
-                while ((servicedSocket != null)
-                        && (listenerThread == Thread.currentThread())
-                        && !Thread.interrupted()) {
+                while ((servicedSocket != null) &&
+                       (listenerThread == Thread.currentThread()) &&
+                       !Thread.interrupted()) {
                     try {
                         accept();
                     } catch (Exception e) {
                         ServerSocket ssock = servicedSocket;
                         if ((ssock != null) && !ssock.isClosed()) {
-                            System.out.println(LocalTestServer.this.toString()
-                                    + " could not accept");
+                            System.out.println
+                                (LocalTestServer.this.toString() +
+                                 " could not accept");
                             e.printStackTrace(System.out);
                         }
                         // otherwise ignore the exception silently
@@ -370,14 +395,18 @@ public class LocalTestServer {
             // Set up HTTP connection
             Socket socket = servicedSocket.accept();
             acceptedConnections.incrementAndGet();
-            DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
+            DefaultHttpServerConnection conn =
+                new DefaultHttpServerConnection();
             conn.bind(socket, serverParams);
 
             // Set up the HTTP service
-            HttpService httpService = new HttpService(httpProcessor,
-                    reuseStrategy, new DefaultHttpResponseFactory());
-            httpService.setParams(serverParams);
-            httpService.setHandlerResolver(handlerRegistry);
+            HttpService httpService = new HttpService(
+                httpProcessor, 
+                reuseStrategy, 
+                responseFactory, 
+                handlerRegistry, 
+                null, 
+                serverParams);
 
             // Start worker thread
             Thread t = new Thread(new Worker(httpService, conn));
@@ -387,13 +416,15 @@ public class LocalTestServer {
 
         } // accept
 
+
         protected void cleanup() {
             Thread[] threads = workerThreads.toArray(new Thread[0]);
-            for (int i = 0; i < threads.length; i++) {
+            for (int i=0; i<threads.length; i++) {
                 if (threads[i] != null)
                     threads[i].interrupt();
             }
         }
+
 
         /**
          * A worker for serving incoming requests.
@@ -402,19 +433,21 @@ public class LocalTestServer {
 
             private final HttpService httpservice;
             private final HttpServerConnection conn;
-
-            public Worker(final HttpService httpservice,
-                    final HttpServerConnection conn) {
+        
+            public Worker(
+                final HttpService httpservice, 
+                final HttpServerConnection conn) {
 
                 this.httpservice = httpservice;
                 this.conn = conn;
             }
 
+
             public void run() {
                 HttpContext context = new BasicHttpContext(null);
                 try {
-                    while ((servicedSocket != null) && this.conn.isOpen()
-                            && !Thread.interrupted()) {
+                    while ((servicedSocket != null) &&
+                           this.conn.isOpen() && !Thread.interrupted()) {
                         this.httpservice.handleRequest(this.conn, context);
                     }
                 } catch (IOException ex) {
@@ -425,8 +458,7 @@ public class LocalTestServer {
                     workerThreads.remove(Thread.currentThread());
                     try {
                         this.conn.shutdown();
-                    } catch (IOException ignore) {
-                    }
+                    } catch (IOException ignore) {}
                 }
             }
 
@@ -434,4 +466,5 @@ public class LocalTestServer {
 
     } // class RequestListener
 
+    
 } // class LocalTestServer
