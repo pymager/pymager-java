@@ -49,64 +49,79 @@ import com.sirika.pymager.client.ResourceNotExistingException;
 import com.sirika.pymager.client.UnknownDownloadFailureException;
 import com.sirika.pymager.client.UrlGenerator;
 
-class HttpDownloadInputStreamSource implements InputStreamSource{
-    private final static Logger logger = LoggerFactory.getLogger(HttpDownloadInputStreamSource.class);
+class HttpDownloadInputStreamSource implements InputStreamSource {
+    private final static Logger logger = LoggerFactory
+            .getLogger(HttpDownloadInputStreamSource.class);
     private HttpClientTemplate httpClientTemplate;
     private HttpGet httpGet;
     private ImageReference imageReference;
-    
-    public HttpDownloadInputStreamSource(HttpClient httpClient, UrlGenerator urlGenerator, ImageReference imageReference) {
-	super();
-	this.httpClientTemplate = new HttpClientTemplate(httpClient);
-	this.imageReference = imageReference;
-	this.httpGet = new HttpGet(urlGenerator.getImageResourceUrl(imageReference));
+
+    public HttpDownloadInputStreamSource(HttpClient httpClient,
+            UrlGenerator urlGenerator, ImageReference imageReference) {
+        super();
+        this.httpClientTemplate = new HttpClientTemplate(httpClient);
+        this.imageReference = imageReference;
+        this.httpGet = new HttpGet(urlGenerator
+                .getImageResourceUrl(imageReference));
     }
 
-    public InputStream getInputStream() throws IOException, ResourceNotExistingException, UnknownDownloadFailureException {
-	logger.debug("Generating InputStream for {}", imageReference);
-	
-	return (InputStream) this.httpClientTemplate.execute(this.httpGet, new HttpResponseCallback() {
-	    public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
-		return generateInputStream(httpResponse.getEntity());
-	    }    
-	}, httpErrorHandlers());
+    public InputStream getInputStream() throws IOException,
+            ResourceNotExistingException, UnknownDownloadFailureException {
+        logger.debug("Generating InputStream for {}", imageReference);
+
+        return (InputStream) this.httpClientTemplate.execute(this.httpGet,
+                new HttpResponseCallback() {
+                    public Object doWithHttpResponse(HttpResponse httpResponse)
+                            throws Exception {
+                        return generateInputStream(httpResponse.getEntity());
+                    }
+                }, httpErrorHandlers());
 
     }
 
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
-	return ImmutableList.of(forbiddenErrorHandler(), notFoundHandler(), defaultHandler());
+        return ImmutableList.of(forbiddenErrorHandler(), notFoundHandler(),
+                defaultHandler());
     }
 
     private HttpErrorHandler forbiddenErrorHandler() {
-	return new AbstractHttpErrorHandler(statusCodeEquals(HttpStatus.SC_FORBIDDEN)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new ForbiddenRequestException(new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-	    }
-	};
-    }
-    
-    private HttpErrorHandler notFoundHandler() {
-	return new AbstractHttpErrorHandler(statusCodeEquals(HttpStatus.SC_NOT_FOUND)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new ResourceNotExistingException(imageReference);
-	    }
-	};
-    }
-    
-    private HttpErrorHandler defaultHandler() {
-	return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new UnknownDownloadFailureException(imageReference, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-		}
-	};
+        return new AbstractHttpErrorHandler(
+                statusCodeEquals(HttpStatus.SC_FORBIDDEN)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new ForbiddenRequestException(new HttpResponseException(
+                        response.getStatusLine().getStatusCode(), response
+                                .getStatusLine().getReasonPhrase()));
+            }
+        };
     }
 
-    private InputStream generateInputStream(HttpEntity entity) throws IOException {
-	if(entity != null) {
-	    return entity.getContent();
-	} else {
-	    return null;
-	}
+    private HttpErrorHandler notFoundHandler() {
+        return new AbstractHttpErrorHandler(
+                statusCodeEquals(HttpStatus.SC_NOT_FOUND)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new ResourceNotExistingException(imageReference);
+            }
+        };
     }
-    
+
+    private HttpErrorHandler defaultHandler() {
+        return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new UnknownDownloadFailureException(imageReference,
+                        new HttpResponseException(response.getStatusLine()
+                                .getStatusCode(), response.getStatusLine()
+                                .getReasonPhrase()));
+            }
+        };
+    }
+
+    private InputStream generateInputStream(HttpEntity entity)
+            throws IOException {
+        if (entity != null) {
+            return entity.getContent();
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -19,18 +19,17 @@
  */
 package com.sirika.pymager.client;
 
-
 public class ResourceNotExistingException extends ImageServerException {
     private static final long serialVersionUID = 1L;
-    
+
     private ImageReference imageReference;
-    
+
     public ResourceNotExistingException(ImageReference imageReference) {
-	this.imageReference = imageReference;
+        this.imageReference = imageReference;
     }
 
     public ImageReference getImageReference() {
         return imageReference;
     }
-    
+
 }

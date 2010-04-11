@@ -21,19 +21,20 @@ package com.sirika.pymager.client;
 
 public class ImageServerException extends RuntimeException {
     private static final long serialVersionUID = 1L;
+
     public ImageServerException() {
-	super();
+        super();
     }
 
     public ImageServerException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
     public ImageServerException(String message) {
-	super(message);
+        super(message);
     }
 
     public ImageServerException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 }

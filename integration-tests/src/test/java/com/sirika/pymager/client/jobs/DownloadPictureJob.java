@@ -43,42 +43,48 @@ import com.sirika.pymager.client.testhelpers.PictureStreamAssertionUtils;
  * whether the downloaded picture's content is what was expected
  * 
  * @author Sami Dalouche (sami.dalouche@gmail.com)
- *
+ * 
  */
-public class DownloadPictureJob implements Callable<OperationStatus>  {
-    private final static Logger logger = LoggerFactory.getLogger(DownloadPictureJob.class);
+public class DownloadPictureJob implements Callable<OperationStatus> {
+    private final static Logger logger = LoggerFactory
+            .getLogger(DownloadPictureJob.class);
     private ImageServer imageServer;
     private ImageReference imageReference;
     private InputStreamSource expectedInputStreamSource;
 
-    public DownloadPictureJob(ImageServer imageServer,ImageReference imageReference, InputStreamSource expectedInputStreamSource) {
-	super();
-	this.imageServer = imageServer;
-	this.imageReference = imageReference;
-	this.expectedInputStreamSource = expectedInputStreamSource;
+    public DownloadPictureJob(ImageServer imageServer,
+            ImageReference imageReference,
+            InputStreamSource expectedInputStreamSource) {
+        super();
+        this.imageServer = imageServer;
+        this.imageReference = imageReference;
+        this.expectedInputStreamSource = expectedInputStreamSource;
     }
 
     public OperationStatus call() throws Exception {
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    assertNotNull(source);
-	    if(!isSameStream(source)) {
-		logger.warn("Stream is different");
-		OutputStream os = new FileOutputStream(new File("/tmp/stream"));
-		InputStream is = source.getInputStream();
-		IOUtils.copy(is, os);
-		IOUtils.closeQuietly(os);
-		IOUtils.closeQuietly(is);
-	    }
-	    
-	    return isSameStream(source) ? OperationStatus.OK : OperationStatus.KO;
-	} catch(ImageServerException e) {
-	    logger.error("Unexpected error", e);
-	    return OperationStatus.KO;
-	}
+        try {
+            InputStreamSource source = imageServer
+                    .downloadImage(imageReference);
+            assertNotNull(source);
+            if (!isSameStream(source)) {
+                logger.warn("Stream is different");
+                OutputStream os = new FileOutputStream(new File("/tmp/stream"));
+                InputStream is = source.getInputStream();
+                IOUtils.copy(is, os);
+                IOUtils.closeQuietly(os);
+                IOUtils.closeQuietly(is);
+            }
+
+            return isSameStream(source) ? OperationStatus.OK
+                    : OperationStatus.KO;
+        } catch (ImageServerException e) {
+            logger.error("Unexpected error", e);
+            return OperationStatus.KO;
+        }
     }
 
     private boolean isSameStream(InputStreamSource source) throws IOException {
-	return new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, source).isSameStream();
+        return new PictureStreamAssertionUtils.PictureStreamAsserter(
+                expectedInputStreamSource, source).isSameStream();
     }
 }

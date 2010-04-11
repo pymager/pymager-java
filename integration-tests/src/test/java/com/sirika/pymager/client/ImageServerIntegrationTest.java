@@ -54,103 +54,128 @@ import com.sirika.pymager.client.ImageReference;
 import com.sirika.pymager.client.ResourceNotExistingException;
 import com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother;
 
-public class ImageServerIntegrationTest extends AbstractImageServerIntegrationTestCase {
+public class ImageServerIntegrationTest extends
+        AbstractImageServerIntegrationTestCase {
 
-    @Before @After
+    @Before
+    @After
     public void clean() throws IOException {
-	for(ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
-	    try {
-		InputStreamSource source = imageServer.downloadImage(imageReference);
-		source.getInputStream();
-		imageServer.deleteImage(imageReference.getId());
-	    } catch(ResourceNotExistingException e) {
-		// do nothing, it's fine
-	    }
-	}
+        for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
+                cornicheKabyle())) {
+            try {
+                InputStreamSource source = imageServer
+                        .downloadImage(imageReference);
+                source.getInputStream();
+                imageServer.deleteImage(imageReference.getId());
+            } catch (ResourceNotExistingException e) {
+                // do nothing, it's fine
+            }
+        }
     }
 
     @Test
-    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound() throws IOException {
-	ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
-	try {
-	    InputStreamSource source = imageServer.downloadImage(imageReference);
-	    source.getInputStream();
-	    fail();
-	} catch(ResourceNotExistingException e) {
-	    assertEquals(imageReference, e.getImageReference());
-	} 
+    public void shouldThrowResourceNotExistingExceptionWhenResourceNotFound()
+            throws IOException {
+        ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
+        try {
+            InputStreamSource source = imageServer
+                    .downloadImage(imageReference);
+            source.getInputStream();
+            fail();
+        } catch (ResourceNotExistingException e) {
+            assertEquals(imageReference, e.getImageReference());
+        }
     }
-    
+
     @Test
-    public void shouldThrowBadUploadRequestExceptionWhenUploadingGarbage() throws IOException {
-	ImageId imageId = imageId("anImageThatIsNeverGoingToBeUploaded");
-	try {
-	    imageServer.uploadImage(imageId, JPEG, textfileresource());
-	    fail();
-	} catch(BadUploadRequestException e) {
-	    assertEquals(imageId, e.getImageId());
-	    assertEquals(JPEG, e.getImageFormat());
-	} 
+    public void shouldThrowBadUploadRequestExceptionWhenUploadingGarbage()
+            throws IOException {
+        ImageId imageId = imageId("anImageThatIsNeverGoingToBeUploaded");
+        try {
+            imageServer.uploadImage(imageId, JPEG, textfileresource());
+            fail();
+        } catch (BadUploadRequestException e) {
+            assertEquals(imageId, e.getImageId());
+            assertEquals(JPEG, e.getImageFormat());
+        }
     }
-    
+
     @Test
-    public void shouldThrowImageIdAlreadyExistsExceptionWhenUploadingSameImageTwice() throws IOException {
-	ImageId imageId = yemmaGourayaId();
-	imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
-	try {
-	    imageServer.uploadImage(imageId, JPEG, yemmaGourayaOriginalPictureStream());
-	    fail();
-	} catch(ImageAlreadyExistsException e) {
-	    assertEquals(imageId, e.getImageId());
-	    assertEquals(JPEG, e.getImageFormat());
-	} 
+    public void shouldThrowImageIdAlreadyExistsExceptionWhenUploadingSameImageTwice()
+            throws IOException {
+        ImageId imageId = yemmaGourayaId();
+        imageServer.uploadImage(imageId, JPEG,
+                yemmaGourayaOriginalPictureStream());
+        try {
+            imageServer.uploadImage(imageId, JPEG,
+                    yemmaGourayaOriginalPictureStream());
+            fail();
+        } catch (ImageAlreadyExistsException e) {
+            assertEquals(imageId, e.getImageId());
+            assertEquals(JPEG, e.getImageFormat());
+        }
     }
-    
+
     @Test
-    public void shouldUploadAndDownloadOriginalYemmaGourayaPicture() throws IOException {
-	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	InputStreamSource source = imageServer.downloadImage(yemmaGouraya);
-	assertNotNull(source);
-	assertTrue(isYemmaGourayaPicture(source));
-	assertFalse(isCornicheKabylePicture(source));
+    public void shouldUploadAndDownloadOriginalYemmaGourayaPicture()
+            throws IOException {
+        ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
+                JPEG, yemmaGourayaOriginalPictureStream());
+        InputStreamSource source = imageServer.downloadImage(yemmaGouraya);
+        assertNotNull(source);
+        assertTrue(isYemmaGourayaPicture(source));
+        assertFalse(isCornicheKabylePicture(source));
     }
-    
-    @Test(expected=ResourceNotExistingException.class)
-    public void shouldNotDownloadDeletedYemmaGourayaPicture() throws IOException {
-	imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	imageServer.deleteImage(yemmaGourayaId());
-	ImageReference imageReference = yemmaGouraya();
-	InputStreamSource source = imageServer.downloadImage(imageReference);
-	source.getInputStream();
+
+    @Test(expected = ResourceNotExistingException.class)
+    public void shouldNotDownloadDeletedYemmaGourayaPicture()
+            throws IOException {
+        imageServer.uploadImage(yemmaGourayaId(), JPEG,
+                yemmaGourayaOriginalPictureStream());
+        imageServer.deleteImage(yemmaGourayaId());
+        ImageReference imageReference = yemmaGouraya();
+        InputStreamSource source = imageServer.downloadImage(imageReference);
+        source.getInputStream();
     }
-    
+
     @Test
-    public void shouldUploadSeveralPicturesAndDownloadCornicheKabylePicture() throws IOException {
-	imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	ImageReference cornicheKabyle = imageServer.uploadImage(cornicheKabyleId(), JPEG, PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream());
-	InputStreamSource source = imageServer.downloadImage(cornicheKabyle);
-	assertNotNull(source);
-	assertFalse(isYemmaGourayaPicture(source));
-	assertTrue(isCornicheKabylePicture(source));
+    public void shouldUploadSeveralPicturesAndDownloadCornicheKabylePicture()
+            throws IOException {
+        imageServer.uploadImage(yemmaGourayaId(), JPEG,
+                yemmaGourayaOriginalPictureStream());
+        ImageReference cornicheKabyle = imageServer.uploadImage(
+                cornicheKabyleId(), JPEG, PictureStreamSourceObjectMother
+                        .cornicheKabyleOriginalPictureStream());
+        InputStreamSource source = imageServer.downloadImage(cornicheKabyle);
+        assertNotNull(source);
+        assertFalse(isYemmaGourayaPicture(source));
+        assertTrue(isCornicheKabylePicture(source));
     }
+
     @Test
-    public void shouldUploadYemmaGourayaAndDownloadDerivedPicture() throws IOException {
-	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	InputStreamSource source = imageServer.downloadImage(yemmaGouraya.rescaledTo(width(100).by(100)).convertedTo(JPEG));
-	assertNotNull(source);
-	assertTrue(is100x100CornicheKabylePicture(source));
-	assertFalse(isCornicheKabylePicture(source));
+    public void shouldUploadYemmaGourayaAndDownloadDerivedPicture()
+            throws IOException {
+        ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
+                JPEG, yemmaGourayaOriginalPictureStream());
+        InputStreamSource source = imageServer.downloadImage(yemmaGouraya
+                .rescaledTo(width(100).by(100)).convertedTo(JPEG));
+        assertNotNull(source);
+        assertTrue(is100x100CornicheKabylePicture(source));
+        assertFalse(isCornicheKabylePicture(source));
     }
-    
+
     @Test
-    public void shouldNotDownloadDerivedPictureWhenRequestedSizeIsForbidden() throws IOException {
-	ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	try {
-	    InputStreamSource source = imageServer.downloadImage(yemmaGouraya.rescaledTo(width(10000).by(10000)).convertedTo(JPEG));
-	    source.getInputStream();
-	    fail();
-	} catch(ForbiddenRequestException e) {
-	    // ok
-	}
+    public void shouldNotDownloadDerivedPictureWhenRequestedSizeIsForbidden()
+            throws IOException {
+        ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
+                JPEG, yemmaGourayaOriginalPictureStream());
+        try {
+            InputStreamSource source = imageServer.downloadImage(yemmaGouraya
+                    .rescaledTo(width(10000).by(10000)).convertedTo(JPEG));
+            source.getInputStream();
+            fail();
+        } catch (ForbiddenRequestException e) {
+            // ok
+        }
     }
 }

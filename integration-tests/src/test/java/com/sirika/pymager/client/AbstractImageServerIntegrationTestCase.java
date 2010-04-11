@@ -25,14 +25,15 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.sirika.pymager.client.impl.HttpImageServer;
 
-@ContextConfiguration(locations = { "classpath:/com/sirika/pymager/tests/integration/appcontext.xml"})
-public abstract class AbstractImageServerIntegrationTestCase extends AbstractJUnit4SpringContextTests {
+@ContextConfiguration(locations = { "classpath:/com/sirika/pymager/tests/integration/appcontext.xml" })
+public abstract class AbstractImageServerIntegrationTestCase extends
+        AbstractJUnit4SpringContextTests {
 
     @Autowired
     protected HttpImageServer imageServer;
 
     public AbstractImageServerIntegrationTestCase() {
-	super();
+        super();
     }
 
 }

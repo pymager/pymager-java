@@ -30,31 +30,31 @@ import com.sirika.pymager.client.ImageServer;
 import com.sirika.pymager.client.ImageServerException;
 
 /**
- * Upload a picture and returns a {@link OperationStatus} that informs whether the picture has
- * been successfully uploaded
+ * Upload a picture and returns a {@link OperationStatus} that informs whether
+ * the picture has been successfully uploaded
  * 
  * @author Sami Dalouche (sami.dalouche@gmail.com)
- *
+ * 
  */
-public class UploadPictureJob implements Callable<OperationStatus>  {
+public class UploadPictureJob implements Callable<OperationStatus> {
     private ImageServer imageServer;
     private ImageId imageId;
     private InputStreamSource inputStreamSource;
-    
-    public UploadPictureJob(ImageServer imageServer, ImageId imageId,InputStreamSource inputstreamSource) {
+
+    public UploadPictureJob(ImageServer imageServer, ImageId imageId,
+            InputStreamSource inputstreamSource) {
         super();
         this.imageServer = imageServer;
         this.imageId = imageId;
         this.inputStreamSource = inputstreamSource;
     }
 
-
     public OperationStatus call() throws Exception {
         try {
-    	imageServer.uploadImage(imageId, JPEG, inputStreamSource);    
-    	return OperationStatus.OK;
-        } catch(ImageServerException e) {
-    	return OperationStatus.KO;
+            imageServer.uploadImage(imageId, JPEG, inputStreamSource);
+            return OperationStatus.OK;
+        } catch (ImageServerException e) {
+            return OperationStatus.KO;
         }
     }
 }

@@ -22,15 +22,21 @@ package com.sirika.pymager.client;
 import org.springframework.core.io.InputStreamSource;
 
 /**
- * Represents the Image Server, and the operations we can call on it.
- * This is the starting point of Image Server's client.
+ * Represents the Image Server, and the operations we can call on it. This is
+ * the starting point of Image Server's client.
  * 
  * @author Sami Dalouche (sami.dalouche@gmail.com)
- *
+ * 
  */
-public interface ImageServer extends UrlGenerator{
-    InputStreamSource downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownDownloadFailureException;
-    ImageReference uploadImage(ImageId id, ImageFormat imageFormat, InputStreamSource imageSource) throws UnknownUploadFailureException;
+public interface ImageServer extends UrlGenerator {
+    InputStreamSource downloadImage(ImageReference imageReference)
+            throws ResourceNotExistingException,
+            UnknownDownloadFailureException;
+
+    ImageReference uploadImage(ImageId id, ImageFormat imageFormat,
+            InputStreamSource imageSource) throws UnknownUploadFailureException;
+
     void deleteImage(ImageId imageId) throws UnknownDeleteFailureException;
+
     void destroy() throws Exception;
 }

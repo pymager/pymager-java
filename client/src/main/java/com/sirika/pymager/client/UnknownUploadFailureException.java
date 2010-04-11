@@ -19,17 +19,17 @@
  */
 package com.sirika.pymager.client;
 
-
 public class UnknownUploadFailureException extends ImageServerException {
     private static final long serialVersionUID = 1L;
-    
+
     private ImageId imageId;
     private ImageFormat imageFormat;
-    
-    public UnknownUploadFailureException(ImageId imageId, ImageFormat imageFormat, Exception e) {
-	super(e);
-	this.imageId = imageId;
-	this.imageFormat = imageFormat;
+
+    public UnknownUploadFailureException(ImageId imageId,
+            ImageFormat imageFormat, Exception e) {
+        super(e);
+        this.imageId = imageId;
+        this.imageFormat = imageFormat;
     }
 
     public ImageId getImageId() {
@@ -39,5 +39,5 @@ public class UnknownUploadFailureException extends ImageServerException {
     public ImageFormat getImageFormat() {
         return imageFormat;
     }
-    
+
 }

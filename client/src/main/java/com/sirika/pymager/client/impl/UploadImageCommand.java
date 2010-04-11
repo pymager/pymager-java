@@ -52,76 +52,101 @@ import com.sirika.pymager.client.UrlGenerator;
 
 public class UploadImageCommand {
     public static final String UPLOAD_PARAMETER_NAME = "file";
-    private static final Logger logger = LoggerFactory.getLogger(UploadImageCommand.class);
-    
+    private static final Logger logger = LoggerFactory
+            .getLogger(UploadImageCommand.class);
+
     private HttpClientTemplate httpClientTemplate;
     private UrlGenerator urlGenerator;
     private ImageId imageId;
     private ImageFormat imageFormat;
     private InputStreamSource imageSource;
-    
-    public UploadImageCommand(HttpClient httpClient, UrlGenerator urlGenerator,ImageId imageId, ImageFormat imageFormat, InputStreamSource imageSource) {
-	super();
-	this.httpClientTemplate = new HttpClientTemplate(httpClient);
-	this.urlGenerator = urlGenerator;
-	this.imageId = imageId;
-	this.imageFormat = imageFormat;
-	this.imageSource = imageSource;
+
+    public UploadImageCommand(HttpClient httpClient, UrlGenerator urlGenerator,
+            ImageId imageId, ImageFormat imageFormat,
+            InputStreamSource imageSource) {
+        super();
+        this.httpClientTemplate = new HttpClientTemplate(httpClient);
+        this.urlGenerator = urlGenerator;
+        this.imageId = imageId;
+        this.imageFormat = imageFormat;
+        this.imageSource = imageSource;
     }
 
-    
-    public ImageReference execute() throws UnknownUploadFailureException{
-	ImageReference imageReference = originalImage(this.imageId.toString());
-	HttpPost httpPost = null;
-	try {
-	    httpPost = createHttpPostFor(imageFormat, imageSource, imageReference);
-	} catch (IOException e) {
-	    throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
-	}
-	
-	this.httpClientTemplate.executeWithoutResult(httpPost, httpErrorHandlers());
-	
-	logger.debug("Upload of {} done successfully. Download can be achieved using Image Reference: {}", this.imageId, imageReference);
-	return imageReference;
+    public ImageReference execute() throws UnknownUploadFailureException {
+        ImageReference imageReference = originalImage(this.imageId.toString());
+        HttpPost httpPost = null;
+        try {
+            httpPost = createHttpPostFor(imageFormat, imageSource,
+                    imageReference);
+        } catch (IOException e) {
+            throw new UnknownUploadFailureException(this.imageId, imageFormat,
+                    e);
+        }
+
+        this.httpClientTemplate.executeWithoutResult(httpPost,
+                httpErrorHandlers());
+
+        logger
+                .debug(
+                        "Upload of {} done successfully. Download can be achieved using Image Reference: {}",
+                        this.imageId, imageReference);
+        return imageReference;
     }
-    
+
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
-	return ImmutableList.of(conflictErrorHandler(), badUploadRequestErrorHandler(), defaultHandler());
-    }
-    
-    private HttpErrorHandler conflictErrorHandler() {
-	return new AbstractHttpErrorHandler(statusCodeEquals(HttpStatus.SC_CONFLICT)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new ImageAlreadyExistsException(imageId, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-	    }
-	};
-    }
-    
-    private HttpErrorHandler badUploadRequestErrorHandler() {
-	return new AbstractHttpErrorHandler(statusCodeEquals(HttpStatus.SC_BAD_REQUEST)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new BadUploadRequestException(imageId, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-		}
-	};
-    }
-    
-    private HttpErrorHandler defaultHandler() {
-	return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new UnknownUploadFailureException(imageId, imageFormat, new HttpResponseException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-		}
-	};
+        return ImmutableList.of(conflictErrorHandler(),
+                badUploadRequestErrorHandler(), defaultHandler());
     }
 
-    private HttpPost createHttpPostFor(ImageFormat imageFormat, InputStreamSource imageSource, ImageReference imageReference) throws IOException {
-	HttpPost httpPost = new HttpPost(urlGenerator.getImageResourceUrl(imageReference));
-	httpPost.setEntity(uploadStreamEntity(imageSource, imageFormat));
-	return httpPost;
+    private HttpErrorHandler conflictErrorHandler() {
+        return new AbstractHttpErrorHandler(
+                statusCodeEquals(HttpStatus.SC_CONFLICT)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new ImageAlreadyExistsException(imageId, imageFormat,
+                        new HttpResponseException(response.getStatusLine()
+                                .getStatusCode(), response.getStatusLine()
+                                .getReasonPhrase()));
+            }
+        };
     }
-    
-    private HttpEntity uploadStreamEntity(InputStreamSource imageSource, ImageFormat imageFormat) throws IOException {
-	MultipartEntity entity = new RepeatableMultipartEntity();
-	entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
-	return entity;
+
+    private HttpErrorHandler badUploadRequestErrorHandler() {
+        return new AbstractHttpErrorHandler(
+                statusCodeEquals(HttpStatus.SC_BAD_REQUEST)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new BadUploadRequestException(imageId, imageFormat,
+                        new HttpResponseException(response.getStatusLine()
+                                .getStatusCode(), response.getStatusLine()
+                                .getReasonPhrase()));
+            }
+        };
+    }
+
+    private HttpErrorHandler defaultHandler() {
+        return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new UnknownUploadFailureException(imageId, imageFormat,
+                        new HttpResponseException(response.getStatusLine()
+                                .getStatusCode(), response.getStatusLine()
+                                .getReasonPhrase()));
+            }
+        };
+    }
+
+    private HttpPost createHttpPostFor(ImageFormat imageFormat,
+            InputStreamSource imageSource, ImageReference imageReference)
+            throws IOException {
+        HttpPost httpPost = new HttpPost(urlGenerator
+                .getImageResourceUrl(imageReference));
+        httpPost.setEntity(uploadStreamEntity(imageSource, imageFormat));
+        return httpPost;
+    }
+
+    private HttpEntity uploadStreamEntity(InputStreamSource imageSource,
+            ImageFormat imageFormat) throws IOException {
+        MultipartEntity entity = new RepeatableMultipartEntity();
+        entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(
+                imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
+        return entity;
     }
 }

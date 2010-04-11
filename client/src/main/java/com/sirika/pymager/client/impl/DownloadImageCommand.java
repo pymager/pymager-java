@@ -30,21 +30,25 @@ import com.sirika.pymager.client.UnknownDownloadFailureException;
 import com.sirika.pymager.client.UrlGenerator;
 
 public class DownloadImageCommand {
-    private static final Logger logger = LoggerFactory.getLogger(DownloadImageCommand.class);
-    
+    private static final Logger logger = LoggerFactory
+            .getLogger(DownloadImageCommand.class);
+
     private HttpClient httpClient;
     private UrlGenerator urlGenerator;
     private ImageReference imageReference;
-    
-    public DownloadImageCommand(HttpClient httpClient,UrlGenerator urlGenerator, ImageReference imageReference) {
-	super();
-	this.httpClient = httpClient;
-	this.urlGenerator = urlGenerator;
-	this.imageReference = imageReference;
+
+    public DownloadImageCommand(HttpClient httpClient,
+            UrlGenerator urlGenerator, ImageReference imageReference) {
+        super();
+        this.httpClient = httpClient;
+        this.urlGenerator = urlGenerator;
+        this.imageReference = imageReference;
     }
-    
-    public InputStreamSource execute() throws ResourceNotExistingException, UnknownDownloadFailureException{
-	return new HttpDownloadInputStreamSource(this.httpClient, this.urlGenerator, this.imageReference);
+
+    public InputStreamSource execute() throws ResourceNotExistingException,
+            UnknownDownloadFailureException {
+        return new HttpDownloadInputStreamSource(this.httpClient,
+                this.urlGenerator, this.imageReference);
     }
-    
+
 }

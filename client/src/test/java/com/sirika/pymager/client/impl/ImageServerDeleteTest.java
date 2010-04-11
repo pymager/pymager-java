@@ -37,44 +37,52 @@ import com.sirika.pymager.client.impl.HttpImageServer;
 import com.sirika.pymager.client.testhelpers.ImageIdObjectMother;
 
 public class ImageServerDeleteTest extends ServerTestBase {
-    
-    private static class ImageDeleteRequestHandler implements HttpRequestHandler {
-	private boolean called = false;
+
+    private static class ImageDeleteRequestHandler implements
+            HttpRequestHandler {
+        private boolean called = false;
+
         public ImageDeleteRequestHandler() {
             super();
         }
 
-        public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+        public void handle(final HttpRequest request,
+                final HttpResponse response, final HttpContext context)
+                throws HttpException, IOException {
             assertTrue("DELETE".equals(request.getRequestLine().getMethod()));
-            response.setStatusLine(request.getRequestLine().getProtocolVersion(), HttpStatus.SC_OK);
-            if("/original/yemmaGouraya".equals(request.getRequestLine().getUri())) {
-        	called = true;
+            response.setStatusLine(request.getRequestLine()
+                    .getProtocolVersion(), HttpStatus.SC_OK);
+            if ("/original/yemmaGouraya".equals(request.getRequestLine()
+                    .getUri())) {
+                called = true;
             } else {
-        	throw new RuntimeException("We are only supposed to handle Yemma Gouraya");
+                throw new RuntimeException(
+                        "We are only supposed to handle Yemma Gouraya");
             }
-            
+
         }
+
         public void verify() {
-	    assertTrue(called);
-	}
+            assertTrue(called);
+        }
     }
 
     private ImageDeleteRequestHandler imageDeleteRequestHandler;
 
     public ImageServerDeleteTest(String testName) {
-	super(testName);
+        super(testName);
     }
-    
+
     public void testShouldDeleteYemmaGourayaPicture() throws IOException {
-	registerImageUploadService();
-	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
-	imageServer.deleteImage(yemmaGourayaId());
-	imageDeleteRequestHandler.verify();
-	
+        registerImageUploadService();
+        ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+        imageServer.deleteImage(yemmaGourayaId());
+        imageDeleteRequestHandler.verify();
+
     }
-    
+
     private void registerImageUploadService() {
-	imageDeleteRequestHandler =  new ImageDeleteRequestHandler();
+        imageDeleteRequestHandler = new ImageDeleteRequestHandler();
         this.localServer.register("*", imageDeleteRequestHandler);
     }
 }

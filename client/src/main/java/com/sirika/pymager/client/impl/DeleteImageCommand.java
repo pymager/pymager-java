@@ -38,36 +38,41 @@ import com.sirika.pymager.client.UnknownDeleteFailureException;
 import com.sirika.pymager.client.UrlGenerator;
 
 public class DeleteImageCommand {
-    private static final Logger logger = LoggerFactory.getLogger(DeleteImageCommand.class);
-    
+    private static final Logger logger = LoggerFactory
+            .getLogger(DeleteImageCommand.class);
+
     private HttpClientTemplate httpClientTemplate;
     private UrlGenerator urlGenerator;
     private ImageId imageId;
-    
+
     public DeleteImageCommand(HttpClient httpClient, UrlGenerator urlGenerator,
-	    ImageId imageId) {
-	super();
-	this.httpClientTemplate = new HttpClientTemplate(httpClient);
-	this.urlGenerator = urlGenerator;
-	this.imageId = imageId;
+            ImageId imageId) {
+        super();
+        this.httpClientTemplate = new HttpClientTemplate(httpClient);
+        this.urlGenerator = urlGenerator;
+        this.imageId = imageId;
     }
-    
-    public void execute() throws UnknownDeleteFailureException{
-	HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
-	
-	this.httpClientTemplate.executeWithoutResult(httpDelete, httpErrorHandlers());
+
+    public void execute() throws UnknownDeleteFailureException {
+        HttpDelete httpDelete = new HttpDelete(urlGenerator
+                .getImageResourceUrl(originalImage(imageId.toString())));
+
+        this.httpClientTemplate.executeWithoutResult(httpDelete,
+                httpErrorHandlers());
     }
-    
+
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
-	return ImmutableList.of(defaultHandler());
+        return ImmutableList.of(defaultHandler());
     }
-    
+
     private HttpErrorHandler defaultHandler() {
-	return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
-	    public void handle(HttpResponse response) throws Exception {
-		throw new UnknownDeleteFailureException(imageId, new HttpResponseException(response.getStatusLine().getStatusCode(), "Error while uploading"));
-	    }
-	};
+        return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
+            public void handle(HttpResponse response) throws Exception {
+                throw new UnknownDeleteFailureException(imageId,
+                        new HttpResponseException(response.getStatusLine()
+                                .getStatusCode(), "Error while uploading"));
+            }
+        };
     }
-    
+
 }

@@ -31,51 +31,51 @@ import com.sirika.pymager.client.ImageId;
 
 public class ImageIdTest {
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void idShouldBeMandatory() {
-	imageId(null);
+        imageId(null);
     }
-    
+
     @Test
     public void shouldCreateImageId() {
-	ImageId imageId = imageId("britney");
-	assertThat(imageId.toString(), is("britney"));
+        ImageId imageId = imageId("britney");
+        assertThat(imageId.toString(), is("britney"));
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowSlashCharacterInId() {
-	imageId("my/id");
+        imageId("my/id");
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowUnicodeCharacters() {
-	imageId("myéèàid");
+        imageId("myéèàid");
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowHyphen() {
-	imageId("my-id");
+        imageId("my-id");
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowUnderscore() {
-	imageId("my_id");
+        imageId("my_id");
     }
-    
+
     @Test
     public void shouldBeEqual() {
-	ImageId britney1 = imageId("britney");
-	ImageId britney2 = imageId("britney");
-	assertThat(britney1, equalTo(britney2));
-	assertThat(britney1.hashCode(), is(britney2.hashCode()));
+        ImageId britney1 = imageId("britney");
+        ImageId britney2 = imageId("britney");
+        assertThat(britney1, equalTo(britney2));
+        assertThat(britney1.hashCode(), is(britney2.hashCode()));
     }
-    
+
     @Test
     public void imageIdsCreatedWithDifferentIdsShouldNotBeEqual() {
-	ImageId britney1 = imageId("britney1");
-	ImageId britney2 = imageId("britney2");
-	assertThat(britney1, is(not(equalTo(britney2))));
-	assertThat(britney1.hashCode(), is(not(britney2.hashCode())));
+        ImageId britney1 = imageId("britney1");
+        ImageId britney2 = imageId("britney2");
+        assertThat(britney1, is(not(equalTo(britney2))));
+        assertThat(britney1.hashCode(), is(not(britney2.hashCode())));
     }
-    
+
 }

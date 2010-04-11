@@ -30,30 +30,30 @@ import com.sirika.pymager.client.ImageReference;
 public class ImageReferenceObjectMother {
 
     /**
-     * A mountain located in Bejaia, Algeria 
+     * A mountain located in Bejaia, Algeria
      * (http://photosdesami.com/gallery/v/all/2008/200804/20080426as01/)
+     * 
      * @return
      */
     public static ImageReference yemmaGouraya() {
-	return ImageReference.originalImage(yemmaGourayaId());
+        return ImageReference.originalImage(yemmaGourayaId());
     }
-    
+
     public static ImageReference yemmaGourayaResizedTo300x200InPng() {
-	return ImageReference.originalImage(yemmaGourayaId())
-		.rescaledTo(width(300).by(200))
-		.convertedTo(PNG);
+        return ImageReference.originalImage(yemmaGourayaId()).rescaledTo(
+                width(300).by(200)).convertedTo(PNG);
     }
-    
+
     public static ImageReference yemmaGourayaResizedTo300x200InDefaultFormat() {
-	return ImageReference.originalImage(yemmaGourayaId())
-		.rescaledTo(width(300).by(200));
+        return ImageReference.originalImage(yemmaGourayaId()).rescaledTo(
+                width(300).by(200));
     }
-    
+
     public static ImageReference cornicheKabyle() {
-	return ImageReference.originalImage(cornicheKabyleId());
+        return ImageReference.originalImage(cornicheKabyleId());
     }
-    
+
     public static ImageReference britneySpears() {
-	return ImageReference.originalImage("britneySpears");
+        return ImageReference.originalImage("britneySpears");
     }
 }

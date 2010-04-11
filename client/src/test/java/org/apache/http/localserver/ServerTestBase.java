@@ -40,14 +40,13 @@ import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.http.protocol.RequestConnControl;
 import org.apache.http.protocol.RequestContent;
 
-
 /**
- * Base class for tests using {@link LocalTestServer LocalTestServer}.
- * Note that the test server will be {@link #setUp set up} before each
- * individual tests and {@link #tearDown teared down} afterwards.
- * Use this base class <i>exclusively</i> for tests that require the
- * server. If you have some tests that require the server and others
- * that don't, split them in two different classes.
+ * Base class for tests using {@link LocalTestServer LocalTestServer}. Note that
+ * the test server will be {@link #setUp set up} before each individual tests
+ * and {@link #tearDown teared down} afterwards. Use this base class
+ * <i>exclusively</i> for tests that require the server. If you have some tests
+ * that require the server and others that don't, split them in two different
+ * classes.
  */
 public abstract class ServerTestBase extends TestCase {
 
@@ -69,48 +68,38 @@ public abstract class ServerTestBase extends TestCase {
     /** The request executor for the client side. */
     protected HttpRequestExecutor httpExecutor;
 
-
-
     protected ServerTestBase(String testName) {
         super(testName);
     }
 
-
     /**
-     * Prepares the local server for testing.
-     * Derived classes that override this method MUST call
-     * the implementation here. That SHOULD be done at the
-     * beginning of the overriding method.
-     * <br/>
-     * Derived methods can modify for example the default parameters
-     * being set up, or the interceptors.
+     * Prepares the local server for testing. Derived classes that override this
+     * method MUST call the implementation here. That SHOULD be done at the
+     * beginning of the overriding method. <br/>
+     * Derived methods can modify for example the default parameters being set
+     * up, or the interceptors.
      * <p>
-     * This method will re-use the helper objects from a previous run
-     * if they are still available. For example, the local test server
-     * will be re-started rather than re-created.
-     * {@link #httpContext httpContext} will always be re-created.
-     * Tests that modify the other helper objects should afterwards
-     * set the respective attributes to <code>null</code> in a
-     * <code>finally{}</code> block to force re-creation for
-     * subsequent tests.
-     * Of course that shouldn't be done with the test server,
-     * or only after shutting that down.
-     *
-     * @throws Exception        in case of a problem
+     * This method will re-use the helper objects from a previous run if they
+     * are still available. For example, the local test server will be
+     * re-started rather than re-created. {@link #httpContext httpContext} will
+     * always be re-created. Tests that modify the other helper objects should
+     * afterwards set the respective attributes to <code>null</code> in a
+     * <code>finally{}</code> block to force re-creation for subsequent tests.
+     * Of course that shouldn't be done with the test server, or only after
+     * shutting that down.
+     * 
+     * @throws Exception
+     *             in case of a problem
      */
     @Override
     protected void setUp() throws Exception {
 
         if (defaultParams == null) {
             defaultParams = new BasicHttpParams();
-            HttpProtocolParams.setVersion
-                (defaultParams, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset
-                (defaultParams, "UTF-8");
-            HttpProtocolParams.setUserAgent
-                (defaultParams, "TestAgent/1.1");
-            HttpProtocolParams.setUseExpectContinue
-                (defaultParams, false);
+            HttpProtocolParams.setVersion(defaultParams, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(defaultParams, "UTF-8");
+            HttpProtocolParams.setUserAgent(defaultParams, "TestAgent/1.1");
+            HttpProtocolParams.setUseExpectContinue(defaultParams, false);
         }
 
         if (supportedSchemes == null) {
@@ -141,12 +130,11 @@ public abstract class ServerTestBase extends TestCase {
 
     } // setUp
 
-
     /**
-     * Unprepares the local server for testing.
-     * This stops the test server. All helper objects, including the
-     * test server, remain stored in the attributes for the next test.
-     *
+     * Unprepares the local server for testing. This stops the test server. All
+     * helper objects, including the test server, remain stored in the
+     * attributes for the next test.
+     * 
      * @see #setUp setUp()
      */
     @Override
@@ -154,72 +142,68 @@ public abstract class ServerTestBase extends TestCase {
         localServer.stop();
     }
 
-
     /**
      * Obtains the address of the local test server.
-     *
-     * @return  the test server host, with a scheme name of "http"
+     * 
+     * @return the test server host, with a scheme name of "http"
      */
     protected HttpHost getServerHttp() {
 
         return new HttpHost(LocalTestServer.TEST_SERVER_ADDR.getHostName(),
-                            localServer.getServicePort(),
-                            "http");
+                localServer.getServicePort(), "http");
     }
-
 
     /**
      * Obtains the default route to the local test server.
-     *
+     * 
      * @return the default route to the local test server
      */
     protected HttpRoute getDefaultRoute() {
         return new HttpRoute(getServerHttp());
     }
-    
 
     /**
-     * Opens a connection to the given target using
-     * {@link #defaultParams default parameters}.
-     * Maps to {@link #connectTo(HttpHost,HttpParams)
-     *                 connectTo(target,defaultParams)}.
-     *
-     * @param target    the target to connect to
-     *
-     * @return  a new connection opened to the target
-     *
-     * @throws Exception        in case of a problem
+     * Opens a connection to the given target using {@link #defaultParams
+     * default parameters}. Maps to {@link #connectTo(HttpHost,HttpParams)
+     * connectTo(target,defaultParams)}.
+     * 
+     * @param target
+     *            the target to connect to
+     * 
+     * @return a new connection opened to the target
+     * 
+     * @throws Exception
+     *             in case of a problem
      */
     protected DefaultHttpClientConnection connectTo(HttpHost target)
-        throws Exception {
+            throws Exception {
 
         return connectTo(target, defaultParams);
     }
 
-
     /**
      * Opens a connection to the given target using the given parameters.
-     *
-     * @param target    the target to connect to
-     *
-     * @return  a new connection opened to the target
-     *
-     * @throws Exception        in case of a problem
+     * 
+     * @param target
+     *            the target to connect to
+     * 
+     * @return a new connection opened to the target
+     * 
+     * @throws Exception
+     *             in case of a problem
      */
     protected DefaultHttpClientConnection connectTo(HttpHost target,
-                                                    HttpParams params)
-        throws Exception {
+            HttpParams params) throws Exception {
 
         Scheme schm = supportedSchemes.get(target.getSchemeName());
         int port = schm.resolvePort(target.getPort());
 
         DefaultHttpClientConnection conn = new DefaultHttpClientConnection();
-        Socket sock = schm.getSocketFactory().connectSocket
-            (null, target.getHostName(), port, null, 0, params);
+        Socket sock = schm.getSocketFactory().connectSocket(null,
+                target.getHostName(), port, null, 0, params);
         conn.bind(sock, params);
 
         return conn;
     }
-
 
 } // class ServerTestBase

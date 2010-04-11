@@ -26,11 +26,11 @@ import com.sirika.pymager.client.ImageId;
 public class ImageIdObjectMother {
 
     public static ImageId yemmaGourayaId() {
-	return imageId("yemmaGouraya");
+        return imageId("yemmaGouraya");
     }
-    
+
     public static ImageId cornicheKabyleId() {
-	return imageId("cornicheKabyle");
+        return imageId("cornicheKabyle");
     }
-    
+
 }

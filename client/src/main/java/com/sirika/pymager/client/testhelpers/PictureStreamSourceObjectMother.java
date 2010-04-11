@@ -25,18 +25,22 @@ import org.springframework.core.io.InputStreamSource;
 public class PictureStreamSourceObjectMother {
 
     public static InputStreamSource yemmaGourayaOriginalPictureStream() {
-	return new ClassPathResource("/com/sirika/pymager/testhelpers/samplepix/original/yemmaGourayaInBejaia.jpg");
+        return new ClassPathResource(
+                "/com/sirika/pymager/testhelpers/samplepix/original/yemmaGourayaInBejaia.jpg");
     }
-    
+
     public static InputStreamSource yemmaGourayaDerived100x100PictureStream() {
-	return new ClassPathResource("/com/sirika/pymager/testhelpers/samplepix/derived/yemmaGouraya-100x100.jpg");
+        return new ClassPathResource(
+                "/com/sirika/pymager/testhelpers/samplepix/derived/yemmaGouraya-100x100.jpg");
     }
-    
+
     public static InputStreamSource cornicheKabyleOriginalPictureStream() {
-	return new ClassPathResource("/com/sirika/pymager/testhelpers/samplepix/original/cornicheKabyle.jpg");
+        return new ClassPathResource(
+                "/com/sirika/pymager/testhelpers/samplepix/original/cornicheKabyle.jpg");
     }
-    
+
     public static InputStreamSource textfileresource() {
-	return new ClassPathResource("/com/sirika/pymager/testhelpers/samplepix/somethingthatisnotanimage.txt");
+        return new ClassPathResource(
+                "/com/sirika/pymager/testhelpers/samplepix/somethingthatisnotanimage.txt");
     }
 }

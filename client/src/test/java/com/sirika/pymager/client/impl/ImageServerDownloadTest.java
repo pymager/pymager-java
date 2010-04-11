@@ -54,74 +54,83 @@ import com.sirika.pymager.client.testhelpers.PictureStreamAssertionUtils;
 import com.sirika.pymager.client.testhelpers.PictureStreamSourceObjectMother;
 
 public class ImageServerDownloadTest extends ServerTestBase {
-    
+
     private static class ImageGETRequestHandler implements HttpRequestHandler {
         public ImageGETRequestHandler() {
             super();
         }
 
-        public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+        public void handle(final HttpRequest request,
+                final HttpResponse response, final HttpContext context)
+                throws HttpException, IOException {
             assertTrue("GET".equals(request.getRequestLine().getMethod()));
-            response.setStatusLine(request.getRequestLine().getProtocolVersion(), HttpStatus.SC_OK);
-            if("/original/yemmaGouraya".equals(request.getRequestLine().getUri())) {
-        	response.setEntity(yemmaGourayaHttpEntity());
-            } else if("/original/cornicheKabyle".equals(request.getRequestLine().getUri())) {
-        	response.setEntity(cornicheKabyleHttpEntity());
+            response.setStatusLine(request.getRequestLine()
+                    .getProtocolVersion(), HttpStatus.SC_OK);
+            if ("/original/yemmaGouraya".equals(request.getRequestLine()
+                    .getUri())) {
+                response.setEntity(yemmaGourayaHttpEntity());
+            } else if ("/original/cornicheKabyle".equals(request
+                    .getRequestLine().getUri())) {
+                response.setEntity(cornicheKabyleHttpEntity());
             }
-            
+
         }
 
-	private EntityTemplate yemmaGourayaHttpEntity() {
-	    return entityForInputStreamSource(yemmaGourayaOriginalPictureStream());
-	}
-	
-	private EntityTemplate cornicheKabyleHttpEntity() {
-	    return entityForInputStreamSource(cornicheKabyleOriginalPictureStream());
-	}
+        private EntityTemplate yemmaGourayaHttpEntity() {
+            return entityForInputStreamSource(yemmaGourayaOriginalPictureStream());
+        }
 
-	private EntityTemplate entityForInputStreamSource(
-		final InputStreamSource iss) {
-	    return new EntityTemplate(new ContentProducer() {
-		public void writeTo(OutputStream outstream) throws IOException {
-		    InputStream yemmaGouraya = iss.getInputStream();
-		    IOUtils.copy(yemmaGouraya, outstream);
-		    IOUtils.closeQuietly(yemmaGouraya);
-		}
+        private EntityTemplate cornicheKabyleHttpEntity() {
+            return entityForInputStreamSource(cornicheKabyleOriginalPictureStream());
+        }
+
+        private EntityTemplate entityForInputStreamSource(
+                final InputStreamSource iss) {
+            return new EntityTemplate(new ContentProducer() {
+                public void writeTo(OutputStream outstream) throws IOException {
+                    InputStream yemmaGouraya = iss.getInputStream();
+                    IOUtils.copy(yemmaGouraya, outstream);
+                    IOUtils.closeQuietly(yemmaGouraya);
+                }
             });
-	}
+        }
     }
 
-
     public ImageServerDownloadTest(String testName) {
-	super(testName);
+        super(testName);
     }
 
     public void testShouldGenerateUrlByDelegatingToUrlGenerator() {
-	ImageReference imageReference = yemmaGouraya();
-	UrlGenerator urlGenerator = createMock(UrlGenerator.class);
-	expect(urlGenerator.getImageResourceUrl(imageReference)).andReturn("http://anyurl.com/yemmaGouraya");
-	replay(urlGenerator);
+        ImageReference imageReference = yemmaGouraya();
+        UrlGenerator urlGenerator = createMock(UrlGenerator.class);
+        expect(urlGenerator.getImageResourceUrl(imageReference)).andReturn(
+                "http://anyurl.com/yemmaGouraya");
+        replay(urlGenerator);
 
-	ImageServer imageServer = new HttpImageServer(urlGenerator);
-	assertThat(imageServer.getImageResourceUrl(imageReference),is("http://anyurl.com/yemmaGouraya"));
-	verify(urlGenerator);
+        ImageServer imageServer = new HttpImageServer(urlGenerator);
+        assertThat(imageServer.getImageResourceUrl(imageReference),
+                is("http://anyurl.com/yemmaGouraya"));
+        verify(urlGenerator);
     }
-    
+
     public void testShouldDownloadYemmaGourayaPicture() throws IOException {
-	doDownloadImage(yemmaGouraya(), yemmaGourayaOriginalPictureStream());
+        doDownloadImage(yemmaGouraya(), yemmaGourayaOriginalPictureStream());
     }
 
     public void testShouldDownloadCornicheKabylePicture() throws IOException {
-	doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream());
+        doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother
+                .cornicheKabyleOriginalPictureStream());
     }
-    
-    private void doDownloadImage(ImageReference imageReference, InputStreamSource expectedInputStreamSource) throws IOException {
-	registerImageDownloadService();
-	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
-	InputStreamSource actual = imageServer.downloadImage(imageReference);
-	assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, actual).isSameStream());
+
+    private void doDownloadImage(ImageReference imageReference,
+            InputStreamSource expectedInputStreamSource) throws IOException {
+        registerImageDownloadService();
+        ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+        InputStreamSource actual = imageServer.downloadImage(imageReference);
+        assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(
+                expectedInputStreamSource, actual).isSameStream());
     }
-    
+
     private void registerImageDownloadService() {
         this.localServer.register("*", new ImageGETRequestHandler());
     }

@@ -41,45 +41,52 @@ import com.sirika.pymager.client.impl.HttpImageServer;
 import com.sirika.pymager.client.testhelpers.ImageIdObjectMother;
 
 public class ImageServerUploadTest extends ServerTestBase {
-    
+
     private static class ImagePOSTRequestHandler implements HttpRequestHandler {
-	private boolean called = false;
+        private boolean called = false;
+
         public ImagePOSTRequestHandler() {
             super();
         }
 
-        public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+        public void handle(final HttpRequest request,
+                final HttpResponse response, final HttpContext context)
+                throws HttpException, IOException {
             assertTrue("POST".equals(request.getRequestLine().getMethod()));
-            response.setStatusLine(request.getRequestLine().getProtocolVersion(), HttpStatus.SC_OK);
-            if("/original/yemmaGouraya".equals(request.getRequestLine().getUri())) {
-        	called = true;
+            response.setStatusLine(request.getRequestLine()
+                    .getProtocolVersion(), HttpStatus.SC_OK);
+            if ("/original/yemmaGouraya".equals(request.getRequestLine()
+                    .getUri())) {
+                called = true;
             } else {
-        	throw new RuntimeException("We are only supposed to handle Yemma Gouraya");
+                throw new RuntimeException(
+                        "We are only supposed to handle Yemma Gouraya");
             }
         }
 
-	public void verify() {
-	    assertTrue(called);
-	}
+        public void verify() {
+            assertTrue(called);
+        }
     }
 
     private ImagePOSTRequestHandler imagePOSTRequestHandler;
-    
+
     public ImageServerUploadTest(String testName) {
-	super(testName);
+        super(testName);
     }
-    
+
     public void testShouldUploadYemmaGourayaPicture() throws IOException {
-	registerImageUploadService();
-	ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
-	ImageReference imageReference = imageServer.uploadImage(yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
-	assertEquals(yemmaGouraya(), imageReference);
-	imagePOSTRequestHandler.verify();
-	
+        registerImageUploadService();
+        ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
+        ImageReference imageReference = imageServer.uploadImage(
+                yemmaGourayaId(), JPEG, yemmaGourayaOriginalPictureStream());
+        assertEquals(yemmaGouraya(), imageReference);
+        imagePOSTRequestHandler.verify();
+
     }
-    
+
     private void registerImageUploadService() {
-	imagePOSTRequestHandler = new ImagePOSTRequestHandler();
+        imagePOSTRequestHandler = new ImagePOSTRequestHandler();
         this.localServer.register("*", imagePOSTRequestHandler);
     }
 }

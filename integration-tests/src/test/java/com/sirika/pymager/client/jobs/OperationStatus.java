@@ -22,4 +22,6 @@
  */
 package com.sirika.pymager.client.jobs;
 
-public enum OperationStatus { OK, KO  }
+public enum OperationStatus {
+    OK, KO
+}

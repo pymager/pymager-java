@@ -34,57 +34,56 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.http.util.EntityUtils;
 
-
-
 /**
  * A handler that echos the incoming request entity.
  * 
  * @author <a href="mailto:rolandw at apache.org">Roland Weber</a>
  * @author <a href="mailto:oleg at ural.ru">Oleg Kalnichevski</a>
- *
- *
- * <!-- empty lines to avoid 'svn diff' problems -->
+ * 
+ * 
+ *         <!-- empty lines to avoid 'svn diff' problems -->
  * @version $Revision: 652950 $
  */
-public class EchoHandler
-    implements HttpRequestHandler {
+public class EchoHandler implements HttpRequestHandler {
 
     // public default constructor
 
     /**
-     * Handles a request by echoing the incoming request entity.
-     * If there is no request entity, an empty document is returned.
-     *
-     * @param request   the request
-     * @param response  the response
-     * @param context   the context
-     *
-     * @throws HttpException    in case of a problem
-     * @throws IOException      in case of an IO problem
+     * Handles a request by echoing the incoming request entity. If there is no
+     * request entity, an empty document is returned.
+     * 
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param context
+     *            the context
+     * 
+     * @throws HttpException
+     *             in case of a problem
+     * @throws IOException
+     *             in case of an IO problem
      */
-    public void handle(final HttpRequest request, 
-                       final HttpResponse response,
-                       final HttpContext context)
-        throws HttpException, IOException {
+    public void handle(final HttpRequest request, final HttpResponse response,
+            final HttpContext context) throws HttpException, IOException {
 
-        String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
-        if (!"GET".equals(method) &&
-            !"POST".equals(method) &&
-            !"PUT".equals(method)
-            ) {
-            throw new MethodNotSupportedException
-                (method + " not supported by " + getClass().getName());
+        String method = request.getRequestLine().getMethod().toUpperCase(
+                Locale.ENGLISH);
+        if (!"GET".equals(method) && !"POST".equals(method)
+                && !"PUT".equals(method)) {
+            throw new MethodNotSupportedException(method + " not supported by "
+                    + getClass().getName());
         }
 
         HttpEntity entity = null;
         if (request instanceof HttpEntityEnclosingRequest)
-            entity = ((HttpEntityEnclosingRequest)request).getEntity();
+            entity = ((HttpEntityEnclosingRequest) request).getEntity();
 
         // For some reason, just putting the incoming entity into
         // the response will not work. We have to buffer the message.
         byte[] data;
         if (entity == null) {
-            data = new byte [0];
+            data = new byte[0];
         } else {
             data = EntityUtils.toByteArray(entity);
         }
@@ -99,6 +98,5 @@ public class EchoHandler
         response.setEntity(entity);
 
     } // handle
-
 
 } // class EchoHandler
