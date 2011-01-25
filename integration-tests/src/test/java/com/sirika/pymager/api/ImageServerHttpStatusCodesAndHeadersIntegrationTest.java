@@ -27,7 +27,6 @@ import static org.junit.Assert.assertFalse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,13 +36,11 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.InputStreamSource;
 
 import com.google.common.base.Strings;
 import com.google.common.io.InputSupplier;
@@ -152,9 +149,6 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
         assertEquals(HttpStatus.SC_NOT_MODIFIED, secondResponse.getStatusLine().getStatusCode());
     }
 
-    private Date dateInFuture() {
-        return new DateTime().plusDays(1).toDate();
-    }
 
     @Test
     public void shouldRaise404WhenDownloadingNotExistingOriginalResource()

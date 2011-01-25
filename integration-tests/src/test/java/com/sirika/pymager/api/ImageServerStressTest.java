@@ -22,14 +22,12 @@ import static com.sirika.pymager.api.testhelpers.ImageIdObjectMother.cornicheKab
 import static com.sirika.pymager.api.testhelpers.ImageIdObjectMother.yemmaGourayaId;
 import static com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother.cornicheKabyle;
 import static com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
-import static com.sirika.pymager.api.testhelpers.PictureStreamAssertionUtils.is100x100CornicheKabylePicture;
 import static com.sirika.pymager.api.testhelpers.PictureStreamAssertionUtils.isCornicheKabylePicture;
 import static com.sirika.pymager.api.testhelpers.PictureStreamAssertionUtils.isYemmaGourayaPicture;
 import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaDerived100x100PictureStream;
 import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -38,33 +36,24 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.InputStreamSource;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.io.InputSupplier;
-import com.sirika.pymager.api.ImageReference;
-import com.sirika.pymager.api.ResourceNotExistingException;
 import com.sirika.pymager.api.jobs.DownloadPictureJob;
 import com.sirika.pymager.api.jobs.OperationStatus;
 import com.sirika.pymager.api.jobs.UploadPictureJob;
-import com.sirika.pymager.api.testhelpers.ImageIdObjectMother;
-import com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother;
 import com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother;
 
 public class ImageServerStressTest extends AbstractImageServerIntegrationTestCase {
