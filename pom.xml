@@ -3,12 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sirika.pymager</groupId>
-    <artifactId>pymager-java-client-parent</artifactId>
+    <artifactId>pymager-java-parent</artifactId>
     <packaging>pom</packaging>
-    <name>PyMager Java Client Parent</name>
-    <description>Java client for PyMager</description>
+    <name>PyMager Java Parent</name>
+    <description>Java API for PyMager</description>
     <version>0.13-SNAPSHOT</version>
-    <url>http://developers.sirika.com/pymager-java-client</url>
+    <url>http://developers.sirika.com/pymager-java</url>
     <inceptionYear>2009</inceptionYear>
     <prerequisites>
         <maven>3.0.2</maven>
@@ -25,9 +25,9 @@
     </properties>
 
     <scm>
-        <connection>git://github.com/pymager/pymager-java-client.git</connection>
-        <developerConnection>git@github.com:pymager/pymager-java-client.git</developerConnection>
-        <url>https://github.com/pymager/pymager-java-client</url>
+        <connection>git://github.com/pymager/pymager-java.git</connection>
+        <developerConnection>git@github.com:pymager/pymager-java.git</developerConnection>
+        <url>https://github.com/pymager/pymager-java</url>
     </scm>
 
     <licenses>
@@ -66,7 +66,7 @@
     </developers>
 
     <modules>
-        <module>client</module>
+        <module>api</module>
         <module>integration-tests</module>
         <module>assembly</module>
     </modules>
@@ -284,7 +284,7 @@
         </snapshotRepository>
         <site>
             <id>sirika-site</id>
-            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java-client</url>
+            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java</url>
         </site>
     </distributionManagement>
 
