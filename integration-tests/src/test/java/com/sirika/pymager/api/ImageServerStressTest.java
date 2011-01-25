@@ -67,11 +67,10 @@ import com.sirika.pymager.api.testhelpers.ImageIdObjectMother;
 import com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother;
 import com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother;
 
-public class ImageServerStressTest extends
-        AbstractImageServerIntegrationTestCase {
+public class ImageServerStressTest extends AbstractImageServerIntegrationTestCase {
     private final static long TIMEOUT_IN_SECONDS = 500;
-    private final static int THREAD_POOL_SIZE = 10;
-    private final static int TOTAL_NUMBER_OF_THREADS = 200;
+    private final static int THREAD_POOL_SIZE = 50;
+    private final static int TOTAL_NUMBER_OF_THREADS = 500;
     private ExecutorService executorService;
 
     @Before
@@ -81,8 +80,7 @@ public class ImageServerStressTest extends
     }
 
     private void initialFailproofCleanup() throws IOException {
-        for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
-                cornicheKabyle())) {
+        for (ImageReference imageReference : Lists.newArrayList(yemmaGouraya(),cornicheKabyle())) {
             try {
                 InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
                 source.getInput();
@@ -94,14 +92,12 @@ public class ImageServerStressTest extends
     }
 
     @Test
-    public void onlyOneUploadThreadOfYemmaGourayaShoudSucceed()
-            throws InterruptedException, IOException {
+    public void onlyOneUploadThreadOfYemmaGourayaShoudSucceed() throws InterruptedException, IOException {
         Iterable<Future<OperationStatus>> results = executorService.invokeAll(
                 uploadYemmaGourayaJobs(TOTAL_NUMBER_OF_THREADS),
                 TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
         assertThat(numberOfSuccessfulOperations(results), is(1));
-        assertThat(numberOfUnsuccessfulOperations(results),
-                is(TOTAL_NUMBER_OF_THREADS - 1));
+        assertThat(numberOfUnsuccessfulOperations(results),is(TOTAL_NUMBER_OF_THREADS - 1));
 
         InputSupplier<InputStream> source = imageServer.downloadImage(yemmaGouraya());
         assertNotNull(source);
@@ -110,8 +106,7 @@ public class ImageServerStressTest extends
     }
 
     @Test
-    public void onlyOneUploadThreadOfEachImageIdShoudSucceed()
-            throws InterruptedException, IOException {
+    public void onlyOneUploadThreadOfEachImageIdShoudSucceed() throws InterruptedException, IOException {
         Iterable<Future<OperationStatus>> results = executorService
                 .invokeAll(
                         Lists
@@ -121,8 +116,7 @@ public class ImageServerStressTest extends
                                                 uploadCornicheKabyleJobs(TOTAL_NUMBER_OF_THREADS / 2))),
                         TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
         assertThat(numberOfSuccessfulOperations(results), is(2));
-        assertThat(numberOfUnsuccessfulOperations(results),
-                is(TOTAL_NUMBER_OF_THREADS - 2));
+        assertThat(numberOfUnsuccessfulOperations(results),is(TOTAL_NUMBER_OF_THREADS - 2));
 
         InputSupplier<InputStream> yemmaGourayaSource = imageServer.downloadImage(yemmaGouraya());
         assertNotNull(yemmaGourayaSource);
@@ -137,8 +131,7 @@ public class ImageServerStressTest extends
     }
 
     @Test
-    public void shouldUploadAndDownloadOriginalYemmaGourayaPictureUsingSeveralThreads()
-            throws IOException, InterruptedException {
+    public void shouldUploadAndDownloadOriginalYemmaGourayaPictureUsingSeveralThreads() throws IOException, InterruptedException {
         uploadYemmaGourayaPicture();
 
         Iterable<Future<OperationStatus>> results = executorService.invokeAll(
@@ -149,8 +142,7 @@ public class ImageServerStressTest extends
     }
 
     @Test
-    public void shouldUploadAndDownloadDerivedYemmaGourayaPictureUsingSeveralThreads()
-            throws IOException, InterruptedException {
+    public void shouldUploadAndDownloadDerivedYemmaGourayaPictureUsingSeveralThreads() throws IOException, InterruptedException {
         uploadYemmaGourayaPicture();
 
         Iterable<Future<OperationStatus>> results = executorService.invokeAll(
