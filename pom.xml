@@ -26,8 +26,8 @@
     </properties>
 
     <scm>
-        <connection>git://github.com/pymager/pymager-java.git</connection>
-        <developerConnection>git@github.com:pymager/pymager-java.git</developerConnection>
+        <connection>scm:git:git://github.com/pymager/pymager-java.git</connection>
+        <developerConnection>scm:git:git@github.com:pymager/pymager-java.git</developerConnection>
         <url>https://github.com/pymager/pymager-java</url>
     </scm>
 
