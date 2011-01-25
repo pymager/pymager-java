@@ -32,7 +32,7 @@
     <context:property-placeholder location="classpath:/com/sirika/pymager/tests/integration/config.properties" />
 	<context:annotation-config/>
 	
-	<bean id="imageServer" class="com.sirika.pymager.client.impl.HttpImageServer">
+	<bean id="imageServer" class="com.sirika.pymager.api.impl.HttpImageServer">
 		<constructor-arg><value>${imgserver.baseurl}</value></constructor-arg>
 		<constructor-arg><ref bean="httpClient" /></constructor-arg>
 	</bean>
