@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.sirika.pymager.api.UrlGenerator;
-import com.sirika.pymager.api.impl.RESTfulUrlGenerator;
+import com.sirika.pymager.api.internal.RESTfulUrlGenerator;
 
 public class RESTfulUrlGeneratorTest {
 

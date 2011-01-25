@@ -21,8 +21,8 @@ import static com.sirika.pymager.api.ImageReference.originalImage;
 import static com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother.yemmaGouraya;
 import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 
-import java.awt.image.ImageProducer;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -32,19 +32,16 @@ import org.apache.http.localserver.ServerTestBase;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.junit.Assert;
-import org.springframework.core.io.InputStreamSource;
 
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.BadUploadRequestException;
 import com.sirika.pymager.api.ForbiddenRequestException;
 import com.sirika.pymager.api.ImageAlreadyExistsException;
-import com.sirika.pymager.api.ImageFormat;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ImageServer;
 import com.sirika.pymager.api.ResourceNotExistingException;
 import com.sirika.pymager.api.UnknownDeleteFailureException;
-import com.sirika.pymager.api.UnknownDownloadFailureException;
-import com.sirika.pymager.api.impl.HttpImageServer;
-import com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother;
+import com.sirika.pymager.api.UnknownGetFailureException;
 
 public class ImageServerFailureTest extends ServerTestBase {
 
@@ -63,11 +60,8 @@ public class ImageServerFailureTest extends ServerTestBase {
             this(-1);
         }
 
-        public void handle(final HttpRequest request,
-                final HttpResponse response, final HttpContext context)
-                throws HttpException, IOException {
-            response.setStatusLine(request.getRequestLine()
-                    .getProtocolVersion(), this.statuscode);
+        public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+            response.setStatusLine(request.getRequestLine().getProtocolVersion(), this.statuscode);
         }
     }
 
@@ -75,16 +69,14 @@ public class ImageServerFailureTest extends ServerTestBase {
         super(testName);
     }
 
-    public void testShouldThrowResourceNotExistingExceptionWhileDownloadingWhenResourceNotFound()
-            throws IOException {
+    public void testShouldThrowResourceNotExistingExceptionWhileDownloadingWhenResourceNotFound() throws IOException {
         registerErrorService(HttpStatus.SC_NOT_FOUND);
 
         ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
-            InputStreamSource source = imageServer
-                    .downloadImage(imageReference);
-            source.getInputStream();
+            InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+            source.getInput();
             Assert.fail();
         } catch (ResourceNotExistingException e) {
             assertEquals(imageReference, e.getImageReference());
@@ -97,54 +89,47 @@ public class ImageServerFailureTest extends ServerTestBase {
      * 
      * @throws IOException
      */
-    public void testShouldThrowUnknownDownloadFailureExceptionWhenServerSendsBadRequest()
-            throws IOException {
+    public void testShouldThrowUnknownDownloadFailureExceptionWhenServerSendsBadRequest() throws IOException {
         registerErrorService(HttpStatus.SC_BAD_REQUEST);
 
         ImageReference imageReference = originalImage("abadrequestthatshouldtheoreticallyneverhappen");
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
-            InputStreamSource source = imageServer
-                    .downloadImage(imageReference);
-            source.getInputStream();
+            InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+            source.getInput();
             Assert.fail();
-        } catch (UnknownDownloadFailureException e) {
+        } catch (UnknownGetFailureException e) {
             assertEquals(imageReference, e.getImageReference());
         }
 
     }
 
-    public void testShouldThrowUnknownFailureExceptionWhileDownloadingWhenInternalServerError()
-            throws IOException {
+    public void testShouldThrowUnknownFailureExceptionWhileDownloadingWhenInternalServerError() throws IOException {
         registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
         ImageReference imageReference = yemmaGouraya();
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
-            InputStreamSource iss = imageServer.downloadImage(imageReference);
-            iss.getInputStream();
+            InputSupplier<InputStream> iss = imageServer.downloadImage(imageReference);
+            iss.getInput();
             fail();
-        } catch (UnknownDownloadFailureException e) {
+        } catch (UnknownGetFailureException e) {
             assertEquals(imageReference, e.getImageReference());
         }
     }
 
-    public void testShouldThrowUnknownFailureExceptionWhileUploadingYemmaGourayaPictureWhenInternalServerError()
-            throws IOException {
+    public void testShouldThrowUnknownFailureExceptionWhileUploadingYemmaGourayaPictureWhenInternalServerError() throws IOException {
         registerErrorService(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
-            imageServer
-                    .deleteImage(imageId("anyResourceThatWillThrowAnException"));
+            imageServer.deleteImage(imageId("anyResourceThatWillThrowAnException"));
             fail();
         } catch (UnknownDeleteFailureException e) {
-            assertEquals(imageId("anyResourceThatWillThrowAnException"), e
-                    .getImageId());
+            assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
         }
     }
 
-    public void testShouldThrowBadUploadRequestExceptionWhileUploading()
-            throws IOException {
+    public void testShouldThrowBadUploadRequestExceptionWhileUploading() throws IOException {
         registerErrorService(HttpStatus.SC_BAD_REQUEST);
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
@@ -153,15 +138,13 @@ public class ImageServerFailureTest extends ServerTestBase {
                     yemmaGourayaOriginalPictureStream());
             fail();
         } catch (BadUploadRequestException e) {
-            assertEquals(imageId("anyResourceThatWillThrowAnException"), e
-                    .getImageId());
+            assertEquals(imageId("anyResourceThatWillThrowAnException"), e.getImageId());
             assertEquals(JPEG, e.getImageFormat());
         }
 
     }
 
-    public void testShouldThrowImageAlreadyExistsExceptionWhenConflict()
-            throws IOException {
+    public void testShouldThrowImageAlreadyExistsExceptionWhenConflict() throws IOException {
         registerErrorService(HttpStatus.SC_CONFLICT);
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
@@ -181,8 +164,8 @@ public class ImageServerFailureTest extends ServerTestBase {
         registerErrorService(HttpStatus.SC_FORBIDDEN);
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
         try {
-            InputStreamSource iss = imageServer.downloadImage(yemmaGouraya());
-            iss.getInputStream();
+            InputSupplier<InputStream> iss = imageServer.downloadImage(yemmaGouraya());
+            iss.getInput();
             fail();
         } catch (ForbiddenRequestException e) {
 

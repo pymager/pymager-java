@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sirika.pymager.api.impl;
+package com.sirika.pymager.api.internal;
 
-import static com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler.statusCodeEquals;
-import static com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler.statusCodeGreaterOrEquals;
 import static com.sirika.pymager.api.ImageReference.originalImage;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,14 +29,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 
 import com.google.common.collect.ImmutableList;
-import com.sirika.httpclienthelpers.springframework.InputStreamSourceBody;
-import com.sirika.httpclienthelpers.springframework.RepeatableMultipartEntity;
-import com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler;
-import com.sirika.httpclienthelpers.template.HttpClientTemplate;
-import com.sirika.httpclienthelpers.template.HttpErrorHandler;
+import com.google.common.io.InputSupplier;
+import com.sirika.hchelpers.client.DelegatingHttpErrorHandler;
+import com.sirika.hchelpers.client.HttpClientTemplate;
+import com.sirika.hchelpers.client.HttpErrorHandler;
+import com.sirika.hchelpers.client.HttpErrorMatchers;
+import com.sirika.hchelpers.client.HttpResponseCallback;
+import com.sirika.hchelpers.mime.InputSupplierSourceBody;
+import com.sirika.hchelpers.mime.RepeatableMultipartEntity;
 import com.sirika.pymager.api.BadUploadRequestException;
 import com.sirika.pymager.api.ImageAlreadyExistsException;
 import com.sirika.pymager.api.ImageFormat;
@@ -48,18 +49,17 @@ import com.sirika.pymager.api.UrlGenerator;
 
 public class UploadImageCommand {
     public static final String UPLOAD_PARAMETER_NAME = "file";
-    private static final Logger logger = LoggerFactory
-            .getLogger(UploadImageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(UploadImageCommand.class);
 
     private HttpClientTemplate httpClientTemplate;
     private UrlGenerator urlGenerator;
     private ImageId imageId;
     private ImageFormat imageFormat;
-    private InputStreamSource imageSource;
+    private InputSupplier<InputStream> imageSource;
 
     public UploadImageCommand(HttpClient httpClient, UrlGenerator urlGenerator,
             ImageId imageId, ImageFormat imageFormat,
-            InputStreamSource imageSource) {
+            InputSupplier<InputStream> imageSource) {
         super();
         this.httpClientTemplate = new HttpClientTemplate(httpClient);
         this.urlGenerator = urlGenerator;
@@ -72,20 +72,16 @@ public class UploadImageCommand {
         ImageReference imageReference = originalImage(this.imageId.toString());
         HttpPost httpPost = null;
         try {
-            httpPost = createHttpPostFor(imageFormat, imageSource,
-                    imageReference);
+            httpPost = createHttpPostFor(imageFormat, imageSource, imageReference);
         } catch (IOException e) {
-            throw new UnknownUploadFailureException(this.imageId, imageFormat,
-                    e);
+            throw new UnknownUploadFailureException(this.imageId, imageFormat, e);
         }
 
-        this.httpClientTemplate.executeWithoutResult(httpPost,
-                httpErrorHandlers());
+        this.httpClientTemplate.executeWithoutResult(httpPost, httpErrorHandlers());
 
-        logger
-                .debug(
-                        "Upload of {} done successfully. Download can be achieved using Image Reference: {}",
-                        this.imageId, imageReference);
+        logger.debug("Upload of {} done successfully. Download can be achieved using Image Reference: {}",
+                     this.imageId, 
+                     imageReference);
         return imageReference;
     }
 
@@ -95,54 +91,47 @@ public class UploadImageCommand {
     }
 
     private HttpErrorHandler conflictErrorHandler() {
-        return new AbstractHttpErrorHandler(
-                statusCodeEquals(HttpStatus.SC_CONFLICT)) {
-            public void handle(HttpResponse response) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_CONFLICT), new HttpResponseCallback() {
+            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new ImageAlreadyExistsException(imageId, imageFormat,
-                        new HttpResponseException(response.getStatusLine()
-                                .getStatusCode(), response.getStatusLine()
+                        new HttpResponseException(httpResponse.getStatusLine()
+                                .getStatusCode(), httpResponse.getStatusLine()
                                 .getReasonPhrase()));
             }
-        };
+        });
     }
 
     private HttpErrorHandler badUploadRequestErrorHandler() {
-        return new AbstractHttpErrorHandler(
-                statusCodeEquals(HttpStatus.SC_BAD_REQUEST)) {
-            public void handle(HttpResponse response) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_BAD_REQUEST), new HttpResponseCallback() {
+            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new BadUploadRequestException(imageId, imageFormat,
-                        new HttpResponseException(response.getStatusLine()
-                                .getStatusCode(), response.getStatusLine()
+                        new HttpResponseException(httpResponse.getStatusLine()
+                                .getStatusCode(), httpResponse.getStatusLine()
                                 .getReasonPhrase()));
             }
-        };
+        });
     }
 
     private HttpErrorHandler defaultHandler() {
-        return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
-            public void handle(HttpResponse response) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeGreaterOrEquals(300), new HttpResponseCallback() {
+            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new UnknownUploadFailureException(imageId, imageFormat,
-                        new HttpResponseException(response.getStatusLine()
-                                .getStatusCode(), response.getStatusLine()
+                        new HttpResponseException(httpResponse.getStatusLine()
+                                .getStatusCode(), httpResponse.getStatusLine()
                                 .getReasonPhrase()));
             }
-        };
+        });
     }
 
-    private HttpPost createHttpPostFor(ImageFormat imageFormat,
-            InputStreamSource imageSource, ImageReference imageReference)
-            throws IOException {
-        HttpPost httpPost = new HttpPost(urlGenerator
-                .getImageResourceUrl(imageReference));
+    private HttpPost createHttpPostFor(ImageFormat imageFormat,InputSupplier<InputStream> imageSource, ImageReference imageReference) throws IOException {
+        HttpPost httpPost = new HttpPost(urlGenerator.getImageResourceUrl(imageReference));
         httpPost.setEntity(uploadStreamEntity(imageSource, imageFormat));
         return httpPost;
     }
 
-    private HttpEntity uploadStreamEntity(InputStreamSource imageSource,
-            ImageFormat imageFormat) throws IOException {
+    private HttpEntity uploadStreamEntity(InputSupplier<InputStream> imageSource, ImageFormat imageFormat) throws IOException {
         MultipartEntity entity = new RepeatableMultipartEntity();
-        entity.addPart(UPLOAD_PARAMETER_NAME, new InputStreamSourceBody(
-                imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
+        entity.addPart(UPLOAD_PARAMETER_NAME, new InputSupplierSourceBody(imageSource, imageFormat.mimeType(), UPLOAD_PARAMETER_NAME));
         return entity;
     }
 }

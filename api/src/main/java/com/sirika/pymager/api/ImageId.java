@@ -15,8 +15,9 @@
  */
 package com.sirika.pymager.api;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 
 /**
  * An Image ID
@@ -28,12 +29,11 @@ public class ImageId {
     private String id;
 
     private ImageId(String id) {
-        Validate.notNull(id);
-        if ((!StringUtils.isAsciiPrintable(id))
-                || (!StringUtils.isAlphanumeric(id))) {
-            throw new IllegalArgumentException(
-                    "ID cannot contain special characters");
-        }
+        Preconditions.checkArgument(id != null, "ID cannnot be null");
+        Preconditions.checkArgument(
+            CharMatcher.ASCII.and(CharMatcher.JAVA_LETTER_OR_DIGIT)
+                .matchesAllOf(id), "ID cannot contain special characters");
+        
         this.id = id;
     }
 
@@ -47,10 +47,7 @@ public class ImageId {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+        return Objects.hashCode(id);
     }
 
     @Override
@@ -62,12 +59,8 @@ public class ImageId {
         if (getClass() != obj.getClass())
             return false;
         ImageId other = (ImageId) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+        
+        return Objects.equal(this.id, other.id);
     }
 
 }

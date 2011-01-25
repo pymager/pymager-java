@@ -35,19 +35,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.pymager.api.BadUploadRequestException;
-import com.sirika.pymager.api.ForbiddenRequestException;
-import com.sirika.pymager.api.ImageAlreadyExistsException;
-import com.sirika.pymager.api.ImageId;
-import com.sirika.pymager.api.ImageReference;
-import com.sirika.pymager.api.ResourceNotExistingException;
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother;
 
 public class ImageServerIntegrationTest extends
@@ -59,9 +54,8 @@ public class ImageServerIntegrationTest extends
         for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
                 cornicheKabyle())) {
             try {
-                InputStreamSource source = imageServer
-                        .downloadImage(imageReference);
-                source.getInputStream();
+                InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+                source.getInput();
                 imageServer.deleteImage(imageReference.getId());
             } catch (ResourceNotExistingException e) {
                 // do nothing, it's fine
@@ -74,9 +68,8 @@ public class ImageServerIntegrationTest extends
             throws IOException {
         ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
         try {
-            InputStreamSource source = imageServer
-                    .downloadImage(imageReference);
-            source.getInputStream();
+            InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+            source.getInput();
             fail();
         } catch (ResourceNotExistingException e) {
             assertEquals(imageReference, e.getImageReference());
@@ -117,7 +110,7 @@ public class ImageServerIntegrationTest extends
             throws IOException {
         ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
                 JPEG, yemmaGourayaOriginalPictureStream());
-        InputStreamSource source = imageServer.downloadImage(yemmaGouraya);
+        InputSupplier<InputStream> source = imageServer.downloadImage(yemmaGouraya);
         assertNotNull(source);
         assertTrue(isYemmaGourayaPicture(source));
         assertFalse(isCornicheKabylePicture(source));
@@ -130,8 +123,8 @@ public class ImageServerIntegrationTest extends
                 yemmaGourayaOriginalPictureStream());
         imageServer.deleteImage(yemmaGourayaId());
         ImageReference imageReference = yemmaGouraya();
-        InputStreamSource source = imageServer.downloadImage(imageReference);
-        source.getInputStream();
+        InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+        source.getInput();
     }
 
     @Test
@@ -142,7 +135,7 @@ public class ImageServerIntegrationTest extends
         ImageReference cornicheKabyle = imageServer.uploadImage(
                 cornicheKabyleId(), JPEG, PictureStreamSourceObjectMother
                         .cornicheKabyleOriginalPictureStream());
-        InputStreamSource source = imageServer.downloadImage(cornicheKabyle);
+        InputSupplier<InputStream> source = imageServer.downloadImage(cornicheKabyle);
         assertNotNull(source);
         assertFalse(isYemmaGourayaPicture(source));
         assertTrue(isCornicheKabylePicture(source));
@@ -151,10 +144,8 @@ public class ImageServerIntegrationTest extends
     @Test
     public void shouldUploadYemmaGourayaAndDownloadDerivedPicture()
             throws IOException {
-        ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
-                JPEG, yemmaGourayaOriginalPictureStream());
-        InputStreamSource source = imageServer.downloadImage(yemmaGouraya
-                .rescaledTo(width(100).by(100)).convertedTo(JPEG));
+        ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),JPEG, yemmaGourayaOriginalPictureStream());
+        InputSupplier<InputStream> source = imageServer.downloadImage(yemmaGouraya.rescaledTo(width(100).by(100)).convertedTo(JPEG));
         assertNotNull(source);
         assertTrue(is100x100CornicheKabylePicture(source));
         assertFalse(isCornicheKabylePicture(source));
@@ -166,9 +157,8 @@ public class ImageServerIntegrationTest extends
         ImageReference yemmaGouraya = imageServer.uploadImage(yemmaGourayaId(),
                 JPEG, yemmaGourayaOriginalPictureStream());
         try {
-            InputStreamSource source = imageServer.downloadImage(yemmaGouraya
-                    .rescaledTo(width(10000).by(10000)).convertedTo(JPEG));
-            source.getInputStream();
+            InputSupplier<InputStream> source = imageServer.downloadImage(yemmaGouraya.rescaledTo(width(10000).by(10000)).convertedTo(JPEG));
+            source.getInput();
             fail();
         } catch (ForbiddenRequestException e) {
             // ok

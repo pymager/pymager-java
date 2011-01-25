@@ -21,8 +21,7 @@ public class UnknownUploadFailureException extends ImageServerException {
     private ImageId imageId;
     private ImageFormat imageFormat;
 
-    public UnknownUploadFailureException(ImageId imageId,
-            ImageFormat imageFormat, Exception e) {
+    public UnknownUploadFailureException(ImageId imageId, ImageFormat imageFormat, Exception e) {
         super(e);
         this.imageId = imageId;
         this.imageFormat = imageFormat;

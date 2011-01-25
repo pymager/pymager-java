@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sirika.pymager.api.impl;
+package com.sirika.pymager.api.internal;
+
+import java.io.InputStream;
 
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ResourceNotExistingException;
-import com.sirika.pymager.api.UnknownDownloadFailureException;
+import com.sirika.pymager.api.UnknownGetFailureException;
 import com.sirika.pymager.api.UrlGenerator;
 
 public class DownloadImageCommand {
-    private static final Logger logger = LoggerFactory
-            .getLogger(DownloadImageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(DownloadImageCommand.class);
 
     private HttpClient httpClient;
     private UrlGenerator urlGenerator;
@@ -41,10 +42,8 @@ public class DownloadImageCommand {
         this.imageReference = imageReference;
     }
 
-    public InputStreamSource execute() throws ResourceNotExistingException,
-            UnknownDownloadFailureException {
-        return new HttpDownloadInputStreamSource(this.httpClient,
-                this.urlGenerator, this.imageReference);
+    public InputSupplier<InputStream> execute() throws ResourceNotExistingException, UnknownGetFailureException {
+        return new HttpDownloadInputStreamSupplier(this.httpClient, this.urlGenerator, this.imageReference);
     }
 
 }

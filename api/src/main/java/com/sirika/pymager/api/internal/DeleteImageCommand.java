@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sirika.pymager.api.impl;
+package com.sirika.pymager.api.internal;
 
-import static com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler.statusCodeGreaterOrEquals;
 import static com.sirika.pymager.api.ImageReference.originalImage;
 
 import org.apache.http.HttpResponse;
@@ -26,16 +25,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
-import com.sirika.httpclienthelpers.template.AbstractHttpErrorHandler;
-import com.sirika.httpclienthelpers.template.HttpClientTemplate;
-import com.sirika.httpclienthelpers.template.HttpErrorHandler;
+import com.sirika.hchelpers.client.DelegatingHttpErrorHandler;
+import com.sirika.hchelpers.client.HttpErrorMatchers;
+import com.sirika.hchelpers.client.HttpClientTemplate;
+import com.sirika.hchelpers.client.HttpErrorHandler;
+import com.sirika.hchelpers.client.HttpResponseCallback;
 import com.sirika.pymager.api.ImageId;
 import com.sirika.pymager.api.UnknownDeleteFailureException;
 import com.sirika.pymager.api.UrlGenerator;
 
 public class DeleteImageCommand {
-    private static final Logger logger = LoggerFactory
-            .getLogger(DeleteImageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeleteImageCommand.class);
 
     private HttpClientTemplate httpClientTemplate;
     private UrlGenerator urlGenerator;
@@ -50,11 +50,9 @@ public class DeleteImageCommand {
     }
 
     public void execute() throws UnknownDeleteFailureException {
-        HttpDelete httpDelete = new HttpDelete(urlGenerator
-                .getImageResourceUrl(originalImage(imageId.toString())));
+        HttpDelete httpDelete = new HttpDelete(urlGenerator.getImageResourceUrl(originalImage(imageId.toString())));
 
-        this.httpClientTemplate.executeWithoutResult(httpDelete,
-                httpErrorHandlers());
+        this.httpClientTemplate.executeWithoutResult(httpDelete,httpErrorHandlers());
     }
 
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
@@ -62,13 +60,12 @@ public class DeleteImageCommand {
     }
 
     private HttpErrorHandler defaultHandler() {
-        return new AbstractHttpErrorHandler(statusCodeGreaterOrEquals(300)) {
-            public void handle(HttpResponse response) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeGreaterOrEquals(300), new HttpResponseCallback() {
+            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new UnknownDeleteFailureException(imageId,
-                        new HttpResponseException(response.getStatusLine()
-                                .getStatusCode(), "Error while uploading"));
+                        new HttpResponseException(httpResponse.getStatusLine().getStatusCode(), "Error while uploading"));
             }
-        };
+        });
     }
 
 }

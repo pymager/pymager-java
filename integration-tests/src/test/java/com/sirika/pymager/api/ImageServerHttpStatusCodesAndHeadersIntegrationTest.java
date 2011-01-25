@@ -22,15 +22,13 @@ import static com.sirika.pymager.api.testhelpers.ImageReferenceObjectMother.yemm
 import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother.textfileresource;
 import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother.yemmaGourayaOriginalPictureStream;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -39,22 +37,19 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.impl.cookie.DateUtils;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamSource;
 
-import com.sirika.httpclienthelpers.springframework.InputStreamSourceBody;
-import com.sirika.httpclienthelpers.springframework.RepeatableMultipartEntity;
-import com.sirika.pymager.api.ImageReference;
-import com.sirika.pymager.api.ResourceNotExistingException;
-import com.sirika.pymager.api.impl.UploadImageCommand;
+import com.google.common.base.Strings;
+import com.google.common.io.InputSupplier;
+import com.sirika.hchelpers.mime.InputSupplierSourceBody;
+import com.sirika.hchelpers.mime.RepeatableMultipartEntity;
+import com.sirika.pymager.api.internal.UploadImageCommand;
 
 /**
  * The idea of this class is to specify the behavior (executable specification)
@@ -91,9 +86,8 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
         for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
                 cornicheKabyle())) {
             try {
-                InputStreamSource source = imageServer
-                        .downloadImage(imageReference);
-                source.getInputStream();
+                InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+                source.getInput();
                 imageServer.deleteImage(imageReference.getId());
             } catch (ResourceNotExistingException e) {
                 // do nothing, it's fine
@@ -109,7 +103,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + yemmaGourayaId());
         HttpResponse httpResponse = httpClient.execute(firstHttpGet);
         firstHttpGet.abort();
-        assertTrue(StringUtils.isNotEmpty(lastModifiedValue(httpResponse)));
+        assertFalse(Strings.isNullOrEmpty(lastModifiedValue(httpResponse)));
     }
 
     @Test
@@ -120,7 +114,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + "-100x100.jpg");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         httpGet.abort();
-        assertTrue(StringUtils.isNotEmpty(lastModifiedValue(httpResponse)));
+        assertFalse(Strings.isNullOrEmpty(lastModifiedValue(httpResponse)));
     }
 
     private String lastModifiedValue(HttpResponse httpResponse) {
@@ -140,8 +134,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
     public void shouldRaise304WhenDerivedResourceHasNotBeenModified()
             throws ClientProtocolException, IOException, InterruptedException {
         uploadYemmaGouraya();
-        shouldRaise304WithModifiedSinceHeaderForUrl(baseUrl + "/derived/"
-                + yemmaGourayaId() + "-100x100.jpg");
+        shouldRaise304WithModifiedSinceHeaderForUrl(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
     }
 
     private void shouldRaise304WithModifiedSinceHeaderForUrl(String url)
@@ -156,8 +149,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
         HttpResponse secondResponse = httpClient.execute(secondHttpGet);
 
         secondHttpGet.abort();
-        assertEquals(HttpStatus.SC_NOT_MODIFIED, secondResponse.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_MODIFIED, secondResponse.getStatusLine().getStatusCode());
     }
 
     private Date dateInFuture() {
@@ -167,23 +159,19 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
     @Test
     public void shouldRaise404WhenDownloadingNotExistingOriginalResource()
             throws ClientProtocolException, IOException {
-        HttpGet httpGet = new HttpGet(baseUrl
-                + "/original/someOriginalResourceThatDoesNotExist");
+        HttpGet httpGet = new HttpGet(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
         HttpResponse response = httpClient.execute(httpGet);
         httpGet.abort();
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test
     public void shouldRaise404WhenDeletingNonExistingOriginalResource()
             throws ClientProtocolException, IOException {
-        HttpDelete httpDelete = new HttpDelete(baseUrl
-                + "/original/someOriginalResourceThatDoesNotExist");
+        HttpDelete httpDelete = new HttpDelete(baseUrl + "/original/someOriginalResourceThatDoesNotExist");
         HttpResponse response = httpClient.execute(httpDelete);
         httpDelete.abort();
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -193,8 +181,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + "/derived/someDerivedResourceThatDoesNotExist-100x100.jpg");
         HttpResponse response = httpClient.execute(httpGet);
         httpGet.abort();
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -204,32 +191,27 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + "/derived/derivedResourceThatHasNoSizeNorFormat-100x100.jpg");
         HttpResponse response = httpClient.execute(httpGet);
         httpGet.abort();
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test
     public void shouldRaise400WhenRequestingNotSupportedImageFormat()
             throws ClientProtocolException, IOException {
         uploadYemmaGouraya();
-        HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId()
-                + "-100x100.pixar");
+        HttpGet httpGet = new HttpGet(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.pixar");
         HttpResponse response = httpClient.execute(httpGet);
         httpGet.abort();
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 
     @Test
     public void shouldRaise405WhenHttpMethodNotSupported()
             throws ClientProtocolException, IOException {
         uploadYemmaGouraya();
-        HttpDelete httpDelete = new HttpDelete(baseUrl + "/derived/"
-                + yemmaGourayaId() + "-100x100.jpg");
+        HttpDelete httpDelete = new HttpDelete(baseUrl + "/derived/" + yemmaGourayaId() + "-100x100.jpg");
         HttpResponse response = httpClient.execute(httpDelete);
         httpDelete.abort();
-        assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -239,15 +221,13 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
         HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
         MultipartEntity entity = new RepeatableMultipartEntity();
         entity.addPart(UploadImageCommand.UPLOAD_PARAMETER_NAME,
-                new InputStreamSourceBody(textfileresource(), "text/plain",
-                        UploadImageCommand.UPLOAD_PARAMETER_NAME));
+                new InputSupplierSourceBody(textfileresource(), "text/plain",UploadImageCommand.UPLOAD_PARAMETER_NAME));
 
         httpPost.setEntity(entity);
 
         HttpResponse response = httpClient.execute(httpPost);
         httpPost.abort();
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -255,7 +235,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
             throws ClientProtocolException, IOException {
         HttpPost httpPost = new HttpPost(baseUrl + "/original/myimage");
         MultipartEntity entity = new RepeatableMultipartEntity();
-        entity.addPart("fuckedupParameterName", new InputStreamSourceBody(
+        entity.addPart("fuckedupParameterName", new InputSupplierSourceBody(
                 yemmaGourayaOriginalPictureStream(), JPEG.mimeType(),
                 "fuckedupParameterName"));
 
@@ -263,8 +243,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
 
         HttpResponse response = httpClient.execute(httpPost);
         httpPost.abort();
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -272,8 +251,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
             throws ClientProtocolException, IOException {
         uploadYemmaGouraya();
         HttpResponse response = uploadYemmaGouraya();
-        assertEquals(HttpStatus.SC_CONFLICT, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_CONFLICT, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -284,8 +262,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + "-25000x25000.jpg");
         HttpResponse response = httpClient.execute(httpGet);
         httpGet.abort();
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine()
-                .getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
     private HttpResponse uploadYemmaGouraya() throws IOException,
@@ -294,9 +271,7 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 + yemmaGourayaId());
         MultipartEntity entity = new RepeatableMultipartEntity();
         entity.addPart(UploadImageCommand.UPLOAD_PARAMETER_NAME,
-                new InputStreamSourceBody(yemmaGourayaOriginalPictureStream(),
-                        JPEG.mimeType(),
-                        UploadImageCommand.UPLOAD_PARAMETER_NAME));
+                new InputSupplierSourceBody(yemmaGourayaOriginalPictureStream(), JPEG.mimeType(), UploadImageCommand.UPLOAD_PARAMETER_NAME));
         httpPost.setEntity(entity);
         HttpResponse response = httpClient.execute(httpPost);
         httpPost.abort();

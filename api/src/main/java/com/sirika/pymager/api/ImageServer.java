@@ -15,7 +15,9 @@
  */
 package com.sirika.pymager.api;
 
-import org.springframework.core.io.InputStreamSource;
+import java.io.InputStream;
+
+import com.google.common.io.InputSupplier;
 
 /**
  * Represents the Image Server, and the operations we can call on it. This is
@@ -25,12 +27,11 @@ import org.springframework.core.io.InputStreamSource;
  * 
  */
 public interface ImageServer extends UrlGenerator {
-    InputStreamSource downloadImage(ImageReference imageReference)
+    InputSupplier<InputStream> downloadImage(ImageReference imageReference)
             throws ResourceNotExistingException,
-            UnknownDownloadFailureException;
+            UnknownGetFailureException;
 
-    ImageReference uploadImage(ImageId id, ImageFormat imageFormat,
-            InputStreamSource imageSource) throws UnknownUploadFailureException;
+    ImageReference uploadImage(ImageId id, ImageFormat imageFormat,InputSupplier<InputStream> imageSource) throws UnknownUploadFailureException;
 
     void deleteImage(ImageId imageId) throws UnknownDeleteFailureException;
 

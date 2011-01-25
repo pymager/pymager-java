@@ -15,36 +15,45 @@
  */
 package com.sirika.pymager.api.impl;
 
-import static com.sirika.httpclienthelpers.DefaultHttpClientFactory.defaultHttpClient;
+import java.io.InputStream;
 
-import org.apache.commons.lang.Validate;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 
+import com.google.common.base.Preconditions;
+import com.google.common.io.InputSupplier;
+import com.sirika.hchelpers.client.DefaultHttpClientFactory;
 import com.sirika.pymager.api.ImageFormat;
 import com.sirika.pymager.api.ImageId;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ImageServer;
 import com.sirika.pymager.api.ResourceNotExistingException;
 import com.sirika.pymager.api.UnknownDeleteFailureException;
-import com.sirika.pymager.api.UnknownDownloadFailureException;
+import com.sirika.pymager.api.UnknownGetFailureException;
 import com.sirika.pymager.api.UnknownUploadFailureException;
 import com.sirika.pymager.api.UrlGenerator;
+import com.sirika.pymager.api.internal.DeleteImageCommand;
+import com.sirika.pymager.api.internal.HttpDownloadInputStreamSupplier;
+import com.sirika.pymager.api.internal.RESTfulUrlGenerator;
+import com.sirika.pymager.api.internal.UploadImageCommand;
 
 public class HttpImageServer implements ImageServer {
-    private static final Logger logger = LoggerFactory
-            .getLogger(HttpImageServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpImageServer.class);
     private UrlGenerator urlGenerator;
     private HttpClient httpClient;
 
+    /**
+     * Instanciates the server with a {@link RESTfulUrlGenerator} and the given base URL
+     * 
+     * @param baseImageServiceUrl
+     */
     public HttpImageServer(String baseImageServiceUrl) {
-        this(defaultHttpClient(), defaultUrlGeneratorFor(baseImageServiceUrl));
+        this(DefaultHttpClientFactory.defaultHttpClient(), defaultUrlGeneratorFor(baseImageServiceUrl));
     }
 
     public HttpImageServer(UrlGenerator urlGenerator) {
-        this(defaultHttpClient(), urlGenerator);
+        this(DefaultHttpClientFactory.defaultHttpClient(), urlGenerator);
     }
 
     public HttpImageServer(String baseImageServiceUrl, HttpClient httpClient) {
@@ -52,29 +61,23 @@ public class HttpImageServer implements ImageServer {
     }
 
     public HttpImageServer(HttpClient httpClient, UrlGenerator urlGenerator) {
-        logger
-                .info(
-                        "Creating Image Server using , HttpClient [{}], URLGenerator [{}]",
-                        httpClient, urlGenerator);
-        Validate.notNull(urlGenerator);
-        Validate.notNull(httpClient);
+        logger.info("Creating Image Server using , HttpClient [{}], URLGenerator [{}]", httpClient, urlGenerator);
+        Preconditions.checkArgument(urlGenerator != null, "urlGenerator is required");
+        Preconditions.checkArgument(httpClient != null, "httpClient is required");
+        
         this.urlGenerator = urlGenerator;
         this.httpClient = httpClient;
     }
 
-    public void deleteImage(ImageId imageId)
-            throws UnknownDeleteFailureException {
+    public void deleteImage(ImageId imageId) throws UnknownDeleteFailureException {
         logger.debug("Deleting Image: {}", imageId);
         new DeleteImageCommand(httpClient, urlGenerator, imageId).execute();
 
     }
 
-    public InputStreamSource downloadImage(ImageReference imageReference)
-            throws ResourceNotExistingException,
-            UnknownDownloadFailureException {
+    public InputSupplier<InputStream> downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownGetFailureException {
         logger.debug("Downloading Image Reference: {}", imageReference);
-        return new HttpDownloadInputStreamSource(httpClient, urlGenerator,
-                imageReference);
+        return new HttpDownloadInputStreamSupplier(httpClient, urlGenerator, imageReference);
     }
 
     public String getImageResourceUrl(ImageReference imageReference) {
@@ -83,21 +86,17 @@ public class HttpImageServer implements ImageServer {
         return url;
     }
 
-    public ImageReference uploadImage(ImageId imageId, ImageFormat imageFormat,
-            InputStreamSource imageSource) throws UnknownUploadFailureException {
-        logger.debug("Uploading Image: {} ({})", imageId, imageFormat
-                .mimeType());
-        return new UploadImageCommand(httpClient, urlGenerator, imageId,
-                imageFormat, imageSource).execute();
+    public ImageReference uploadImage(ImageId imageId, ImageFormat imageFormat, InputSupplier<InputStream> imageSource) throws UnknownUploadFailureException {
+        logger.debug("Uploading Image: {} ({})", imageId, imageFormat.mimeType());
+        return new UploadImageCommand(httpClient, urlGenerator, imageId, imageFormat, imageSource).execute();
     }
 
     public void destroy() throws Exception {
         this.httpClient.getConnectionManager().shutdown();
     }
 
-    private static RESTfulUrlGenerator defaultUrlGeneratorFor(
-            String baseImageServiceUrl) {
-        Validate.notNull(baseImageServiceUrl);
+    private static RESTfulUrlGenerator defaultUrlGeneratorFor( String baseImageServiceUrl) {
+        Preconditions.checkArgument(baseImageServiceUrl != null, "baseImageServiceUrl is required");
         return new RESTfulUrlGenerator(baseImageServiceUrl);
     }
 }

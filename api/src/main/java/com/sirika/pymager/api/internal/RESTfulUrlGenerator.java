@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sirika.pymager.api.impl;
+package com.sirika.pymager.api.internal;
 
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.UrlGenerator;
@@ -52,14 +52,12 @@ public class RESTfulUrlGenerator implements UrlGenerator {
                             .getRescaling().getHeight(), imageReference
                             .getImageFormat().extension());
         } else {
-            return String.format("%s/original/%s", this.baseImageServiceUrl,
-                    imageReference.getId());
+            return String.format("%s/original/%s", this.baseImageServiceUrl, imageReference.getId());
         }
     }
 
     public String toString() {
-        return String.format("RESTful URL Generator pointing to %s",
-                baseImageServiceUrl);
+        return String.format("RESTful URL Generator pointing to %s", baseImageServiceUrl);
     }
 
 }

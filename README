@@ -16,10 +16,15 @@ Deploy the current snapshot version and site
  
  
 Perform a release
+* make sure that  ~/.m2/settings.xml contains your ssh configuration for sirika-repo-releases, sirika-repo-snapshots and sirika-site
 * add entry to src/changes/changes.xml
 * update headers: mvn -Prelease license:format
 * commit
 * delete everything in .m2/repository
-* git clone git@github.com:pymager/pymager-java-client.git
+* git clone git@github.com:pymager/pymager-java.git
 * mvn -Pall,release release:prepare -DautoVersionSubmodules=true
 * mvn release:perform
+
+= Available profiles =
+* all : adds superfluous items to the build (attach sources, javadoc various reports - changes, jxr -, build assembly, ..)
+* release : activate sanity checks (licenses, ..) and disable any potential integrated test

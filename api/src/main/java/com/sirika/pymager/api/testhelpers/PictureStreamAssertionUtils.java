@@ -22,46 +22,35 @@ import static com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.InputStreamSource;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 
 public class PictureStreamAssertionUtils {
     public static class PictureStreamAsserter {
-        private InputStreamSource expected;
-        private InputStreamSource actual;
+        private InputSupplier<InputStream> expected;
+        private InputSupplier<InputStream> actual;
 
-        public PictureStreamAsserter(InputStreamSource expected,
-                InputStreamSource actual) {
+        public PictureStreamAsserter(InputSupplier<InputStream> expected, InputSupplier<InputStream> actual) {
             super();
             this.expected = expected;
             this.actual = actual;
         }
 
         public boolean isSameStream() throws IOException {
-            InputStream expectedStream = expected.getInputStream();
-            InputStream actualStream = actual.getInputStream();
-            boolean b = IOUtils.contentEquals(expectedStream, actualStream);
-            IOUtils.closeQuietly(expectedStream);
-            IOUtils.closeQuietly(actualStream);
-            return b;
+            return ByteStreams.equal(expected, actual);
         };
     }
 
-    public static boolean isYemmaGourayaPicture(InputStreamSource iss)
-            throws IOException {
-        return new PictureStreamAsserter(yemmaGourayaOriginalPictureStream(),
-                iss).isSameStream();
+    public static boolean isYemmaGourayaPicture(InputSupplier<InputStream> iss) throws IOException {
+        return new PictureStreamAsserter(yemmaGourayaOriginalPictureStream(),iss).isSameStream();
     }
 
-    public static boolean isCornicheKabylePicture(InputStreamSource iss)
+    public static boolean isCornicheKabylePicture(InputSupplier<InputStream> iss)
             throws IOException {
-        return new PictureStreamAsserter(cornicheKabyleOriginalPictureStream(),
-                iss).isSameStream();
+        return new PictureStreamAsserter(cornicheKabyleOriginalPictureStream(),iss).isSameStream();
     }
 
-    public static boolean is100x100CornicheKabylePicture(InputStreamSource iss)
-            throws IOException {
-        return new PictureStreamAsserter(
-                yemmaGourayaDerived100x100PictureStream(), iss).isSameStream();
+    public static boolean is100x100CornicheKabylePicture(InputSupplier<InputStream> iss) throws IOException {
+        return new PictureStreamAsserter(yemmaGourayaDerived100x100PictureStream(), iss).isSameStream();
     }
 }

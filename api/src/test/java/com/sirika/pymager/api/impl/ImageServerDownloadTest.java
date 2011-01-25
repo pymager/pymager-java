@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -38,12 +37,12 @@ import org.apache.http.localserver.ServerTestBase;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.mockito.Mockito;
-import org.springframework.core.io.InputStreamSource;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ImageServer;
 import com.sirika.pymager.api.UrlGenerator;
-import com.sirika.pymager.api.impl.HttpImageServer;
 import com.sirika.pymager.api.testhelpers.PictureStreamAssertionUtils;
 import com.sirika.pymager.api.testhelpers.PictureStreamSourceObjectMother;
 
@@ -78,13 +77,10 @@ public class ImageServerDownloadTest extends ServerTestBase {
             return entityForInputStreamSource(cornicheKabyleOriginalPictureStream());
         }
 
-        private EntityTemplate entityForInputStreamSource(
-                final InputStreamSource iss) {
+        private EntityTemplate entityForInputStreamSource(final InputSupplier<InputStream> iss) {
             return new EntityTemplate(new ContentProducer() {
                 public void writeTo(OutputStream outstream) throws IOException {
-                    InputStream yemmaGouraya = iss.getInputStream();
-                    IOUtils.copy(yemmaGouraya, outstream);
-                    IOUtils.closeQuietly(yemmaGouraya);
+                    ByteStreams.copy(iss, outstream);
                 }
             });
         }
@@ -100,8 +96,7 @@ public class ImageServerDownloadTest extends ServerTestBase {
         Mockito.when(urlGenerator.getImageResourceUrl(imageReference)).thenReturn("http://anyurl.com/yemmaGouraya");
 
         ImageServer imageServer = new HttpImageServer(urlGenerator);
-        assertThat(imageServer.getImageResourceUrl(imageReference),
-                is("http://anyurl.com/yemmaGouraya"));
+        assertThat(imageServer.getImageResourceUrl(imageReference), is("http://anyurl.com/yemmaGouraya"));
         Mockito.verify(urlGenerator).getImageResourceUrl(imageReference);
     }
 
@@ -110,17 +105,14 @@ public class ImageServerDownloadTest extends ServerTestBase {
     }
 
     public void testShouldDownloadCornicheKabylePicture() throws IOException {
-        doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother
-                .cornicheKabyleOriginalPictureStream());
+        doDownloadImage(cornicheKabyle(), PictureStreamSourceObjectMother.cornicheKabyleOriginalPictureStream());
     }
 
-    private void doDownloadImage(ImageReference imageReference,
-            InputStreamSource expectedInputStreamSource) throws IOException {
+    private void doDownloadImage(ImageReference imageReference, InputSupplier<InputStream> expectedInputStreamSource) throws IOException {
         registerImageDownloadService();
         ImageServer imageServer = new HttpImageServer(getServerHttp().toURI());
-        InputStreamSource actual = imageServer.downloadImage(imageReference);
-        assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(
-                expectedInputStreamSource, actual).isSameStream());
+        InputSupplier<InputStream> actual = imageServer.downloadImage(imageReference);
+        assertTrue(new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, actual).isSameStream());
     }
 
     private void registerImageDownloadService() {

@@ -21,6 +21,7 @@
         <guava.version>r03</guava.version>
         <slf4j.version>1.6.1</slf4j.version>
         <junit.version>4.8.2</junit.version>
+        <hchelpers.version>0.8</hchelpers.version>
         <compileSource>1.5</compileSource>
     </properties>
 
@@ -127,49 +128,53 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!--
-                        Only activate at release time because only works
-                        when called from top module, and slows things
-                        down
-                    -->
+                    <!-- http://blog.bindul.name/2010/12/16/reporting-plugin-dependencies-for-maven-3-x-builds/ -->
+		           	<plugin> 
+			           <groupId>org.apache.maven.plugins</groupId>
+			           <artifactId>maven-site-plugin</artifactId>
+			           <configuration>
+			           		<generateSitemap>true</generateSitemap>
+			           		<reportPlugins>
+			                    <plugin>
+			                        <groupId>org.apache.maven.plugins</groupId>
+			                        <artifactId>maven-changes-plugin</artifactId>
+			                        <reportSets>
+			                            <reportSet>
+			                                <reports>
+			                                    <report>changes-report</report>
+			                                </reports>
+			                            </reportSet>
+			                        </reportSets>
+			                    </plugin>
+			                    <plugin>
+			                        <groupId>org.apache.maven.plugins</groupId>
+			                        <artifactId>maven-javadoc-plugin</artifactId>
+			                        <configuration>
+			                            <encoding>UTF-8</encoding>
+			                            <aggregate>true</aggregate>
+			                        </configuration>
+			                    </plugin>
+			
+			                    <plugin>
+			                        <groupId>org.apache.maven.plugins</groupId>
+			                        <artifactId>maven-jxr-plugin</artifactId>
+			                        <configuration>
+			                            <aggregate>true</aggregate>
+			                        </configuration>
+			                    </plugin>
+			
+			                    <plugin>
+			                        <artifactId>maven-surefire-report-plugin</artifactId>
+			                    </plugin>
+			                    
+			                    <plugin>
+			                        <artifactId>maven-project-info-reports-plugin</artifactId>
+			                    </plugin>
+			           		</reportPlugins>
+			           </configuration>
+		           </plugin>
                 </plugins>
             </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-changes-plugin</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <reports>
-                                    <report>changes-report</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <aggregate>true</aggregate>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jxr-plugin</artifactId>
-                        <configuration>
-                            <aggregate>true</aggregate>
-
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <artifactId>maven-surefire-report-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </reporting>
         </profile>
         <profile>
             <id>release</id>
@@ -208,11 +213,27 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
+        <extensions>
+	      <extension>
+	        <groupId>org.apache.maven.wagon</groupId>
+	         <artifactId>wagon-ssh-external</artifactId>
+	         <version>1.0-beta-7</version>
+	      </extension>
+	    </extensions>
+	    <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-site-plugin</artifactId>
+              <version>3.0-beta-3</version>
+            </plugin>
+          </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-9</version>
+                <version>2.1</version>
                 <configuration>
                     <remoteTagging>true</remoteTagging>
                     <releaseProfiles>release</releaseProfiles>
@@ -275,16 +296,16 @@
         <repository>
             <id>sirika-repo-releases</id>
             <name>Sirika Releases Repository</name>
-            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
+            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
         </repository>
         <snapshotRepository>
             <id>sirika-repo-snapshots</id>
             <name>Sirika Snapshots Repository</name>
-            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
+            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
         </snapshotRepository>
         <site>
             <id>sirika-site</id>
-            <url>scp://developers.sirika.com/srv/http/developers.sirika.com/pymager-java</url>
+            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/pymager-java</url>
         </site>
     </distributionManagement>
 

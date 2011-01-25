@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ImageServer;
 import com.sirika.pymager.api.ImageServerException;
@@ -46,11 +46,11 @@ public class DownloadPictureJob implements Callable<OperationStatus> {
             .getLogger(DownloadPictureJob.class);
     private ImageServer imageServer;
     private ImageReference imageReference;
-    private InputStreamSource expectedInputStreamSource;
+    private InputSupplier<InputStream> expectedInputStreamSource;
 
     public DownloadPictureJob(ImageServer imageServer,
             ImageReference imageReference,
-            InputStreamSource expectedInputStreamSource) {
+            InputSupplier<InputStream> expectedInputStreamSource) {
         super();
         this.imageServer = imageServer;
         this.imageReference = imageReference;
@@ -59,28 +59,22 @@ public class DownloadPictureJob implements Callable<OperationStatus> {
 
     public OperationStatus call() throws Exception {
         try {
-            InputStreamSource source = imageServer
-                    .downloadImage(imageReference);
+            InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
             assertNotNull(source);
             if (!isSameStream(source)) {
                 logger.warn("Stream is different");
                 OutputStream os = new FileOutputStream(new File("/tmp/stream"));
-                InputStream is = source.getInputStream();
-                IOUtils.copy(is, os);
-                IOUtils.closeQuietly(os);
-                IOUtils.closeQuietly(is);
+                ByteStreams.copy(source, os);
             }
 
-            return isSameStream(source) ? OperationStatus.OK
-                    : OperationStatus.KO;
+            return isSameStream(source) ? OperationStatus.OK : OperationStatus.KO;
         } catch (ImageServerException e) {
             logger.error("Unexpected error", e);
             return OperationStatus.KO;
         }
     }
 
-    private boolean isSameStream(InputStreamSource source) throws IOException {
-        return new PictureStreamAssertionUtils.PictureStreamAsserter(
-                expectedInputStreamSource, source).isSameStream();
+    private boolean isSameStream(InputSupplier<InputStream> source) throws IOException {
+        return new PictureStreamAssertionUtils.PictureStreamAsserter(expectedInputStreamSource, source).isSameStream();
     }
 }

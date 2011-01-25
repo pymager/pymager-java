@@ -17,10 +17,10 @@ package com.sirika.pymager.api.jobs;
 
 import static com.sirika.pymager.api.ImageFormat.JPEG;
 
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 
-import org.springframework.core.io.InputStreamSource;
-
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.ImageId;
 import com.sirika.pymager.api.ImageServer;
 import com.sirika.pymager.api.ImageServerException;
@@ -35,10 +35,9 @@ import com.sirika.pymager.api.ImageServerException;
 public class UploadPictureJob implements Callable<OperationStatus> {
     private ImageServer imageServer;
     private ImageId imageId;
-    private InputStreamSource inputStreamSource;
+    private InputSupplier<InputStream> inputStreamSource;
 
-    public UploadPictureJob(ImageServer imageServer, ImageId imageId,
-            InputStreamSource inputstreamSource) {
+    public UploadPictureJob(ImageServer imageServer, ImageId imageId,InputSupplier<InputStream> inputstreamSource) {
         super();
         this.imageServer = imageServer;
         this.imageId = imageId;

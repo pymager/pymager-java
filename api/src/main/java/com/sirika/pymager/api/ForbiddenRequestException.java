@@ -16,6 +16,7 @@
 package com.sirika.pymager.api;
 
 public class ForbiddenRequestException extends ImageServerException {
+    private static final long serialVersionUID = 1L;
 
     public ForbiddenRequestException() {
         super();

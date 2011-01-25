@@ -16,10 +16,8 @@
 package com.sirika.pymager.api;
 
 import static com.sirika.pymager.api.ImageId.imageId;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 
 /**
  * Identifies the image that we want to retrieve.
@@ -44,7 +42,7 @@ public class ImageReference {
 
     private ImageReference(ImageId id, ImageScale rescaling,
             ImageFormat imageFormat) {
-        Validate.notNull(id);
+        Preconditions.checkArgument(id != null, "ID cannnot be null");
         this.id = id;
         this.rescaling = rescaling;
         this.imageFormat = imageFormat;
@@ -74,11 +72,8 @@ public class ImageReference {
     }
 
     public ImageReference convertedTo(ImageFormat imageFormat) {
-        if (this.rescaling == null) {
-            throw new IllegalArgumentException(
-                    "Because of a limitation of the image service, converting to another format also requires rescaling the image");
-        }
-        Validate.notNull(imageFormat);
+        Preconditions.checkArgument(this.rescaling != null, "Because of a limitation of the image service, converting to another format also requires rescaling the image");
+        Preconditions.checkArgument(imageFormat != null, "imageFormat is required");
         return new ImageReference(this.id, this.rescaling, imageFormat);
     }
 
@@ -100,14 +95,7 @@ public class ImageReference {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result
-                + ((imageFormat == null) ? 0 : imageFormat.hashCode());
-        result = prime * result
-                + ((rescaling == null) ? 0 : rescaling.hashCode());
-        return result;
+        return Objects.hashCode(id, imageFormat, rescaling);
     }
 
     @Override
@@ -119,28 +107,18 @@ public class ImageReference {
         if (getClass() != obj.getClass())
             return false;
         ImageReference other = (ImageReference) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (imageFormat == null) {
-            if (other.imageFormat != null)
-                return false;
-        } else if (!imageFormat.equals(other.imageFormat))
-            return false;
-        if (rescaling == null) {
-            if (other.rescaling != null)
-                return false;
-        } else if (!rescaling.equals(other.rescaling))
-            return false;
-        return true;
+        
+        return Objects.equal(id, other.id) 
+            && Objects.equal(imageFormat, other.imageFormat)
+            && Objects.equal(rescaling, other.rescaling);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("id", id).append("imageScale", this.rescaling).append(
-                        "imageFormat", this.imageFormat).toString();
+        return Objects.toStringHelper(this)
+            .add("id", id)
+            .add("imageScale", rescaling)
+            .add("rescaling", rescaling)
+            .toString();
     }
 }

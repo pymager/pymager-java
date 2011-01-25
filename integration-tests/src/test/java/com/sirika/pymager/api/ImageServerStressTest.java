@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +57,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.io.InputSupplier;
 import com.sirika.pymager.api.ImageReference;
 import com.sirika.pymager.api.ResourceNotExistingException;
 import com.sirika.pymager.api.jobs.DownloadPictureJob;
@@ -82,9 +84,8 @@ public class ImageServerStressTest extends
         for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
                 cornicheKabyle())) {
             try {
-                InputStreamSource source = imageServer
-                        .downloadImage(imageReference);
-                source.getInputStream();
+                InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+                source.getInput();
                 imageServer.deleteImage(imageReference.getId());
             } catch (ResourceNotExistingException e) {
                 // do nothing, it's fine
@@ -102,7 +103,7 @@ public class ImageServerStressTest extends
         assertThat(numberOfUnsuccessfulOperations(results),
                 is(TOTAL_NUMBER_OF_THREADS - 1));
 
-        InputStreamSource source = imageServer.downloadImage(yemmaGouraya());
+        InputSupplier<InputStream> source = imageServer.downloadImage(yemmaGouraya());
         assertNotNull(source);
         assertTrue(isYemmaGourayaPicture(source));
         imageServer.deleteImage(yemmaGourayaId());
@@ -123,13 +124,11 @@ public class ImageServerStressTest extends
         assertThat(numberOfUnsuccessfulOperations(results),
                 is(TOTAL_NUMBER_OF_THREADS - 2));
 
-        InputStreamSource yemmaGourayaSource = imageServer
-                .downloadImage(yemmaGouraya());
+        InputSupplier<InputStream> yemmaGourayaSource = imageServer.downloadImage(yemmaGouraya());
         assertNotNull(yemmaGourayaSource);
         assertTrue(isYemmaGourayaPicture(yemmaGourayaSource));
 
-        InputStreamSource cornicheKabyleSource = imageServer
-                .downloadImage(cornicheKabyle());
+        InputSupplier<InputStream> cornicheKabyleSource = imageServer.downloadImage(cornicheKabyle());
         assertNotNull(cornicheKabyleSource);
         assertTrue(isCornicheKabylePicture(cornicheKabyleSource));
 
@@ -167,9 +166,8 @@ public class ImageServerStressTest extends
         for (int i = 0; i < 100; i++) {
             ImageReference imageReference = originalImage("anyImageThatNobodyHasEverUploadedOnThisPlanet");
             try {
-                InputStreamSource source = imageServer
-                        .downloadImage(imageReference);
-                source.getInputStream();
+                InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
+                source.getInput();
                 fail();
             } catch (ResourceNotExistingException e) {
                 assertEquals(imageReference, e.getImageReference());

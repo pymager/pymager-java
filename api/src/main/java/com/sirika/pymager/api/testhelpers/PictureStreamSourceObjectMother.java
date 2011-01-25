@@ -15,28 +15,31 @@
  */
 package com.sirika.pymager.api.testhelpers;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamSource;
+import java.io.InputStream;
+import java.net.URL;
+
+import com.google.common.io.InputSupplier;
+import com.google.common.io.Resources;
 
 public class PictureStreamSourceObjectMother {
 
-    public static InputStreamSource yemmaGourayaOriginalPictureStream() {
-        return new ClassPathResource(
-                "/com/sirika/pymager/testhelpers/samplepix/original/yemmaGourayaInBejaia.jpg");
+    public static InputSupplier<InputStream> yemmaGourayaOriginalPictureStream() {
+        return Resources.newInputStreamSupplier(url("com/sirika/pymager/testhelpers/samplepix/original/yemmaGourayaInBejaia.jpg"));
     }
 
-    public static InputStreamSource yemmaGourayaDerived100x100PictureStream() {
-        return new ClassPathResource(
-                "/com/sirika/pymager/testhelpers/samplepix/derived/yemmaGouraya-100x100.jpg");
+    public static InputSupplier<InputStream> yemmaGourayaDerived100x100PictureStream() {
+        return Resources.newInputStreamSupplier(url("com/sirika/pymager/testhelpers/samplepix/derived/yemmaGouraya-100x100.jpg"));
     }
 
-    public static InputStreamSource cornicheKabyleOriginalPictureStream() {
-        return new ClassPathResource(
-                "/com/sirika/pymager/testhelpers/samplepix/original/cornicheKabyle.jpg");
+    public static InputSupplier<InputStream> cornicheKabyleOriginalPictureStream() {
+        return Resources.newInputStreamSupplier(url("com/sirika/pymager/testhelpers/samplepix/original/cornicheKabyle.jpg"));
     }
 
-    public static InputStreamSource textfileresource() {
-        return new ClassPathResource(
-                "/com/sirika/pymager/testhelpers/samplepix/somethingthatisnotanimage.txt");
+    public static InputSupplier<InputStream> textfileresource() {
+        return Resources.newInputStreamSupplier(url("com/sirika/pymager/testhelpers/samplepix/somethingthatisnotanimage.txt"));
+    }
+    
+    private static URL url(String classPathUrl) {
+        return Thread.currentThread().getContextClassLoader().getResource(classPathUrl);
     }
 }
