@@ -11,33 +11,29 @@
     <url>http://developers.sirika.com/pymager-java-client</url>
     <inceptionYear>2009</inceptionYear>
     <prerequisites>
-        <maven>2.1.0</maven>
+        <maven>3.0.2</maven>
     </prerequisites>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springframework.version>3.0.2.RELEASE</springframework.version>
-        <junit.version>4.8.1</junit.version>
-        <httpcomponents.version>4.1-alpha1</httpcomponents.version>
-        <slf4j.version>1.5.2</slf4j.version>
-        <skip-integration-tests>false</skip-integration-tests>
+        <springframework.version>3.0.5.RELEASE</springframework.version>
+        <httpcomponents.version>4.1</httpcomponents.version>
+        <guava.version>r03</guava.version>
+        <slf4j.version>1.6.1</slf4j.version>
+        <junit.version>4.8.2</junit.version>
         <compileSource>1.5</compileSource>
     </properties>
 
     <scm>
-        <connection>
-			scm:git:git://github.com/samokk/pymager-java-client.git
-		</connection>
-        <developerConnection>
-			scm:git:git@github.com:samokk/pymager-java-client.git
-		</developerConnection>
-        <url>http://github.com/samokk/pymager-java-client</url>
+        <connection>git://github.com/pymager/pymager-java-client.git</connection>
+        <developerConnection>git@github.com:pymager/pymager-java-client.git</developerConnection>
+        <url>https://github.com/pymager/pymager-java-client</url>
     </scm>
 
     <licenses>
         <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -46,7 +42,7 @@
         <system>Launchpad</system>
         <url>https://launchpad.net/pymager-java-client</url>
     </issueManagement>
-
+<!-- 
     <ciManagement>
         <url>http://developers.sirika.com:9191/</url>
         <system>hudson</system>
@@ -55,7 +51,7 @@
                 <type>mail</type>
             </notifier>
         </notifiers>
-    </ciManagement>
+    </ciManagement> -->
 
     <developers>
         <developer>
