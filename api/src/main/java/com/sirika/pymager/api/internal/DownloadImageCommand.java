@@ -69,8 +69,8 @@ public class DownloadImageCommand {
     }
 
     private HttpErrorHandler forbiddenErrorHandler() {
-        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_FORBIDDEN), new HttpResponseCallback() {
-            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_FORBIDDEN), new HttpResponseCallback<Void>() {
+            public Void doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new ForbiddenRequestException(
                         new HttpResponseException(
                                 httpResponse.getStatusLine().getStatusCode(), 
@@ -80,29 +80,21 @@ public class DownloadImageCommand {
     }
 
     private HttpErrorHandler notFoundHandler() {
-        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_NOT_FOUND), new HttpResponseCallback() {
-            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeEquals(HttpStatus.SC_NOT_FOUND), new HttpResponseCallback<Void>() {
+            public Void doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new ResourceNotExistingException(imageReference);
             }
         });
     }
 
     private HttpErrorHandler defaultHandler() {
-        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeGreaterOrEquals(300), new HttpResponseCallback() {
-            public Object doWithHttpResponse(HttpResponse httpResponse) throws Exception {
+        return new DelegatingHttpErrorHandler(HttpErrorMatchers.statusCodeGreaterOrEquals(300), new HttpResponseCallback<Void>() {
+            public Void doWithHttpResponse(HttpResponse httpResponse) throws Exception {
                 throw new UnknownGetFailureException(imageReference,
                         new HttpResponseException(httpResponse.getStatusLine()
                                 .getStatusCode(), httpResponse.getStatusLine()
                                 .getReasonPhrase()));
             }
         });
-    }
-
-    private InputStream generateInputStream(HttpEntity entity) throws IOException {
-        if (entity != null) {
-            return entity.getContent();
-        } else {
-            return null;
-        }
     }
 }
