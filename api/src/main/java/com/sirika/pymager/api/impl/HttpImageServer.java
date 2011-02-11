@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.InputSupplier;
-import com.sirika.hchelpers.client.DefaultHttpClientFactory;
+import com.sirika.hchelpers.core.DefaultHttpClientFactory;
 import com.sirika.pymager.api.ImageFormat;
 import com.sirika.pymager.api.ImageId;
 import com.sirika.pymager.api.ImageReference;
@@ -34,7 +34,7 @@ import com.sirika.pymager.api.UnknownGetFailureException;
 import com.sirika.pymager.api.UnknownUploadFailureException;
 import com.sirika.pymager.api.UrlGenerator;
 import com.sirika.pymager.api.internal.DeleteImageCommand;
-import com.sirika.pymager.api.internal.HttpDownloadInputStreamSupplier;
+import com.sirika.pymager.api.internal.DownloadImageCommand;
 import com.sirika.pymager.api.internal.RESTfulUrlGenerator;
 import com.sirika.pymager.api.internal.UploadImageCommand;
 
@@ -77,7 +77,7 @@ public class HttpImageServer implements ImageServer {
 
     public InputSupplier<InputStream> downloadImage(ImageReference imageReference) throws ResourceNotExistingException, UnknownGetFailureException {
         logger.debug("Downloading Image Reference: {}", imageReference);
-        return new HttpDownloadInputStreamSupplier(httpClient, urlGenerator, imageReference);
+        return new DownloadImageCommand(httpClient, urlGenerator, imageReference).execute();
     }
 
     public String getImageResourceUrl(ImageReference imageReference) {

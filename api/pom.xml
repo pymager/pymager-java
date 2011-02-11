@@ -16,18 +16,13 @@
         <!-- Common Stuff that should be in the JDK -->
         <dependency>
 		    <groupId>com.google.guava</groupId>
-		    <artifactId>guava-collections</artifactId>
-		    <version>${guava.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.google.guava</groupId>
-		    <artifactId>guava-io</artifactId>
+		    <artifactId>guava</artifactId>
 		    <version>${guava.version}</version>
 		</dependency>
 
 		<dependency>
             <groupId>com.sirika.hchelpers</groupId>
-            <artifactId>hchelpers-core</artifactId>
+            <artifactId>hchelpers-java</artifactId>
             <version>${hchelpers.version}</version>
         </dependency>
 

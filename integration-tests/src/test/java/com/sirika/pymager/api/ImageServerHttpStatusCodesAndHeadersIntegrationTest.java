@@ -44,8 +44,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.google.common.base.Strings;
 import com.google.common.io.InputSupplier;
-import com.sirika.hchelpers.mime.InputSupplierSourceBody;
-import com.sirika.hchelpers.mime.RepeatableMultipartEntity;
+import com.sirika.hchelpers.core.mime.InputSupplierSourceBody;
+import com.sirika.hchelpers.core.mime.RepeatableMultipartEntity;
 import com.sirika.pymager.api.internal.UploadImageCommand;
 
 /**
@@ -86,18 +86,17 @@ public class ImageServerHttpStatusCodesAndHeadersIntegrationTest extends
                 InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
                 source.getInput();
                 imageServer.deleteImage(imageReference.getId());
-            } catch (ResourceNotExistingException e) {
+            } 
+            catch (ResourceNotExistingException e) {
                 // do nothing, it's fine
             }
         }
     }
 
     @Test
-    public void shouldReturnLastModifiedHeaderForOriginalResource()
-            throws ClientProtocolException, IOException, InterruptedException {
+    public void shouldReturnLastModifiedHeaderForOriginalResource() throws ClientProtocolException, IOException, InterruptedException {
         uploadYemmaGouraya();
-        HttpGet firstHttpGet = new HttpGet(baseUrl + "/original/"
-                + yemmaGourayaId());
+        HttpGet firstHttpGet = new HttpGet(baseUrl + "/original/" + yemmaGourayaId());
         HttpResponse httpResponse = httpClient.execute(firstHttpGet);
         firstHttpGet.abort();
         assertFalse(Strings.isNullOrEmpty(lastModifiedValue(httpResponse)));

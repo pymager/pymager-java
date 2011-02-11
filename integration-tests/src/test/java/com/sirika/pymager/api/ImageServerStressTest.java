@@ -200,9 +200,7 @@ public class ImageServerStressTest extends AbstractImageServerIntegrationTestCas
             int numberOfThreads) {
         List<Callable<OperationStatus>> jobs = new ArrayList<Callable<OperationStatus>>();
         for (int i = 0; i < numberOfThreads; i++) {
-            jobs.add(new DownloadPictureJob(imageServer, yemmaGouraya()
-                    .rescaledTo(width(100).by(100)),
-                    yemmaGourayaDerived100x100PictureStream()));
+            jobs.add(new DownloadPictureJob(imageServer, yemmaGouraya().rescaledTo(width(100).by(100)),yemmaGourayaDerived100x100PictureStream()));
         }
         return jobs;
     }

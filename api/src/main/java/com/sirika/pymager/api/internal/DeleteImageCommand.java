@@ -25,11 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
-import com.sirika.hchelpers.client.DelegatingHttpErrorHandler;
-import com.sirika.hchelpers.client.HttpErrorMatchers;
-import com.sirika.hchelpers.client.HttpClientTemplate;
-import com.sirika.hchelpers.client.HttpErrorHandler;
-import com.sirika.hchelpers.client.HttpResponseCallback;
+import com.sirika.hchelpers.java.DelegatingHttpErrorHandler;
+import com.sirika.hchelpers.java.HttpClientTemplate;
+import com.sirika.hchelpers.java.HttpErrorHandler;
+import com.sirika.hchelpers.java.HttpErrorMatchers;
+import com.sirika.hchelpers.java.HttpResponseCallback;
 import com.sirika.pymager.api.ImageId;
 import com.sirika.pymager.api.UnknownDeleteFailureException;
 import com.sirika.pymager.api.UrlGenerator;

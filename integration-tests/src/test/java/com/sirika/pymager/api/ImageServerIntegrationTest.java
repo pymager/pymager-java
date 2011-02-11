@@ -51,8 +51,7 @@ public class ImageServerIntegrationTest extends
     @Before
     @After
     public void clean() throws IOException {
-        for (ImageReference imageReference : Arrays.asList(yemmaGouraya(),
-                cornicheKabyle())) {
+        for (ImageReference imageReference : Arrays.asList(yemmaGouraya(), cornicheKabyle())) {
             try {
                 InputSupplier<InputStream> source = imageServer.downloadImage(imageReference);
                 source.getInput();
