@@ -4,3 +4,8 @@
 target
 */pymager.log
 bin
+
+# IDEA IntelliJ
+*.iml
+*.ipr
+*.iws
