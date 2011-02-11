@@ -21,6 +21,10 @@
     <author email="sami.dalouche@gmail.com">Sami Dalouche</author>
   </properties>
   <body>
+  	<release version="0.14" date="2011-02-11" description="Updates of most dependencies">
+  		<action dev="sdalouche" type="fix">Upgraded hchelpers (which got rid of some resource leaks)</action>
+  		<action dev="sdalouche" type="update">various code refactoring</action>
+  	</release>
   	<release version="0.13" date="2011-01-25" description="Updates of most dependencies">
       <action dev="sdalouche" type="update">Upgraded all dependencies (Spring, SLF4J, HC Helpers..)</action>
       <action dev="sdalouche" type="update">Got rid of commons-* and spring resource abstraction in favor of google guava</action>
