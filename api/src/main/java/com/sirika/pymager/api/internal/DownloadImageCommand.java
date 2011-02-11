@@ -33,7 +33,7 @@ import com.sirika.hchelpers.java.DelegatingHttpErrorHandler;
 import com.sirika.hchelpers.java.HttpClientTemplate;
 import com.sirika.hchelpers.java.HttpErrorHandler;
 import com.sirika.hchelpers.java.HttpErrorMatchers;
-import com.sirika.hchelpers.java.HttpRequestInputSupplier;
+import com.sirika.hchelpers.java.HttpInputSupplier;
 import com.sirika.hchelpers.java.HttpResponseCallback;
 import com.sirika.pymager.api.ForbiddenRequestException;
 import com.sirika.pymager.api.ImageReference;
@@ -61,7 +61,7 @@ public class DownloadImageCommand {
     }
     
     private InputSupplier<InputStream> inputStreamSupplier() {
-        return new HttpRequestInputSupplier(new HttpClientTemplate(httpClient), new HttpGet(urlGenerator.getImageResourceUrl(imageReference)),httpErrorHandlers());
+        return new HttpInputSupplier(new HttpClientTemplate(httpClient), new HttpGet(urlGenerator.getImageResourceUrl(imageReference)),httpErrorHandlers());
     }
     
     private Iterable<HttpErrorHandler> httpErrorHandlers() {
