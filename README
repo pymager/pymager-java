@@ -28,3 +28,8 @@ Perform a release
 = Available profiles =
 * all : adds superfluous items to the build (attach sources, javadoc various reports - changes, jxr -, build assembly, ..)
 * release : activate sanity checks (licenses, ..) and disable any potential integrated test
+
+
+= Backlog =
+* Convert build to SBT instead of maven ?
+* produce scala version of the API
