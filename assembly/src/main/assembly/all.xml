@@ -19,7 +19,6 @@
 	<id>all</id>
 	<formats>
 		<format>zip</format>
-		<format>tar.gz</format>
 		<format>tar.bz2</format>
 	</formats>
 	<dependencySets>
@@ -52,7 +51,7 @@
 			</includes>
 		</fileSet>
 
-		<!-- Include the website in the assembly -->
+		<!-- Include the website in the assembly 
 		<fileSet>
 			<directory>../target/site</directory>
 			<outputDirectory>docs</outputDirectory>
@@ -68,40 +67,20 @@
 		<fileSet>
 			<directory>../integration-tests/target/site</directory>
 			<outputDirectory>docs/pymager-integration-tests</outputDirectory>
-		</fileSet>
+		</fileSet> -->
 
 		<!-- Include the source code in the assembly -->
-		<fileSet>
-			<directory>../</directory>
-			<outputDirectory>src/</outputDirectory>
-			<includes>
-				<include>pom.xml</include>
-				<include>src/</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>../api</directory>
-			<outputDirectory>src/api</outputDirectory>
-			<includes>
-				<include>pom.xml</include>
-				<include>src/</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>../integration-tests</directory>
-			<outputDirectory>src/integration-tests</outputDirectory>
-			<includes>
-				<include>pom.xml</include>
-				<include>src/</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>../assembly</directory>
-			<outputDirectory>src/assembly</outputDirectory>
-			<includes>
-				<include>pom.xml</include>
-				<include>src/</include>
-			</includes>
-		</fileSet>
+        <fileSet>
+            <directory>${parent.basedir}</directory>
+            <outputDirectory>src</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <excludes>
+                <exclude>**/*.log</exclude>
+                <exclude>**/${project.build.directory}/**</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iws</exclude>
+            </excludes>
+        </fileSet>
 	</fileSets>
 </assembly>
