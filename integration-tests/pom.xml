@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>pymager-java-parent</artifactId>
-        <groupId>com.sirika.pymager</groupId>
+        <groupId>org.iglootools.pymager</groupId>
         <version>0.15-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.sirika.pymager</groupId>
+    <groupId>org.iglootools.pymager</groupId>
     <artifactId>pymager-integration-tests</artifactId>
     <name>PyMager Server Integration Tests</name>
     <version>0.15-SNAPSHOT</version>
@@ -14,12 +14,12 @@
 
         <!-- Internal Dependencies that we test in integration -->
         <dependency>
-            <groupId>com.sirika.pymager</groupId>
+            <groupId>org.iglootools.pymager</groupId>
             <artifactId>pymager-java-api</artifactId>
             <version>0.15-SNAPSHOT</version>
         </dependency>
         <!--
-            <dependency> <groupId>com.sirika.pymager</groupId>
+            <dependency> <groupId>org.iglootools.pymager</groupId>
             <artifactId>pymager-java-client</artifactId>
             <version>0.10-SNAPSHOT</version>
             <classifier>tests</classifier> <scope>test</scope>
@@ -35,7 +35,7 @@
         </dependency>
         
         <dependency>
-            <groupId>com.sirika.hchelpers</groupId>
+            <groupId>org.iglootools.hchelpers</groupId>
             <artifactId>hchelpers-spring</artifactId>
             <version>${hchelpers.version}</version>
             <scope>test</scope>

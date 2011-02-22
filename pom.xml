@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.sirika.pymager</groupId>
+    <groupId>org.iglootools.pymager</groupId>
     <artifactId>pymager-java-parent</artifactId>
     <packaging>pom</packaging>
     <name>PyMager Java Parent</name>
     <description>Java API for PyMager</description>
     <version>0.15-SNAPSHOT</version>
-    <url>http://developers.sirika.com/pymager-java</url>
+    <url>http://www.iglootools.org/pymager-java</url>
     <inceptionYear>2009</inceptionYear>
     <prerequisites>
         <maven>3.0.2</maven>
@@ -20,7 +20,7 @@
         <guava.version>r08</guava.version>
         <slf4j.version>1.6.1</slf4j.version>
         <junit.version>4.8.2</junit.version>
-        <hchelpers.version>0.9</hchelpers.version>
+        <hchelpers.version>0.10-SNAPSHOT</hchelpers.version>
         <compileSource>1.5</compileSource>
     </properties>
 
@@ -42,16 +42,6 @@
         <system>Launchpad</system>
         <url>https://launchpad.net/pymager-java-client</url>
     </issueManagement>
-<!-- 
-    <ciManagement>
-        <url>http://developers.sirika.com:9191/</url>
-        <system>hudson</system>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-            </notifier>
-        </notifiers>
-    </ciManagement> -->
 
     <developers>
         <developer>
@@ -293,33 +283,20 @@
 
     <distributionManagement>
         <repository>
-            <id>sirika-repo-releases</id>
-            <name>Sirika Releases Repository</name>
-            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/maven2/releases</url>
+            <id>iglootools-repo-releases</id>
+            <name>Iglootools Releases Repository</name>
+            <url>scpexe://iglootools.org/srv/http/iglootools.org/maven2/releases</url>
         </repository>
         <snapshotRepository>
-            <id>sirika-repo-snapshots</id>
-            <name>Sirika Snapshots Repository</name>
-            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/maven2/snapshots</url>
+            <id>iglootools-repo-snapshots</id>
+            <name>Iglootools Snapshots Repository</name>
+            <url>scpexe://iglootools.org/srv/http/iglootools.org/maven2/snapshots</url>
         </snapshotRepository>
         <site>
-            <id>sirika-site</id>
-            <url>scpexe://developers.sirika.com/srv/http/developers.sirika.com/pymager-java</url>
+            <id>iglootools-site</id>
+            <url>scpexe://iglootools.org/srv/http/iglootools.org/pymager-java</url>
         </site>
     </distributionManagement>
-
-    <!--
-        <repositories> <repository> <id>sirika-repo-releases</id>
-        <name>Sirika Releases Repository</name>
-        <url>http://developers.sirika.com/maven2/releases</url>
-        <snapshots> <enabled>false</enabled> </snapshots> </repository>
-
-        <repository> <id>sirika-repo-snapshots</id> <name>Sirika
-        Snapshots Repository</name>
-        <url>http://developers.sirika.com/maven2/snapshots</url>
-        <snapshots> <enabled>true</enabled> </snapshots> </repository>
-        </repositories>
-    -->
 
     <pluginRepositories />
 

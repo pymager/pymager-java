@@ -21,6 +21,9 @@
     <author email="sami.dalouche@gmail.com">Sami Dalouche</author>
   </properties>
   <body>
+  	<release version="0.15" date="2011-02-22" description="rename">
+  		<action dev="sdalouche" type="update">Renamed com.sirika to org.iglootools</action>
+  	</release>
   	<release version="0.14" date="2011-02-11" description="Updates of most dependencies">
   		<action dev="sdalouche" type="fix">Upgraded hchelpers (which got rid of some resource leaks)</action>
   		<action dev="sdalouche" type="update">various code refactoring</action>
