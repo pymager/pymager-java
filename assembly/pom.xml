@@ -3,19 +3,19 @@
     <parent>
         <artifactId>pymager-java-parent</artifactId>
         <groupId>org.iglootools.pymager</groupId>
-        <version>0.15</version>
+        <version>0.16-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.iglootools.pymager</groupId>
     <artifactId>pymager-java-assembly</artifactId>
     <packaging>pom</packaging>
     <name>PyMager Server Java Assembly</name>
-    <version>0.15</version>
+    <version>0.16-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.iglootools.pymager</groupId>
             <artifactId>pymager-java-api</artifactId>
-            <version>0.15</version>
+            <version>0.16-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

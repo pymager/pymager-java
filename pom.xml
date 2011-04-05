@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <name>PyMager Java Parent</name>
     <description>Java API for PyMager</description>
-    <version>0.15</version>
+    <version>0.16-SNAPSHOT</version>
     <url>http://www.iglootools.org/pymager-java</url>
     <inceptionYear>2009</inceptionYear>
     <prerequisites>
