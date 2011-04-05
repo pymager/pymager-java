@@ -3,13 +3,13 @@
     <parent>
         <artifactId>pymager-java-parent</artifactId>
         <groupId>org.iglootools.pymager</groupId>
-        <version>0.15-SNAPSHOT</version>
+        <version>0.15</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.iglootools.pymager</groupId>
     <artifactId>pymager-java-api</artifactId>
     <name>PyMager Java API</name>
-    <version>0.15-SNAPSHOT</version>
+    <version>0.15</version>
     <properties>
     </properties>
     <dependencies>
