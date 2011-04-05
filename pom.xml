@@ -283,15 +283,15 @@
 
     <distributionManagement>
         <repository>
-            <id>iglootools-repo-releases</id>
-            <name>Iglootools Releases Repository</name>
-            <url>scpexe://iglootools.org/srv/http/iglootools.org/maven2/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>iglootools-repo-snapshots</id>
-            <name>Iglootools Snapshots Repository</name>
-            <url>scpexe://iglootools.org/srv/http/iglootools.org/maven2/snapshots</url>
-        </snapshotRepository>
+			<id>www.iglootools.org</id>
+			<name>www.iglootools.org-releases</name>
+			<url>http://www.iglootools.org/artifactory/iglootools-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>www.iglootools.org</id>
+			<name>www.iglootools.org-snapshots</name>
+			<url>http://www.iglootools.org/artifactory/iglootools-release-local</url>
+		</snapshotRepository>
         <site>
             <id>iglootools-site</id>
             <url>scpexe://iglootools.org/srv/http/iglootools.org/pymager-java</url>

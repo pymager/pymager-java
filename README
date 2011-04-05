@@ -16,7 +16,7 @@ Deploy the current snapshot version and site
  
  
 Perform a release
-* make sure that  ~/.m2/settings.xml contains your ssh configuration for iglootools-repo-releases, iglootools-repo-snapshots and iglootools-site
+* make sure that  ~/.m2/settings.xml contains your ssh configuration for www.iglootools.org and iglootools-site
 * add entry to src/changes/changes.xml
 * update headers: mvn -Prelease license:format
 * commit
